@@ -1,10 +1,11 @@
 /**
- * 麥麥筆記 互動前端應用程式 (UI/UX 大字版)
+ * 麥麥筆記 互動前端應用程式 (大字版 + 翻牌背誦系統)
  */
 
 let currentSubject = "all";
 let currentSearch = "";
-let currentFontScale = 1.12;
+// 預設字體縮放係數：1.15
+let currentFontScale = parseFloat(localStorage.getItem("maimai_notes_font_scale")) || 1.15;
 
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
@@ -34,19 +35,22 @@ function setTheme(theme) {
   });
 }
 
-// Font Scale Management
+// Font Scale Management: 超有感放大縮小 (每次增減 0.2，約 20%)
 function initFontScale() {
-  const savedScale = parseFloat(localStorage.getItem("maimai_notes_font_scale")) || 1.12;
-  setFontScale(savedScale);
+  setFontScale(currentFontScale);
 
   document.getElementById("btn-font-dec")?.addEventListener("click", () => {
-    if (currentFontScale > 0.85) setFontScale(Math.round((currentFontScale - 0.1) * 100) / 100);
+    if (currentFontScale > 0.85) {
+      setFontScale(Math.round((currentFontScale - 0.2) * 100) / 100);
+    }
   });
-  document.getElementById("btn-font-reset")?.addEventListener("click", () => {
-    setFontScale(1.12);
+  document.getElementById("font-scale-label")?.addEventListener("click", () => {
+    setFontScale(1.15); // 重置為預設
   });
   document.getElementById("btn-font-inc")?.addEventListener("click", () => {
-    if (currentFontScale < 1.9) setFontScale(Math.round((currentFontScale + 0.1) * 100) / 100);
+    if (currentFontScale < 2.2) {
+      setFontScale(Math.round((currentFontScale + 0.2) * 100) / 100);
+    }
   });
 }
 
@@ -55,7 +59,11 @@ function setFontScale(scale) {
   document.documentElement.style.setProperty("--font-scale", scale.toString());
   localStorage.setItem("maimai_notes_font_scale", scale.toString());
   const label = document.getElementById("font-scale-label");
-  if (label) label.textContent = `${Math.round((scale / 1.12) * 100)}%`;
+  if (label) {
+    const pct = Math.round((scale / 1.15) * 100);
+    label.textContent = `${pct}%`;
+    label.title = `點擊重設為 100% (目前字級係數: ${scale})`;
+  }
 }
 
 // Event Listeners
@@ -128,7 +136,6 @@ function renderNotes() {
     return true;
   });
 
-  // Update counts
   if (statsLabel) {
     const subjName = SUBJECT_NAMES[currentSubject] || currentSubject;
     statsLabel.innerHTML = `<i class="fa-solid fa-bookmark"></i> 目前顯示 <b>${filtered.length}</b> 則重點筆記 ${currentSubject !== "all" ? `（學科：${subjName}）` : ""}`;
@@ -146,7 +153,7 @@ function renderNotes() {
         </div>
         <h3 class="empty-subject-title">目前尚無【${subjName}】科筆記</h3>
         <p class="empty-subject-desc">
-          當您在看教學影片時，只要隨時截圖傳到對話中，AI 就會立即為您提煉精華重點、比較大表與隨堂互動測驗！
+          當您在看教學影片時，只要隨時截圖傳到對話中，AI 就會立即為您提煉精華重點、翻牌比較大表與隨堂互動測驗！
         </p>
         <div class="empty-action-hint">
           <i class="fa-regular fa-lightbulb"></i> 隨看隨記 · 免手抄更輕鬆
@@ -158,7 +165,22 @@ function renderNotes() {
 
   container.innerHTML = filtered.map(note => createNoteCardHtml(note)).join("");
 
-  // Attach Interactive Quiz event listeners
+  // Attach Quiz event listeners
+  attachQuizListeners(container, dataList);
+
+  // Render KaTeX
+  if (window.renderMathInElement) {
+    renderMathInElement(container, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false }
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+function attachQuizListeners(container, dataList) {
   container.querySelectorAll(".quiz-opt-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const noteId = btn.dataset.noteId;
@@ -185,31 +207,20 @@ function renderNotes() {
         });
         feedbackBox.className = "quiz-feedback-box show-correct";
         feedbackBox.innerHTML = `
-          <div style="font-weight: 800; font-size: 1.15rem; margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i> 🎉 答對了！太厲害了！</div>
+          <div style="font-weight: 800; font-size: 1.25rem; margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i> 🎉 答對了！太厲害了！</div>
           <div>${selectedOpt.explanation}</div>
         `;
       } else {
         btn.classList.add("is-wrong");
         feedbackBox.className = "quiz-feedback-box show-wrong";
         feedbackBox.innerHTML = `
-          <div style="font-weight: 800; font-size: 1.15rem; margin-bottom: 6px;"><i class="fa-solid fa-circle-xmark"></i> ❌ 答案不太對喔！再想想看～</div>
+          <div style="font-weight: 800; font-size: 1.25rem; margin-bottom: 8px;"><i class="fa-solid fa-circle-xmark"></i> ❌ 答案不太對喔！再想想看～</div>
           <div>${selectedOpt.explanation}</div>
           <button class="retry-quiz-btn" onclick="retryQuiz('${noteId}', ${qIdx})"><i class="fa-solid fa-rotate-left"></i> 重新作答</button>
         `;
       }
     });
   });
-
-  // Render KaTeX
-  if (window.renderMathInElement) {
-    renderMathInElement(container, {
-      delimiters: [
-        { left: "$$", right: "$$", display: true },
-        { left: "$", right: "$", display: false }
-      ],
-      throwOnError: false
-    });
-  }
 }
 
 window.retryQuiz = function(noteId, qIdx) {
@@ -223,6 +234,67 @@ window.retryQuiz = function(noteId, qIdx) {
   });
   feedbackBox.className = "quiz-feedback-box";
   feedbackBox.style.display = "none";
+};
+
+// ========================================================
+// 🃏 翻牌遮蔽背誦功能 (Flashcard Mask & Reveal Mode)
+// ========================================================
+
+window.toggleMaskMode = function(tableId) {
+  const table = document.getElementById(tableId);
+  const btn = document.getElementById(`btn-mask-${tableId}`);
+  if (!table) return;
+
+  const isMasked = table.classList.toggle("is-masked");
+  if (btn) {
+    if (isMasked) {
+      btn.classList.add("is-active");
+      btn.innerHTML = `<i class="fa-solid fa-eye"></i> 退出背誦模式`;
+      // 預設將非第一欄的格子蓋住
+      maskAllCells(tableId);
+    } else {
+      btn.classList.remove("is-active");
+      btn.innerHTML = `<i class="fa-solid fa-mask"></i> 翻牌背誦模式`;
+      revealAllCells(tableId);
+    }
+  }
+};
+
+window.maskAllCells = function(tableId) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+  table.classList.add("is-masked");
+  const btn = document.getElementById(`btn-mask-${tableId}`);
+  if (btn) {
+    btn.classList.add("is-active");
+    btn.innerHTML = `<i class="fa-solid fa-eye"></i> 退出背誦模式`;
+  }
+  table.querySelectorAll("tbody td.mask-cell").forEach(cell => {
+    cell.classList.remove("is-revealed");
+    cell.classList.add("is-hidden");
+  });
+};
+
+window.revealAllCells = function(tableId) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+  table.querySelectorAll("tbody td.mask-cell").forEach(cell => {
+    cell.classList.remove("is-hidden");
+    cell.classList.add("is-revealed");
+  });
+};
+
+window.toggleCell = function(cell) {
+  const table = cell.closest(".note-table");
+  if (!table || !table.classList.contains("is-masked")) return;
+
+  if (cell.classList.contains("is-hidden")) {
+    cell.classList.remove("is-hidden");
+    cell.classList.add("is-revealed");
+  } else {
+    cell.classList.remove("is-revealed");
+    cell.classList.add("is-hidden");
+  }
 };
 
 function updateTabCounts() {
@@ -242,19 +314,49 @@ function updateTabCounts() {
 }
 
 function createNoteCardHtml(note) {
-  // Full-width Table HTML
+  // Table HTML with Mask & Reveal Toolbar
   let tableHtml = "";
   if (note.table && note.table.rows && note.table.rows.length > 0) {
+    const tableId = `table-${note.id}`;
     tableHtml = `
       <div class="section-block">
-        <div class="section-label"><i class="fa-solid fa-table"></i> 關鍵速查比較大表</div>
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <span class="section-label" style="margin-bottom: 0;">
+              <i class="fa-solid fa-table"></i> 關鍵速查比較大表
+            </span>
+          </div>
+          <div class="table-toolbar-actions">
+            <button class="mask-mode-btn" id="btn-mask-${tableId}" onclick="toggleMaskMode('${tableId}')">
+              <i class="fa-solid fa-mask"></i> 翻牌背誦模式
+            </button>
+            <button class="mask-quick-btn" onclick="maskAllCells('${tableId}')" title="全部答案蓋住">
+              <i class="fa-solid fa-eye-slash"></i> 全蓋住
+            </button>
+            <button class="mask-quick-btn" onclick="revealAllCells('${tableId}')" title="全部答案翻開">
+              <i class="fa-solid fa-eye"></i> 全翻開
+            </button>
+          </div>
+        </div>
+
         <div class="table-responsive">
-          <table class="note-table">
+          <table class="note-table" id="${tableId}">
             <thead>
               <tr>${note.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>
             </thead>
             <tbody>
-              ${note.table.rows.map(row => `<tr>${row.map(c => `<td>${formatTableCell(c)}</td>`).join("")}</tr>`).join("")}
+              ${note.table.rows.map(row => `
+                <tr>
+                  ${row.map((c, colIndex) => {
+                    // 第一欄為項目標題，其餘欄位為答案（支援遮蔽翻牌）
+                    if (colIndex === 0) {
+                      return `<td style="font-weight: 800; white-space: nowrap;">${c}</td>`;
+                    } else {
+                      return `<td class="mask-cell" onclick="toggleCell(this)">${formatTableCell(c)}</td>`;
+                    }
+                  }).join("")}
+                </tr>
+              `).join("")}
             </tbody>
           </table>
         </div>
@@ -311,7 +413,7 @@ function createNoteCardHtml(note) {
         </ul>
       </div>
 
-      <!-- 關鍵速查比較大表 -->
+      <!-- 關鍵速查比較大表 (含翻牌背誦模式) -->
       ${tableHtml}
 
       <!-- 黃金記憶口訣 -->

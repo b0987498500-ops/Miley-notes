@@ -18,7 +18,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <!-- Project Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=1.0.4">
+  <link rel="stylesheet" href="styles.css?v=1.0.5">
 </head>
 <body>
 
@@ -29,16 +29,16 @@
         <i class="fa-solid fa-graduation-cap"></i>
       </div>
       <div class="brand-text">
-        <h1>麥麥筆記 <span style="font-size: 0.8rem; font-weight: 600; opacity: 0.85; color: var(--primary);">Miley Notes</span></h1>
+        <h1>麥麥筆記 <span style="font-size: 0.85rem; font-weight: 700; opacity: 0.85; color: var(--primary);">Miley Notes</span></h1>
         <p>教學影片重點精華庫 · 純淨免抄寫系統</p>
       </div>
     </div>
 
     <div class="top-controls">
-      <!-- Font Size Controller -->
+      <!-- Font Size Controller: 超有感字體放大器 -->
       <div class="font-control-group" title="字體大小調節">
         <button id="btn-font-dec" class="font-btn" aria-label="縮小字體">A-</button>
-        <span id="font-scale-label" class="font-btn" style="cursor: default; font-weight: 800;">100%</span>
+        <span id="font-scale-label" class="font-scale-display">100%</span>
         <button id="btn-font-inc" class="font-btn" aria-label="放大字體">A+</button>
       </div>
 
@@ -56,11 +56,11 @@
     <!-- Hero & Search Section -->
     <header class="hero-banner">
       <h2>隨看隨記 · 智能筆記精華</h2>
-      <p>觀看教學影片截圖傳送，AI 自動提煉觀念、公式與口訣，免抄寫無負擔！</p>
+      <p>觀看教學影片截圖傳送，AI 自動提煉觀念、翻牌背誦大表與口訣，免抄寫無負擔！</p>
       
       <div class="search-wrapper">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="search-input" class="search-input" placeholder="搜尋核心觀念、口訣、公式或章節關鍵字..." autocomplete="off">
+        <input type="text" id="search-input" class="search-input" placeholder="搜尋核心觀念、口訣、動物、植物或章節關鍵字..." autocomplete="off">
       </div>
     </header>
 
@@ -69,11 +69,11 @@
       <div class="subject-tabs">
         <button class="subject-tab-btn active" data-subject="all">
           <i class="fa-solid fa-layer-group"></i> 全部重點
-          <span class="badge-count">2</span>
+          <span class="badge-count">3</span>
         </button>
         <button class="subject-tab-btn" data-subject="science">
           <i class="fa-solid fa-flask"></i> 自然
-          <span class="badge-count">2</span>
+          <span class="badge-count">3</span>
         </button>
         <button class="subject-tab-btn" data-subject="math">
           <i class="fa-solid fa-calculator"></i> 數學
@@ -96,8 +96,8 @@
 
     <!-- Stats Ribbon -->
     <div class="stats-bar">
-      <span id="stats-label"><i class="fa-solid fa-bookmark"></i> 目前顯示 <b>2</b> 則重點筆記</span>
-      <span><i class="fa-regular fa-folder-open"></i> 國中教學影片實錄整理</span>
+      <span id="stats-label"><i class="fa-solid fa-bookmark"></i> 目前顯示 <b>3</b> 則重點筆記</span>
+      <span><i class="fa-solid fa-wand-magic-sparkles"></i> 支援「翻牌背誦模式」，點擊格子即可挖空測試</span>
     </div>
 
     <!-- Dynamic Notes Cards List -->
@@ -107,7 +107,7 @@
   </main>
 
   <!-- Scripts -->
-  <script src="notes_data.js?v=1.0.4"></script>
-  <script src="app.js?v=1.0.4"></script>
+  <script src="notes_data.js?v=1.0.5"></script>
+  <script src="app.js?v=1.0.5"></script>
 </body>
 </html>
