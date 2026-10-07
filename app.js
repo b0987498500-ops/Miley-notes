@@ -1,10 +1,10 @@
 /**
- * 麥麥筆記 互動前端應用程式
+ * 麥麥筆記 互動前端應用程式 (UI/UX 大字版)
  */
 
 let currentSubject = "all";
 let currentSearch = "";
-let currentFontScale = 1.0;
+let currentFontScale = 1.12;
 
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
@@ -36,17 +36,17 @@ function setTheme(theme) {
 
 // Font Scale Management
 function initFontScale() {
-  const savedScale = parseFloat(localStorage.getItem("maimai_notes_font_scale")) || 1.0;
+  const savedScale = parseFloat(localStorage.getItem("maimai_notes_font_scale")) || 1.12;
   setFontScale(savedScale);
 
   document.getElementById("btn-font-dec")?.addEventListener("click", () => {
-    if (currentFontScale > 0.8) setFontScale(Math.round((currentFontScale - 0.1) * 10) / 10);
+    if (currentFontScale > 0.85) setFontScale(Math.round((currentFontScale - 0.1) * 100) / 100);
   });
   document.getElementById("btn-font-reset")?.addEventListener("click", () => {
-    setFontScale(1.0);
+    setFontScale(1.12);
   });
   document.getElementById("btn-font-inc")?.addEventListener("click", () => {
-    if (currentFontScale < 1.8) setFontScale(Math.round((currentFontScale + 0.1) * 10) / 10);
+    if (currentFontScale < 1.9) setFontScale(Math.round((currentFontScale + 0.1) * 100) / 100);
   });
 }
 
@@ -55,12 +55,11 @@ function setFontScale(scale) {
   document.documentElement.style.setProperty("--font-scale", scale.toString());
   localStorage.setItem("maimai_notes_font_scale", scale.toString());
   const label = document.getElementById("font-scale-label");
-  if (label) label.textContent = `${Math.round(scale * 100)}%`;
+  if (label) label.textContent = `${Math.round((scale / 1.12) * 100)}%`;
 }
 
 // Event Listeners
 function initEventListeners() {
-  // Search
   const searchInput = document.getElementById("search-input");
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
@@ -69,7 +68,6 @@ function initEventListeners() {
     });
   }
 
-  // Subject Tabs
   document.querySelectorAll(".subject-tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".subject-tab-btn").forEach(b => b.classList.remove("active"));
@@ -78,17 +76,30 @@ function initEventListeners() {
       renderNotes();
     });
   });
-
-  // Lightbox Close
-  const modal = document.getElementById("lightbox-modal");
-  const closeBtn = document.getElementById("lightbox-close");
-  if (modal && closeBtn) {
-    closeBtn.addEventListener("click", () => modal.classList.remove("active"));
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) modal.classList.remove("active");
-    });
-  }
 }
+
+// Format bold text
+function formatRichText(str) {
+  if (!str) return "";
+  return str.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+}
+
+// Format symbols ○ and × with high-end badges
+function formatTableCell(str) {
+  if (!str) return "";
+  if (str === "○") return '<span class="sym-check">✓</span>';
+  if (str === "×") return '<span class="sym-cross">✕</span>';
+  return str;
+}
+
+const SUBJECT_NAMES = {
+  all: "全部",
+  math: "數學",
+  science: "自然",
+  chinese: "國文",
+  social: "社會",
+  english: "英文"
+};
 
 // Render Notes
 function renderNotes() {
@@ -97,11 +108,10 @@ function renderNotes() {
   if (!container) return;
 
   const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+
   const filtered = dataList.filter(item => {
-    // Subject filter
     if (currentSubject !== "all" && item.subject !== currentSubject) return false;
 
-    // Search filter
     if (currentSearch) {
       const matchText = [
         item.title,
@@ -110,9 +120,7 @@ function renderNotes() {
         item.subjectName,
         item.gradeVersion,
         item.mnemonic || "",
-        ...(item.coreConcepts || []),
-        item.example?.question || "",
-        item.example?.solution || ""
+        ...(item.coreConcepts || [])
       ].join(" ").toLowerCase();
       if (!matchText.includes(currentSearch)) return false;
     }
@@ -122,17 +130,27 @@ function renderNotes() {
 
   // Update counts
   if (statsLabel) {
-    statsLabel.innerHTML = `共顯示 <b>${filtered.length}</b> 則重點筆記 ${currentSubject !== 'all' ? `（篩選：${currentSubject}）` : ''}`;
+    const subjName = SUBJECT_NAMES[currentSubject] || currentSubject;
+    statsLabel.innerHTML = `<i class="fa-solid fa-bookmark"></i> 目前顯示 <b>${filtered.length}</b> 則重點筆記 ${currentSubject !== "all" ? `（學科：${subjName}）` : ""}`;
   }
 
   updateTabCounts();
 
+  // Empty State
   if (filtered.length === 0) {
+    const subjName = SUBJECT_NAMES[currentSubject] || "該學科";
     container.innerHTML = `
-      <div class="empty-state">
-        <i class="fa-solid fa-book-bookmark"></i>
-        <h3>查無符合的筆記重點</h3>
-        <p>請嘗試更換關鍵字或點選「全部」分類。</p>
+      <div class="empty-subject-card">
+        <div class="empty-subject-icon">
+          <i class="fa-solid fa-pen-nib"></i>
+        </div>
+        <h3 class="empty-subject-title">目前尚無【${subjName}】科筆記</h3>
+        <p class="empty-subject-desc">
+          當您在看教學影片時，只要隨時截圖傳到對話中，AI 就會立即為您提煉精華重點、比較大表與隨堂互動測驗！
+        </p>
+        <div class="empty-action-hint">
+          <i class="fa-regular fa-lightbulb"></i> 隨看隨記 · 免手抄更輕鬆
+        </div>
       </div>
     `;
     return;
@@ -140,19 +158,6 @@ function renderNotes() {
 
   container.innerHTML = filtered.map(note => createNoteCardHtml(note)).join("");
 
-  // Attach Lightbox event
-  container.querySelectorAll(".note-thumb-img").forEach(img => {
-    img.addEventListener("click", () => {
-      const modal = document.getElementById("lightbox-modal");
-      const fullImg = document.getElementById("lightbox-img");
-      if (modal && fullImg) {
-        fullImg.src = img.src;
-        modal.classList.add("active");
-      }
-    });
-  });
-
-  
   // Attach Interactive Quiz event listeners
   container.querySelectorAll(".quiz-opt-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -161,7 +166,7 @@ function renderNotes() {
       const optIdx = parseInt(btn.dataset.optIdx);
       const isCorrect = btn.dataset.correct === "true";
 
-      const note = NOTES_DATA.find(n => n.id === noteId);
+      const note = dataList.find(n => n.id === noteId);
       if (!note || !note.quiz || !note.quiz[qIdx]) return;
       const q = note.quiz[qIdx];
       const selectedOpt = q.options[optIdx];
@@ -180,14 +185,14 @@ function renderNotes() {
         });
         feedbackBox.className = "quiz-feedback-box show-correct";
         feedbackBox.innerHTML = `
-          <div style="font-weight: 800; margin-bottom: 4px;"><i class="fa-solid fa-circle-check"></i> 🎉 答對了！太棒了！</div>
+          <div style="font-weight: 800; font-size: 1.15rem; margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i> 🎉 答對了！太厲害了！</div>
           <div>${selectedOpt.explanation}</div>
         `;
       } else {
         btn.classList.add("is-wrong");
         feedbackBox.className = "quiz-feedback-box show-wrong";
         feedbackBox.innerHTML = `
-          <div style="font-weight: 800; margin-bottom: 4px;"><i class="fa-solid fa-circle-xmark"></i> ❌ 答案不太對喔！再想想看～</div>
+          <div style="font-weight: 800; font-size: 1.15rem; margin-bottom: 6px;"><i class="fa-solid fa-circle-xmark"></i> ❌ 答案不太對喔！再想想看～</div>
           <div>${selectedOpt.explanation}</div>
           <button class="retry-quiz-btn" onclick="retryQuiz('${noteId}', ${qIdx})"><i class="fa-solid fa-rotate-left"></i> 重新作答</button>
         `;
@@ -207,16 +212,28 @@ function renderNotes() {
   }
 }
 
+window.retryQuiz = function(noteId, qIdx) {
+  const quizPanel = document.getElementById(`quiz-${noteId}-${qIdx}`);
+  const feedbackBox = document.getElementById(`feedback-${noteId}-${qIdx}`);
+  if (!quizPanel || !feedbackBox) return;
+
+  quizPanel.querySelectorAll(".quiz-opt-btn").forEach(b => {
+    b.disabled = false;
+    b.classList.remove("is-correct", "is-wrong");
+  });
+  feedbackBox.className = "quiz-feedback-box";
+  feedbackBox.style.display = "none";
+};
+
 function updateTabCounts() {
+  const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
   document.querySelectorAll(".subject-tab-btn").forEach(btn => {
     const subj = btn.dataset.subject;
     const badge = btn.querySelector(".badge-count");
     if (badge) {
       if (subj === "all") {
-        const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
         badge.textContent = dataList.length;
       } else {
-        const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
         const count = dataList.filter(n => n.subject === subj).length;
         badge.textContent = count;
       }
@@ -224,21 +241,20 @@ function updateTabCounts() {
   });
 }
 
-
 function createNoteCardHtml(note) {
-  // Table HTML
+  // Full-width Table HTML
   let tableHtml = "";
   if (note.table && note.table.rows && note.table.rows.length > 0) {
     tableHtml = `
       <div class="section-block">
-        <div class="section-label"><i class="fa-solid fa-table"></i> 關鍵速查比較表</div>
+        <div class="section-label"><i class="fa-solid fa-table"></i> 關鍵速查比較大表</div>
         <div class="table-responsive">
           <table class="note-table">
             <thead>
               <tr>${note.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>
             </thead>
             <tbody>
-              ${note.table.rows.map(row => `<tr>${row.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}
+              ${note.table.rows.map(row => `<tr>${row.map(c => `<td>${formatTableCell(c)}</td>`).join("")}</tr>`).join("")}
             </tbody>
           </table>
         </div>
@@ -252,7 +268,7 @@ function createNoteCardHtml(note) {
     quizHtml = note.quiz.map((q, qIndex) => `
       <div class="quiz-panel" id="quiz-${note.id}-${qIndex}">
         <div class="quiz-header">
-          <span class="quiz-header-title"><i class="fa-solid fa-circle-question"></i> 觀念實戰速測</span>
+          <span class="quiz-header-title"><i class="fa-solid fa-circle-question"></i> 隨堂觀念自我檢測</span>
           <span class="quiz-badge">點選即測即評</span>
         </div>
         <p class="quiz-question-text">${q.question}</p>
@@ -287,52 +303,27 @@ function createNoteCardHtml(note) {
 
       <h2 class="note-title">${note.title}</h2>
 
-      <div class="note-card-grid">
-        <!-- 左欄：核心觀念、比較表格、黃金口訣 -->
-        <div class="note-column-left">
-          <div class="section-block">
-            <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精華</div>
-            <ul class="concepts-list">
-              ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
-            </ul>
-          </div>
-
-          ${tableHtml}
-
-          ${note.mnemonic ? `
-            <div class="mnemonic-box">
-              <div class="box-title"><i class="fa-solid fa-star"></i> 黃金記憶口訣與破題密碼</div>
-              <div>${note.mnemonic}</div>
-            </div>
-          ` : ''}
-        </div>
-
-        <!-- 右欄：隨堂即時自我檢測 -->
-        <div class="note-column-right">
-          ${quizHtml}
-        </div>
+      <!-- 核心觀念精粹 -->
+      <div class="section-block">
+        <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精粹</div>
+        <ul class="concepts-list">
+          ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
+        </ul>
       </div>
+
+      <!-- 關鍵速查比較大表 -->
+      ${tableHtml}
+
+      <!-- 黃金記憶口訣 -->
+      ${note.mnemonic ? `
+        <div class="mnemonic-box">
+          <div class="box-title"><i class="fa-solid fa-star"></i> 黃金記憶口訣與秒殺密碼</div>
+          <div>${note.mnemonic}</div>
+        </div>
+      ` : ''}
+
+      <!-- 隨堂即時自我檢測 -->
+      ${quizHtml}
     </article>
   `;
 }
-
-
-
-function formatRichText(str) {
-  if (!str) return "";
-  return str.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-}
-
-
-window.retryQuiz = function(noteId, qIdx) {
-  const quizPanel = document.getElementById(`quiz-${noteId}-${qIdx}`);
-  const feedbackBox = document.getElementById(`feedback-${noteId}-${qIdx}`);
-  if (!quizPanel || !feedbackBox) return;
-
-  quizPanel.querySelectorAll(".quiz-opt-btn").forEach(b => {
-    b.disabled = false;
-    b.classList.remove("is-correct", "is-wrong");
-  });
-  feedbackBox.className = "quiz-feedback-box";
-  feedbackBox.style.display = "none";
-};
