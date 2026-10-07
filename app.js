@@ -96,7 +96,8 @@ function renderNotes() {
   const statsLabel = document.getElementById("stats-label");
   if (!container) return;
 
-  const filtered = NOTES_DATA.filter(item => {
+  const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const filtered = dataList.filter(item => {
     // Subject filter
     if (currentSubject !== "all" && item.subject !== currentSubject) return false;
 
@@ -169,9 +170,11 @@ function updateTabCounts() {
     const badge = btn.querySelector(".badge-count");
     if (badge) {
       if (subj === "all") {
-        badge.textContent = NOTES_DATA.length;
+        const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+        badge.textContent = dataList.length;
       } else {
-        const count = NOTES_DATA.filter(n => n.subject === subj).length;
+        const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+        const count = dataList.filter(n => n.subject === subj).length;
         badge.textContent = count;
       }
     }
@@ -241,7 +244,7 @@ function createNoteCardHtml(note) {
       <div class="section-block">
         <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精華</div>
         <ul class="concepts-list">
-          ${note.coreConcepts.map(c => `<li>${c}</li>`).join("")}
+          ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
         </ul>
       </div>
 
@@ -258,4 +261,10 @@ function createNoteCardHtml(note) {
       ${imageHtml}
     </article>
   `;
+}
+
+
+function formatRichText(str) {
+  if (!str) return "";
+  return str.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 }

@@ -220,4 +220,4 @@ const NOTES_DATA = [
     },
     imageUrl: ""
   }
-];\n
+]
