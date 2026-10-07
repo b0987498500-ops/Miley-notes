@@ -152,6 +152,49 @@ function renderNotes() {
     });
   });
 
+  
+  // Attach Interactive Quiz event listeners
+  container.querySelectorAll(".quiz-opt-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const noteId = btn.dataset.noteId;
+      const qIdx = parseInt(btn.dataset.qIdx);
+      const optIdx = parseInt(btn.dataset.optIdx);
+      const isCorrect = btn.dataset.correct === "true";
+
+      const note = NOTES_DATA.find(n => n.id === noteId);
+      if (!note || !note.quiz || !note.quiz[qIdx]) return;
+      const q = note.quiz[qIdx];
+      const selectedOpt = q.options[optIdx];
+
+      const quizPanel = document.getElementById(`quiz-${noteId}-${qIdx}`);
+      const feedbackBox = document.getElementById(`feedback-${noteId}-${qIdx}`);
+      if (!quizPanel || !feedbackBox) return;
+
+      const allBtns = quizPanel.querySelectorAll(".quiz-opt-btn");
+
+      if (isCorrect) {
+        allBtns.forEach(b => {
+          b.disabled = true;
+          if (b.dataset.correct === "true") b.classList.add("is-correct");
+          else b.classList.remove("is-wrong");
+        });
+        feedbackBox.className = "quiz-feedback-box show-correct";
+        feedbackBox.innerHTML = `
+          <div style="font-weight: 800; margin-bottom: 4px;"><i class="fa-solid fa-circle-check"></i> 🎉 答對了！太棒了！</div>
+          <div>${selectedOpt.explanation}</div>
+        `;
+      } else {
+        btn.classList.add("is-wrong");
+        feedbackBox.className = "quiz-feedback-box show-wrong";
+        feedbackBox.innerHTML = `
+          <div style="font-weight: 800; margin-bottom: 4px;"><i class="fa-solid fa-circle-xmark"></i> ❌ 答案不太對喔！再想想看～</div>
+          <div>${selectedOpt.explanation}</div>
+          <button class="retry-quiz-btn" onclick="retryQuiz('${noteId}', ${qIdx})"><i class="fa-solid fa-rotate-left"></i> 重新作答</button>
+        `;
+      }
+    });
+  });
+
   // Render KaTeX
   if (window.renderMathInElement) {
     renderMathInElement(container, {
@@ -181,6 +224,7 @@ function updateTabCounts() {
   });
 }
 
+
 function createNoteCardHtml(note) {
   // Table HTML
   let tableHtml = "";
@@ -202,29 +246,31 @@ function createNoteCardHtml(note) {
     `;
   }
 
-  // Image HTML
-  let imageHtml = "";
-  if (note.imageUrl) {
-    imageHtml = `
-      <div class="section-block">
-        <div class="section-label"><i class="fa-solid fa-image"></i> 影片重點截圖（點擊放大）</div>
-        <div class="note-image-container">
-          <img src="${note.imageUrl}" alt="${note.title}" class="note-thumb-img">
+  // Quiz HTML
+  let quizHtml = "";
+  if (note.quiz && note.quiz.length > 0) {
+    quizHtml = note.quiz.map((q, qIndex) => `
+      <div class="quiz-panel" id="quiz-${note.id}-${qIndex}">
+        <div class="quiz-header">
+          <span class="quiz-header-title"><i class="fa-solid fa-circle-question"></i> 觀念實戰速測</span>
+          <span class="quiz-badge">點選即測即評</span>
         </div>
+        <p class="quiz-question-text">${q.question}</p>
+        <div class="quiz-options-list">
+          ${q.options.map((opt, optIndex) => `
+            <button class="quiz-opt-btn" 
+              data-note-id="${note.id}"
+              data-q-idx="${qIndex}"
+              data-opt-idx="${optIndex}"
+              data-correct="${opt.correct}">
+              <span class="quiz-opt-prefix">${opt.prefix}</span>
+              <span class="quiz-opt-text">${opt.text}</span>
+            </button>
+          `).join("")}
+        </div>
+        <div class="quiz-feedback-box" id="feedback-${note.id}-${qIndex}"></div>
       </div>
-    `;
-  }
-
-  // Example HTML
-  let exampleHtml = "";
-  if (note.example && note.example.question) {
-    exampleHtml = `
-      <div class="example-box">
-        <div class="box-title"><i class="fa-solid fa-bullseye"></i> 經典會考實戰示範</div>
-        <div style="margin-bottom: 6px;"><b>題目：</b>${note.example.question}</div>
-        <div><b>破題思路：</b>${note.example.solution}</div>
-      </div>
-    `;
+    `).join("");
   }
 
   return `
@@ -241,30 +287,52 @@ function createNoteCardHtml(note) {
 
       <h2 class="note-title">${note.title}</h2>
 
-      <div class="section-block">
-        <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精華</div>
-        <ul class="concepts-list">
-          ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
-        </ul>
-      </div>
+      <div class="note-card-grid">
+        <!-- 左欄：核心觀念、比較表格、黃金口訣 -->
+        <div class="note-column-left">
+          <div class="section-block">
+            <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精華</div>
+            <ul class="concepts-list">
+              ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
+            </ul>
+          </div>
 
-      ${tableHtml}
+          ${tableHtml}
 
-      ${note.mnemonic ? `
-        <div class="mnemonic-box">
-          <div class="box-title"><i class="fa-solid fa-star"></i> 黃金記憶口訣與破題密碼</div>
-          <div>${note.mnemonic}</div>
+          ${note.mnemonic ? `
+            <div class="mnemonic-box">
+              <div class="box-title"><i class="fa-solid fa-star"></i> 黃金記憶口訣與破題密碼</div>
+              <div>${note.mnemonic}</div>
+            </div>
+          ` : ''}
         </div>
-      ` : ''}
 
-      ${exampleHtml}
-      ${imageHtml}
+        <!-- 右欄：隨堂即時自我檢測 -->
+        <div class="note-column-right">
+          ${quizHtml}
+        </div>
+      </div>
     </article>
   `;
 }
+
 
 
 function formatRichText(str) {
   if (!str) return "";
   return str.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 }
+
+
+window.retryQuiz = function(noteId, qIdx) {
+  const quizPanel = document.getElementById(`quiz-${noteId}-${qIdx}`);
+  const feedbackBox = document.getElementById(`feedback-${noteId}-${qIdx}`);
+  if (!quizPanel || !feedbackBox) return;
+
+  quizPanel.querySelectorAll(".quiz-opt-btn").forEach(b => {
+    b.disabled = false;
+    b.classList.remove("is-correct", "is-wrong");
+  });
+  feedbackBox.className = "quiz-feedback-box";
+  feedbackBox.style.display = "none";
+};

@@ -92,13 +92,7 @@
 | **毬果** | × | × | × | ○ (生殖器官) | × |
 | **花粉管 (受精不需水)** | × (需水受精) | × (需水受精) | × (需水受精) | ○ | ○ |
 
-<details open>
-<summary>🔍 <b>[教學影片重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
-<input type="checkbox" id="zoom-sci-plant-evo" class="zoom-toggle">
-<label for="zoom-sci-plant-evo" class="zoom-label">
-  <img src="images/science/plant_evolution_groups.png" alt="植物界五大族群演化與構造特徵比較表" style="width: 100%; max-width: 550px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
-</label>
-</details>
+
 
 ### 🧠 記憶口訣與破題訣竅
 > 💡 **【黃金演化階梯口訣】**
@@ -151,13 +145,7 @@
 | **根系型態** | **軸根系** (有明顯主根) | **鬚根系** (整叢細鬚根) | 雙子葉頂天立地軸根；單子葉一把鬍鬚鬚根 |
 | **生活常見代表** | 花生、大豆、榕樹、咸豐草、向日葵、番茄 | 水稻、玉米、小麥、百合、竹子、蔥、蒜 | 蔥切開是平行脈、根是一把鬚！ |
 
-<details open>
-<summary>🔍 <b>[教學影片重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
-<input type="checkbox" id="zoom-sci-dicot-monocot" class="zoom-toggle">
-<label for="zoom-sci-dicot-monocot" class="zoom-label">
-  <img src="images/science/plant_dicot_monocot.png" alt="雙子葉植物與單子葉植物五大特徵比較表" style="width: 100%; max-width: 550px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
-</label>
-</details>
+
 
 ### 🧠 記憶口訣與破題訣竅
 > 💡 **【雙子葉 vs. 單子葉黃金口訣】**
