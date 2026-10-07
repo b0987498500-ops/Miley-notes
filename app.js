@@ -1,11 +1,17 @@
 /**
- * 麥麥筆記 互動前端應用程式 (大字版 + 翻牌背誦系統)
+ * 麥麥筆記 互動前端應用程式 (大字尊榮版 + 完美遮蔽背誦系統 v1.1.0)
  */
 
 let currentSubject = "all";
 let currentSearch = "";
-// 預設字體縮放係數：1.15
-let currentFontScale = parseFloat(localStorage.getItem("maimai_notes_font_scale")) || 1.15;
+// 預設字體縮放：1.0 (對應 html 根字級 22px，大字清晰護眼)
+let currentFontScale = 1.0;
+try {
+  const savedScale = parseFloat(localStorage.getItem("maimai_notes_font_scale"));
+  if (!isNaN(savedScale) && savedScale >= 0.8 && savedScale <= 2.2) {
+    currentFontScale = savedScale;
+  }
+} catch (e) {}
 
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
@@ -16,7 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Theme Management
 function initTheme() {
-  const savedTheme = localStorage.getItem("maimai_notes_theme") || "light";
+  let savedTheme = "light";
+  try {
+    savedTheme = localStorage.getItem("maimai_notes_theme") || "light";
+  } catch (e) {}
   setTheme(savedTheme);
 
   document.querySelectorAll(".theme-btn").forEach(btn => {
@@ -29,40 +38,50 @@ function initTheme() {
 
 function setTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
-  localStorage.setItem("maimai_notes_theme", theme);
+  try {
+    localStorage.setItem("maimai_notes_theme", theme);
+  } catch (e) {}
   document.querySelectorAll(".theme-btn").forEach(b => {
     b.classList.toggle("active", b.dataset.theme === theme);
   });
 }
 
-// Font Scale Management: 超有感放大縮小 (每次增減 0.2，約 20%)
+// Font Scale Management: 超有感字體放大器！
+// 每次按 + 或 - 調整 0.2 (20%)，並直接修改 html 的 fontSize 與 --font-scale
 function initFontScale() {
   setFontScale(currentFontScale);
 
   document.getElementById("btn-font-dec")?.addEventListener("click", () => {
-    if (currentFontScale > 0.85) {
-      setFontScale(Math.round((currentFontScale - 0.2) * 100) / 100);
+    if (currentFontScale > 0.8) {
+      setFontScale(Math.round((currentFontScale - 0.2) * 10) / 10);
     }
   });
+
   document.getElementById("font-scale-label")?.addEventListener("click", () => {
-    setFontScale(1.15); // 重置為預設
+    setFontScale(1.0); // 點擊百分比重設為 100%
   });
+
   document.getElementById("btn-font-inc")?.addEventListener("click", () => {
-    if (currentFontScale < 2.2) {
-      setFontScale(Math.round((currentFontScale + 0.2) * 100) / 100);
+    if (currentFontScale < 2.0) {
+      setFontScale(Math.round((currentFontScale + 0.2) * 10) / 10);
     }
   });
 }
 
 function setFontScale(scale) {
   currentFontScale = scale;
+  // 同步設定 CSS 變數與根節點像素大小，保證全站 rem 元素 100% 立即有感放大！
   document.documentElement.style.setProperty("--font-scale", scale.toString());
-  localStorage.setItem("maimai_notes_font_scale", scale.toString());
+  document.documentElement.style.fontSize = (22 * scale) + "px";
+  try {
+    localStorage.setItem("maimai_notes_font_scale", scale.toString());
+  } catch (e) {}
+
   const label = document.getElementById("font-scale-label");
   if (label) {
-    const pct = Math.round((scale / 1.15) * 100);
+    const pct = Math.round(scale * 100);
     label.textContent = `${pct}%`;
-    label.title = `點擊重設為 100% (目前字級係數: ${scale})`;
+    label.title = `點擊重設為 100% (目前: ${pct}%)`;
   }
 }
 
@@ -138,7 +157,7 @@ function renderNotes() {
 
   if (statsLabel) {
     const subjName = SUBJECT_NAMES[currentSubject] || currentSubject;
-    statsLabel.innerHTML = `<i class="fa-solid fa-bookmark"></i> 目前顯示 <b>${filtered.length}</b> 則重點筆記 ${currentSubject !== "all" ? `（學科：${subjName}）` : ""}`;
+    statsLabel.innerHTML = `<i class="fa-solid fa-bookmark"></i> 目前顯示 <b>${filtered.length}</b> 則重點筆搞 ${currentSubject !== "all" ? `（學科：${subjName}）` : ""}`;
   }
 
   updateTabCounts();
@@ -237,7 +256,7 @@ window.retryQuiz = function(noteId, qIdx) {
 };
 
 // ========================================================
-// 🃏 翻牌遮蔽背誦功能 (Flashcard Mask & Reveal Mode)
+// 🃏 翻牌遮蔽背誦功能 (單一切換按鈕，100% 零漏字)
 // ========================================================
 
 window.toggleMaskMode = function(tableId) {
@@ -248,53 +267,29 @@ window.toggleMaskMode = function(tableId) {
   const isMasked = table.classList.toggle("is-masked");
   if (btn) {
     if (isMasked) {
+      // 進入背誦模式：全部答案預設蓋住
       btn.classList.add("is-active");
-      btn.innerHTML = `<i class="fa-solid fa-eye"></i> 退出背誦模式`;
-      // 預設將非第一欄的格子蓋住
-      maskAllCells(tableId);
+      btn.innerHTML = `<i class="fa-solid fa-eye"></i> 退出背誦模式（顯示全部答案）`;
+      table.querySelectorAll("tbody td.mask-cell").forEach(cell => {
+        cell.classList.remove("is-revealed");
+      });
     } else {
+      // 退出背誦模式：恢復正常查看
       btn.classList.remove("is-active");
-      btn.innerHTML = `<i class="fa-solid fa-mask"></i> 翻牌背誦模式`;
-      revealAllCells(tableId);
+      btn.innerHTML = `<i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式`;
+      table.querySelectorAll("tbody td.mask-cell").forEach(cell => {
+        cell.classList.remove("is-revealed");
+      });
     }
   }
-};
-
-window.maskAllCells = function(tableId) {
-  const table = document.getElementById(tableId);
-  if (!table) return;
-  table.classList.add("is-masked");
-  const btn = document.getElementById(`btn-mask-${tableId}`);
-  if (btn) {
-    btn.classList.add("is-active");
-    btn.innerHTML = `<i class="fa-solid fa-eye"></i> 退出背誦模式`;
-  }
-  table.querySelectorAll("tbody td.mask-cell").forEach(cell => {
-    cell.classList.remove("is-revealed");
-    cell.classList.add("is-hidden");
-  });
-};
-
-window.revealAllCells = function(tableId) {
-  const table = document.getElementById(tableId);
-  if (!table) return;
-  table.querySelectorAll("tbody td.mask-cell").forEach(cell => {
-    cell.classList.remove("is-hidden");
-    cell.classList.add("is-revealed");
-  });
 };
 
 window.toggleCell = function(cell) {
   const table = cell.closest(".note-table");
   if (!table || !table.classList.contains("is-masked")) return;
 
-  if (cell.classList.contains("is-hidden")) {
-    cell.classList.remove("is-hidden");
-    cell.classList.add("is-revealed");
-  } else {
-    cell.classList.remove("is-revealed");
-    cell.classList.add("is-hidden");
-  }
+  // 點擊翻開或蓋住
+  cell.classList.toggle("is-revealed");
 };
 
 function updateTabCounts() {
@@ -314,7 +309,7 @@ function updateTabCounts() {
 }
 
 function createNoteCardHtml(note) {
-  // Table HTML with Mask & Reveal Toolbar
+  // Table HTML with Single Toggle Mask & Reveal Button
   let tableHtml = "";
   if (note.table && note.table.rows && note.table.rows.length > 0) {
     const tableId = `table-${note.id}`;
@@ -328,13 +323,7 @@ function createNoteCardHtml(note) {
           </div>
           <div class="table-toolbar-actions">
             <button class="mask-mode-btn" id="btn-mask-${tableId}" onclick="toggleMaskMode('${tableId}')">
-              <i class="fa-solid fa-mask"></i> 翻牌背誦模式
-            </button>
-            <button class="mask-quick-btn" onclick="maskAllCells('${tableId}')" title="全部答案蓋住">
-              <i class="fa-solid fa-eye-slash"></i> 全蓋住
-            </button>
-            <button class="mask-quick-btn" onclick="revealAllCells('${tableId}')" title="全部答案翻開">
-              <i class="fa-solid fa-eye"></i> 全翻開
+              <i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式
             </button>
           </div>
         </div>
@@ -348,11 +337,17 @@ function createNoteCardHtml(note) {
               ${note.table.rows.map(row => `
                 <tr>
                   ${row.map((c, colIndex) => {
-                    // 第一欄為項目標題，其餘欄位為答案（支援遮蔽翻牌）
                     if (colIndex === 0) {
-                      return `<td style="font-weight: 800; white-space: nowrap;">${c}</td>`;
+                      return `<td style="font-weight: 900; white-space: nowrap; background-color: var(--bg-secondary);">${c}</td>`;
                     } else {
-                      return `<td class="mask-cell" onclick="toggleCell(this)">${formatTableCell(c)}</td>`;
+                      return `
+                        <td class="mask-cell" onclick="toggleCell(this)">
+                          <div class="cell-wrapper">
+                            <span class="cell-mask-card"><i class="fa-solid fa-lock"></i> 點擊揭曉</span>
+                            <span class="cell-real-answer">${formatTableCell(c)}</span>
+                          </div>
+                        </td>
+                      `;
                     }
                   }).join("")}
                 </tr>
@@ -413,7 +408,7 @@ function createNoteCardHtml(note) {
         </ul>
       </div>
 
-      <!-- 關鍵速查比較大表 (含翻牌背誦模式) -->
+      <!-- 關鍵速查比較大表 (含單一按鈕翻牌背誦模式) -->
       ${tableHtml}
 
       <!-- 黃金記憶口訣 -->
