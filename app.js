@@ -23,7 +23,7 @@ try {
 } catch (e) {}
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 支援 URL Hash 深度連結 (例如 #p=2 或 #science-2)
+  // 支援 URL Hash 深度連結 (例如 #p=2 或 #math, #chinese, #science-2)
   if (window.location.hash) {
     const hash = window.location.hash.replace("#", "");
     if (hash.startsWith("p=") || hash.startsWith("page=")) {
@@ -31,6 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isNaN(pNum) && pNum > 0) {
         currentPage = pNum - 1;
       }
+    } else if (hash.startsWith("subj=")) {
+      const s = hash.split("=")[1];
+      if (["math", "science", "chinese", "social", "english", "all"].includes(s)) currentSubject = s;
+    } else if (["math", "science", "chinese", "social", "english"].includes(hash)) {
+      currentSubject = hash;
     } else if (typeof NOTES_DATA !== "undefined") {
       const idx = NOTES_DATA.findIndex(n => n.id === hash);
       if (idx !== -1) {
@@ -191,33 +196,83 @@ function setViewMode(mode) {
   renderNotes();
 }
 
+// Web Audio API 柔和紙張翻頁沙沙音效
+function playPageTurnSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const duration = 0.12;
+    const bufferSize = Math.floor(ctx.sampleRate * duration);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.4));
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(650, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + duration);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start();
+  } catch (e) {}
+}
+
+let isFlipping = false;
+
+function flipToPage(newIndex, direction) {
+  if (isFlipping) return;
+  const filtered = getFilteredNotes();
+  if (newIndex < 0 || newIndex >= filtered.length || newIndex === currentPage) return;
+
+  isFlipping = true;
+  playPageTurnSound();
+
+  const spread = document.querySelector(".open-book-spread");
+  if (spread) {
+    spread.classList.add(direction === "next" ? "turning-page-next" : "turning-page-prev");
+  }
+
+  // 翻折至半空約 220ms 時切換內容並觸發落地平鋪
+  setTimeout(() => {
+    flipDirection = direction;
+    currentPage = newIndex;
+    renderNotes();
+    scrollToBookTop();
+
+    setTimeout(() => {
+      isFlipping = false;
+      document.querySelector(".open-book-spread")?.classList.remove("turning-page-next", "turning-page-prev");
+    }, 400);
+  }, 220);
+}
+
 // 翻頁控制核心函式
 window.nextPage = function() {
   const filtered = getFilteredNotes();
   if (currentPage < filtered.length - 1) {
-    flipDirection = "next";
-    currentPage++;
-    renderNotes();
-    scrollToBookTop();
+    flipToPage(currentPage + 1, "next");
   }
 };
 
 window.prevPage = function() {
   if (currentPage > 0) {
-    flipDirection = "prev";
-    currentPage--;
-    renderNotes();
-    scrollToBookTop();
+    flipToPage(currentPage - 1, "prev");
   }
 };
 
 window.goToPage = function(pageIndex) {
   const filtered = getFilteredNotes();
   if (pageIndex >= 0 && pageIndex < filtered.length && pageIndex !== currentPage) {
-    flipDirection = pageIndex > currentPage ? "next" : "prev";
-    currentPage = pageIndex;
-    renderNotes();
-    scrollToBookTop();
+    const dir = pageIndex > currentPage ? "next" : "prev";
+    flipToPage(pageIndex, dir);
   }
 };
 
@@ -294,21 +349,26 @@ function renderNotes() {
   }
 
   updateTabCounts();
+  document.querySelectorAll(".subject-tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.subject === currentSubject);
+  });
 
   // 空狀態判斷
   if (filtered.length === 0) {
     const subjName = SUBJECT_NAMES[currentSubject] || "該學科";
     container.innerHTML = `
       <div class="empty-subject-card">
-        <div class="empty-subject-icon">
-          <i class="fa-solid fa-pen-nib"></i>
+        <div class="empty-mascot-wrapper">
+          <img src="images/illustrations/empty_state_cat.png" alt="等待記錄的可愛貓咪" class="empty-mascot-img">
+          <img src="images/illustrations/sticker_pencil.png" alt="魔法鉛筆" class="empty-pencil-badge">
         </div>
         <h3 class="empty-subject-title">目前尚無【${subjName}】科筆記</h3>
         <p class="empty-subject-desc">
           當您在看教學影片時，只要隨時截圖傳到對話中，AI 就會立即為您提煉精華重點、翻牌比較大表與隨堂互動測驗！
         </p>
         <div class="empty-action-hint">
-          <i class="fa-regular fa-lightbulb"></i> 隨看隨記 · 免手抄更輕鬆
+          <img src="images/illustrations/sticker_star.png" alt="笑臉星星" class="mini-inline-sticker">
+          <span>隨看隨記 · 免手抄更輕鬆</span>
         </div>
       </div>
     `;
@@ -453,7 +513,7 @@ function createOpenBookHtml(filtered, pageIdx) {
     quizHtml = currentNote.quiz.map((q, qIndex) => `
       <div class="quiz-panel" id="quiz-${currentNote.id}-${qIndex}">
         <div class="quiz-header">
-          <span class="quiz-header-title"><i class="fa-solid fa-circle-question"></i> 隨堂觀念自我檢測</span>
+          <span class="quiz-header-title"><img src="images/illustrations/sticker_flask.png" class="section-label-sticker" alt="隨堂測驗"> 隨堂觀念自我檢測</span>
           <span class="quiz-badge">點選即測即評</span>
         </div>
         <p class="quiz-question-text">${q.question}</p>
@@ -501,7 +561,7 @@ function createOpenBookHtml(filtered, pageIdx) {
         <!-- 下一頁大按鈕 (醒目亮麗漸層) -->
         <button class="book-flip-btn btn-next-action" onclick="nextPage()" ${pageIdx === totalPages - 1 ? 'disabled' : ''} title="翻到下一頁">
           <span class="btn-main-label">下一頁 <i class="fa-solid fa-arrow-right"></i></span>
-          <span class="btn-sub-label">${nextNote ? `第 ${pageIdx + 2} 頁：${nextNote.title}` : '🎉 本單元全部完成'}</span>
+          <span class="btn-sub-label">${nextNote ? `第 ${pageIdx + 2} 頁：${nextNote.title}` : '<img src="images/illustrations/sticker_star.png" class="btn-mini-star" alt="星星"> 🎉 本單元全部完成'}</span>
         </button>
       </div>
 
@@ -543,6 +603,13 @@ function createOpenBookHtml(filtered, pageIdx) {
 
         <!-- 主筆記紙本體 (乾淨平整白紙，絕無中央凹下折痕) -->
         <div class="open-book-spread">
+          <!-- 可愛和紙膠帶角落飾貼 -->
+          <div class="washi-tape-sticker washi-top-left" aria-hidden="true"></div>
+          <div class="washi-tape-sticker washi-top-right" aria-hidden="true"></div>
+
+          <!-- 可愛手帳書本插圖貼紙標籤 -->
+          <img src="images/illustrations/sticker_book.png" alt="筆記貼紙" class="notebook-sticker-badge" aria-hidden="true">
+
           <!-- 復古金色書角裝飾 -->
           <div class="book-corner top-left"></div>
           <div class="book-corner top-right"></div>
@@ -602,7 +669,10 @@ function createOpenBookHtml(filtered, pageIdx) {
 
           <!-- 核心觀念精粹 -->
           <div class="section-block">
-            <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精粹</div>
+            <div class="section-label">
+              <img src="images/illustrations/sticker_pencil.png" class="section-label-sticker" alt="魔法鉛筆">
+              <span>核心觀念精粹</span>
+            </div>
             <ul class="concepts-list">
               ${currentNote.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
             </ul>
@@ -614,7 +684,10 @@ function createOpenBookHtml(filtered, pageIdx) {
           <!-- 黃金記憶口訣 -->
           ${currentNote.mnemonic ? `
             <div class="mnemonic-box">
-              <div class="box-title"><i class="fa-solid fa-star"></i> 黃金記憶口訣與秒殺密碼</div>
+              <div class="box-title">
+                <img src="images/illustrations/sticker_star.png" class="section-label-sticker" alt="星星">
+                <span>黃金記憶口訣與秒殺密碼</span>
+              </div>
               <div>${currentNote.mnemonic}</div>
             </div>
           ` : ''}
@@ -802,7 +875,10 @@ function attachQuizListeners(container, dataList) {
         });
         feedbackBox.className = "quiz-feedback-box show-correct";
         feedbackBox.innerHTML = `
-          <div style="font-weight: 800; font-size: 1.25rem; margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i> 🎉 答對了！太厲害了！</div>
+          <div style="font-weight: 800; font-size: 1.25rem; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+            <img src="images/illustrations/sticker_star.png" alt="星星獎章" class="quiz-correct-star">
+            <span>🎉 答對了！太厲害了！</span>
+          </div>
           <div>${selectedOpt.explanation}</div>
         `;
       } else {
