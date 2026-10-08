@@ -18,7 +18,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <!-- Project Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="styles.css?v=1.1.0">
+  <link rel="stylesheet" href="styles.css?v=1.2.0">
 </head>
 <body>
 
@@ -96,18 +96,40 @@
 
     <!-- Stats Ribbon -->
     <div class="stats-bar">
-      <span id="stats-label"><i class="fa-solid fa-bookmark"></i> 目前顯示 <b>3</b> 則重點筆記</span>
-      <span><i class="fa-solid fa-wand-magic-sparkles"></i> 支援「翻牌背誦模式」，點擊格子即可挖空測試</span>
+      <div class="stats-left">
+        <span id="stats-label"><i class="fa-solid fa-bookmark"></i> 目前顯示 <b>3</b> 則重點筆記</span>
+        <span class="stats-tip"><i class="fa-solid fa-wand-magic-sparkles"></i> 支援翻牌背誦測試</span>
+      </div>
+      <div class="stats-right">
+        <!-- 閱讀模式切換：預設精裝翻書模式 -->
+        <div class="view-mode-toggle" title="切換閱讀版面模式">
+          <button class="mode-btn active" id="btn-mode-book" data-mode="book">
+            <i class="fa-solid fa-book-open"></i> 翻書模式
+          </button>
+          <button class="mode-btn" id="btn-mode-list" data-mode="list">
+            <i class="fa-solid fa-list-ul"></i> 清單模式
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Dynamic Notes Cards List -->
-    <section id="notes-container" class="notes-list">
+    <!-- Dynamic Notes Container (Book Mode / List Mode) -->
+    <section id="notes-container" class="notes-content-area">
       <!-- Injected by app.js -->
     </section>
   </main>
 
+  <!-- High Definition Image Lightbox Modal -->
+  <div id="image-lightbox" class="image-lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-dialog" onclick="event.stopPropagation()">
+      <button class="lightbox-close-btn" onclick="closeLightbox()" title="關閉放大視窗 (Esc)">&times;</button>
+      <img id="lightbox-img" src="" alt="教學重點高清大圖">
+      <div id="lightbox-caption" class="lightbox-caption"></div>
+    </div>
+  </div>
+
   <!-- Scripts with Cache Buster -->
-  <script src="notes_data.js?v=1.1.0"></script>
-  <script src="app.js?v=1.1.0"></script>
+  <script src="notes_data.js?v=1.2.0"></script>
+  <script src="app.js?v=1.2.0"></script>
 </body>
 </html>

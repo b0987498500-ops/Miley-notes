@@ -1,10 +1,19 @@
 /**
- * 麥麥筆記 互動前端應用程式 (大字尊榮版 + 完美遮蔽背誦系統 v1.1.0)
+ * 麥麥筆記 互動前端應用程式
+ * (精裝立體翻書模式 + 大字清晰版 + 完美遮蔽背誦系統 + 高清插圖燈箱 v1.2.0)
  */
 
 let currentSubject = "all";
 let currentSearch = "";
-// 預設字體縮放：1.0 (對應 html 根字級 22px，大字清晰護眼)
+let currentPage = 0; // 當前正在閱讀的頁碼 (0-indexed)
+let currentViewMode = "book"; // "book" (預設精裝翻書) 或 "list" (長頁清單)
+let flipDirection = "next"; // "next" 或 "prev" 驅動翻頁動效方向
+
+// 觸控滑動翻頁紀錄
+let touchStartX = 0;
+let touchStartY = 0;
+
+// 預設字體縮放：1.0 (對應 html 根字級 23px，大字清晰護眼)
 let currentFontScale = 1.0;
 try {
   const savedScale = parseFloat(localStorage.getItem("maimai_notes_font_scale"));
@@ -47,7 +56,6 @@ function setTheme(theme) {
 }
 
 // Font Scale Management: 超有感字體放大器！
-// 每次按 + 或 - 調整 0.2 (20%)，並直接修改 html 的 fontSize 與 --font-scale
 function initFontScale() {
   setFontScale(currentFontScale);
 
@@ -70,9 +78,8 @@ function initFontScale() {
 
 function setFontScale(scale) {
   currentFontScale = scale;
-  // 同步設定 CSS 變數與根節點像素大小，保證全站 rem 元素 100% 立即有感放大！
   document.documentElement.style.setProperty("--font-scale", scale.toString());
-  document.documentElement.style.fontSize = (22 * scale) + "px";
+  document.documentElement.style.fontSize = (23 * scale) + "px";
   try {
     localStorage.setItem("maimai_notes_font_scale", scale.toString());
   } catch (e) {}
@@ -87,22 +94,123 @@ function setFontScale(scale) {
 
 // Event Listeners
 function initEventListeners() {
+  // 搜尋欄
   const searchInput = document.getElementById("search-input");
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
       currentSearch = e.target.value.trim().toLowerCase();
+      currentPage = 0; // 搜尋時重設至第 1 頁
       renderNotes();
     });
   }
 
+  // 科目標籤切換
   document.querySelectorAll(".subject-tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".subject-tab-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       currentSubject = btn.dataset.subject;
+      currentPage = 0; // 切換科目時一律由第 1 頁開始
       renderNotes();
     });
   });
+
+  // 閱讀版面切換：翻書模式 vs 清單模式
+  document.getElementById("btn-mode-book")?.addEventListener("click", () => {
+    setViewMode("book");
+  });
+  document.getElementById("btn-mode-list")?.addEventListener("click", () => {
+    setViewMode("list");
+  });
+
+  // 鍵盤左右鍵與 PageUp/PageDown 翻頁
+  window.addEventListener("keydown", (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    
+    // Lightbox 開啟時按 ESC 關閉
+    if (document.getElementById("image-lightbox")?.classList.contains("active")) {
+      if (e.key === "Escape") closeLightbox();
+      return;
+    }
+
+    if (currentViewMode !== "book") return;
+
+    if (e.key === "ArrowRight" || e.key === "PageDown") {
+      nextPage();
+    } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+      prevPage();
+    }
+  });
+
+  // 手機與平板觸控左右滑動翻頁
+  window.addEventListener("touchstart", (e) => {
+    if (e.changedTouches && e.changedTouches[0]) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }
+  }, { passive: true });
+
+  window.addEventListener("touchend", (e) => {
+    if (currentViewMode !== "book") return;
+    if (document.getElementById("image-lightbox")?.classList.contains("active")) return;
+    if (e.changedTouches && e.changedTouches[0]) {
+      const diffX = e.changedTouches[0].screenX - touchStartX;
+      const diffY = e.changedTouches[0].screenY - touchStartY;
+      // 水平位移大於 60px 且垂直偏離小於 60px 時判定為翻頁手勢
+      if (Math.abs(diffX) > 60 && Math.abs(diffY) < 60) {
+        if (diffX < 0) {
+          nextPage(); // 往左滑：看下一頁
+        } else {
+          prevPage(); // 往右滑：看上一頁
+        }
+      }
+    }
+  }, { passive: true });
+}
+
+function setViewMode(mode) {
+  currentViewMode = mode;
+  document.getElementById("btn-mode-book")?.classList.toggle("active", mode === "book");
+  document.getElementById("btn-mode-list")?.classList.toggle("active", mode === "list");
+  renderNotes();
+}
+
+// 翻頁控制核心函式
+window.nextPage = function() {
+  const filtered = getFilteredNotes();
+  if (currentPage < filtered.length - 1) {
+    flipDirection = "next";
+    currentPage++;
+    renderNotes();
+    scrollToBookTop();
+  }
+};
+
+window.prevPage = function() {
+  if (currentPage > 0) {
+    flipDirection = "prev";
+    currentPage--;
+    renderNotes();
+    scrollToBookTop();
+  }
+};
+
+window.goToPage = function(pageIndex) {
+  const filtered = getFilteredNotes();
+  if (pageIndex >= 0 && pageIndex < filtered.length && pageIndex !== currentPage) {
+    flipDirection = pageIndex > currentPage ? "next" : "prev";
+    currentPage = pageIndex;
+    renderNotes();
+    scrollToBookTop();
+  }
+};
+
+function scrollToBookTop() {
+  const container = document.getElementById("notes-container");
+  if (container) {
+    const topPos = container.getBoundingClientRect().top + window.pageYOffset - 90;
+    window.scrollTo({ top: Math.max(0, topPos), behavior: "smooth" });
+  }
 }
 
 // Format bold text
@@ -128,15 +236,9 @@ const SUBJECT_NAMES = {
   english: "英文"
 };
 
-// Render Notes
-function renderNotes() {
-  const container = document.getElementById("notes-container");
-  const statsLabel = document.getElementById("stats-label");
-  if (!container) return;
-
+function getFilteredNotes() {
   const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
-
-  const filtered = dataList.filter(item => {
+  return dataList.filter(item => {
     if (currentSubject !== "all" && item.subject !== currentSubject) return false;
 
     if (currentSearch) {
@@ -154,15 +256,30 @@ function renderNotes() {
 
     return true;
   });
+}
 
+// Render Notes 主進入點
+function renderNotes() {
+  const container = document.getElementById("notes-container");
+  const statsLabel = document.getElementById("stats-label");
+  if (!container) return;
+
+  const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const filtered = getFilteredNotes();
+
+  // 更新統計文字
   if (statsLabel) {
     const subjName = SUBJECT_NAMES[currentSubject] || currentSubject;
-    statsLabel.innerHTML = `<i class="fa-solid fa-bookmark"></i> 目前顯示 <b>${filtered.length}</b> 則重點筆搞 ${currentSubject !== "all" ? `（學科：${subjName}）` : ""}`;
+    if (currentViewMode === "book" && filtered.length > 0) {
+      statsLabel.innerHTML = `<i class="fa-solid fa-book-open"></i> 目前正在閱讀【${subjName}】第 <b>${currentPage + 1}</b> 頁 / 共 <b>${filtered.length}</b> 頁`;
+    } else {
+      statsLabel.innerHTML = `<i class="fa-solid fa-bookmark"></i> 目前顯示 <b>${filtered.length}</b> 則重點筆記 ${currentSubject !== "all" ? `（學科：${subjName}）` : ""}`;
+    }
   }
 
   updateTabCounts();
 
-  // Empty State
+  // 空狀態判斷
   if (filtered.length === 0) {
     const subjName = SUBJECT_NAMES[currentSubject] || "該學科";
     container.innerHTML = `
@@ -182,12 +299,27 @@ function renderNotes() {
     return;
   }
 
-  container.innerHTML = filtered.map(note => createNoteCardHtml(note)).join("");
+  // 校正當前頁碼防呆
+  if (currentPage >= filtered.length) {
+    currentPage = Math.max(0, filtered.length - 1);
+  }
 
-  // Attach Quiz event listeners
+  if (currentViewMode === "book") {
+    // 📖 精裝立體翻書模式
+    container.innerHTML = createOpenBookHtml(filtered, currentPage);
+  } else {
+    // 📜 清單連續瀏覽模式
+    container.innerHTML = `
+      <div class="notes-list">
+        ${filtered.map(note => createNoteCardHtml(note)).join("")}
+      </div>
+    `;
+  }
+
+  // 綁定測驗監聽器
   attachQuizListeners(container, dataList);
 
-  // Render KaTeX
+  // KaTeX 數學公式優雅渲染
   if (window.renderMathInElement) {
     renderMathInElement(container, {
       delimiters: [
@@ -199,6 +331,396 @@ function renderNotes() {
   }
 }
 
+// ========================================================
+// 📖 產生精裝立體翻書模式 HTML (含頁碼、快捷標籤與插圖)
+// ========================================================
+function createOpenBookHtml(filtered, pageIdx) {
+  const currentNote = filtered[pageIdx];
+  const totalPages = filtered.length;
+  const prevNote = pageIdx > 0 ? filtered[pageIdx - 1] : null;
+  const nextNote = pageIdx < totalPages - 1 ? filtered[pageIdx + 1] : null;
+
+  const animClass = flipDirection === "next" ? "page-flip-next-enter" : "page-flip-prev-enter";
+
+  // 1. 書頂快捷頁數標籤條 (Book Tabs Ribbon)
+  const tabsBarHtml = `
+    <div class="book-tabs-bar" role="tablist" aria-label="章節頁數快捷導覽">
+      ${filtered.map((note, idx) => `
+        <button class="book-tab-item ${idx === pageIdx ? 'active' : ''}" 
+          onclick="goToPage(${idx})" 
+          title="前往第 ${idx + 1} 頁：${note.title}">
+          <span class="tab-page-num">第 ${idx + 1} 頁</span>
+          <span>${note.title.length > 15 ? note.title.substring(0, 15) + '...' : note.title}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+
+  // 2. 教學插圖區塊 (Illustration Card)
+  let illustrationHtml = "";
+  if (currentNote.image) {
+    const safeCaption = (currentNote.imageCaption || currentNote.title).replace(/'/g, "\\'");
+    illustrationHtml = `
+      <div class="book-illustration-block">
+        <div class="illustration-header">
+          <span class="illustration-tag">
+            <i class="fa-solid fa-image"></i> 教學重點插圖精華
+          </span>
+          <button class="btn-zoom-img" onclick="openLightbox('${currentNote.image}', '${safeCaption}')" title="點擊放大全螢幕查看">
+            <i class="fa-solid fa-magnifying-glass-plus"></i> 點擊放大查看
+          </button>
+        </div>
+        <div class="illustration-frame" onclick="openLightbox('${currentNote.image}', '${safeCaption}')" title="點擊放大高清全螢幕對照">
+          <img src="${currentNote.image}" alt="${currentNote.title}" class="illustration-img" loading="lazy">
+          <div class="illustration-hover-overlay">
+            <i class="fa-solid fa-expand"></i> 點擊放大高清全螢幕對照
+          </div>
+        </div>
+        ${currentNote.imageCaption ? `<div class="illustration-caption"><i class="fa-solid fa-circle-info"></i> ${currentNote.imageCaption}</div>` : ''}
+      </div>
+    `;
+  }
+
+  // 3. 關鍵速查比較大表 (含單鍵翻牌背誦)
+  let tableHtml = "";
+  if (currentNote.table && currentNote.table.rows && currentNote.table.rows.length > 0) {
+    const tableId = `table-${currentNote.id}`;
+    tableHtml = `
+      <div class="section-block">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <span class="section-label" style="margin-bottom: 0;">
+              <i class="fa-solid fa-table"></i> 關鍵速查比較大表
+            </span>
+          </div>
+          <div class="table-toolbar-actions">
+            <button class="mask-mode-btn" id="btn-mask-${tableId}" onclick="toggleMaskMode('${tableId}')">
+              <i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="note-table" id="${tableId}">
+            <thead>
+              <tr>${currentNote.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>
+            </thead>
+            <tbody>
+              ${currentNote.table.rows.map(row => `
+                <tr>
+                  ${row.map((c, colIndex) => {
+                    if (colIndex === 0) {
+                      return `<td style="font-weight: 900; white-space: nowrap; background-color: var(--bg-secondary);">${c}</td>`;
+                    } else {
+                      return `
+                        <td class="mask-cell" onclick="toggleCell(this)">
+                          <div class="cell-wrapper">
+                            <span class="cell-mask-card"><i class="fa-solid fa-lock"></i> 點擊揭曉</span>
+                            <span class="cell-real-answer">${formatTableCell(c)}</span>
+                          </div>
+                        </td>
+                      `;
+                    }
+                  }).join("")}
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  // 4. 隨堂自我檢測 (Quiz Panel)
+  let quizHtml = "";
+  if (currentNote.quiz && currentNote.quiz.length > 0) {
+    quizHtml = currentNote.quiz.map((q, qIndex) => `
+      <div class="quiz-panel" id="quiz-${currentNote.id}-${qIndex}">
+        <div class="quiz-header">
+          <span class="quiz-header-title"><i class="fa-solid fa-circle-question"></i> 隨堂觀念自我檢測</span>
+          <span class="quiz-badge">點選即測即評</span>
+        </div>
+        <p class="quiz-question-text">${q.question}</p>
+        <div class="quiz-options-list">
+          ${q.options.map((opt, optIndex) => `
+            <button class="quiz-opt-btn" 
+              data-note-id="${currentNote.id}"
+              data-q-idx="${qIndex}"
+              data-opt-idx="${optIndex}"
+              data-correct="${opt.correct}">
+              <span class="quiz-opt-prefix">${opt.prefix}</span>
+              <span class="quiz-opt-text">${opt.text}</span>
+            </button>
+          `).join("")}
+        </div>
+        <div class="quiz-feedback-box" id="feedback-${currentNote.id}-${qIndex}"></div>
+      </div>
+    `).join("");
+  }
+
+  // 5. 底部主翻頁控制列
+  const bottomNavHtml = `
+    <div class="book-bottom-nav">
+      <div class="flip-btn-group">
+        <!-- 上一頁大按鈕 -->
+        <button class="book-flip-btn btn-prev-action" onclick="prevPage()" ${pageIdx === 0 ? 'disabled' : ''} title="翻到上一頁">
+          <span class="btn-main-label"><i class="fa-solid fa-arrow-left"></i> 上一頁</span>
+          <span class="btn-sub-label">${prevNote ? `第 ${pageIdx} 頁：${prevNote.title}` : '已是第一頁'}</span>
+        </button>
+
+        <!-- 中間頁數與進度圓點 -->
+        <div class="page-indicator-center">
+          <div class="page-indicator-text">
+            <i class="fa-solid fa-book-open"></i> 第 ${pageIdx + 1} 頁 / 共 ${totalPages} 頁
+          </div>
+          <div class="page-dots-list" title="頁碼跳頁">
+            ${filtered.map((_, idx) => `
+              <button class="page-dot-btn ${idx === pageIdx ? 'active' : ''}" 
+                onclick="goToPage(${idx})" 
+                title="跳至第 ${idx + 1} 頁"></button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 下一頁大按鈕 (醒目亮麗漸層) -->
+        <button class="book-flip-btn btn-next-action" onclick="nextPage()" ${pageIdx === totalPages - 1 ? 'disabled' : ''} title="翻到下一頁">
+          <span class="btn-main-label">下一頁 <i class="fa-solid fa-arrow-right"></i></span>
+          <span class="btn-sub-label">${nextNote ? `第 ${pageIdx + 2} 頁：${nextNote.title}` : '🎉 本單元全部完成'}</span>
+        </button>
+      </div>
+
+      <div class="flip-shortcut-hint">
+        <i class="fa-solid fa-keyboard"></i> 鍵盤快速鍵：可使用左右方向鍵 <b>← / →</b> 翻頁 · 手機平板支援左右滑動
+      </div>
+    </div>
+  `;
+
+  // 組合精裝立體翻開書本
+  return `
+    <div class="open-book-container">
+      ${tabsBarHtml}
+
+      <div class="open-book-spread">
+        <!-- 復古金色書角裝飾 -->
+        <div class="book-corner top-left"></div>
+        <div class="book-corner top-right"></div>
+        <div class="book-corner bottom-left"></div>
+        <div class="book-corner bottom-right"></div>
+
+        <!-- 絲質書籤飄帶 -->
+        <div class="book-ribbon" style="background: linear-gradient(180deg, var(--subj-${currentNote.subject}) 0%, var(--primary-hover) 100%);"></div>
+
+        <!-- 中央書脊凹槽陰影 -->
+        <div class="book-spine-crease"></div>
+
+        <!-- 懸浮左側翻頁翅膀 -->
+        <button class="book-side-nav prev-side" onclick="prevPage()" ${pageIdx === 0 ? 'disabled' : ''} title="上一頁">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- 懸浮右側翻頁翅膀 -->
+        <button class="book-side-nav next-side" onclick="nextPage()" ${pageIdx === totalPages - 1 ? 'disabled' : ''} title="下一頁">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <!-- 書本內頁內容 -->
+        <article class="book-page-body ${animClass}" id="${currentNote.id}">
+          <!-- Running Header (頁首資訊) -->
+          <div class="book-running-head">
+            <div class="book-running-left">
+              <span class="subject-badge badge-${currentNote.subject}">
+                <i class="fa-solid ${currentNote.subjectIcon || 'fa-tag'}"></i> ${currentNote.subjectName}
+              </span>
+              <span class="unit-tag">${currentNote.unit}</span>
+              <span class="concept-tag">${currentNote.gradeVersion}</span>
+            </div>
+
+            <!-- 金色頁碼徽章印章 -->
+            <div class="book-page-stamp">
+              <i class="fa-solid fa-bookmark"></i> 第 ${pageIdx + 1} 頁 / 共 ${totalPages} 頁
+            </div>
+          </div>
+
+          <!-- 筆記大標題 -->
+          <h2 class="note-title">${currentNote.title}</h2>
+
+          <!-- 精選教學插圖區塊 -->
+          ${illustrationHtml}
+
+          <!-- 核心觀念精粹 -->
+          <div class="section-block">
+            <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精粹</div>
+            <ul class="concepts-list">
+              ${currentNote.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
+            </ul>
+          </div>
+
+          <!-- 關鍵速查比較大表 -->
+          ${tableHtml}
+
+          <!-- 黃金記憶口訣 -->
+          ${currentNote.mnemonic ? `
+            <div class="mnemonic-box">
+              <div class="box-title"><i class="fa-solid fa-star"></i> 黃金記憶口訣與秒殺密碼</div>
+              <div>${currentNote.mnemonic}</div>
+            </div>
+          ` : ''}
+
+          <!-- 隨堂即時自我檢測 -->
+          ${quizHtml}
+
+          <!-- Running Footer (頁尾資訊) -->
+          <div class="book-running-footer">
+            <div class="book-footer-branding">
+              <i class="fa-solid fa-graduation-cap"></i> 麥麥筆記 · 教學影片重點精華庫
+            </div>
+            <div class="book-footer-pagenum">
+              - 第 ${pageIdx + 1} 頁 -
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- 底部翻頁主控制中心 -->
+      ${bottomNavHtml}
+    </div>
+  `;
+}
+
+// 備用：清單連續瀏覽模式 Note Card HTML
+function createNoteCardHtml(note) {
+  let illustrationHtml = "";
+  if (note.image) {
+    const safeCaption = (note.imageCaption || note.title).replace(/'/g, "\\'");
+    illustrationHtml = `
+      <div class="book-illustration-block">
+        <div class="illustration-header">
+          <span class="illustration-tag"><i class="fa-solid fa-image"></i> 教學重點插圖精華</span>
+          <button class="btn-zoom-img" onclick="openLightbox('${note.image}', '${safeCaption}')">
+            <i class="fa-solid fa-magnifying-glass-plus"></i> 放大查看
+          </button>
+        </div>
+        <div class="illustration-frame" onclick="openLightbox('${note.image}', '${safeCaption}')">
+          <img src="${note.image}" alt="${note.title}" class="illustration-img" loading="lazy">
+        </div>
+        ${note.imageCaption ? `<div class="illustration-caption">${note.imageCaption}</div>` : ''}
+      </div>
+    `;
+  }
+
+  let tableHtml = "";
+  if (note.table && note.table.rows && note.table.rows.length > 0) {
+    const tableId = `table-${note.id}`;
+    tableHtml = `
+      <div class="section-block">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <span class="section-label" style="margin-bottom: 0;">
+              <i class="fa-solid fa-table"></i> 關鍵速查比較大表
+            </span>
+          </div>
+          <div class="table-toolbar-actions">
+            <button class="mask-mode-btn" id="btn-mask-${tableId}" onclick="toggleMaskMode('${tableId}')">
+              <i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="note-table" id="${tableId}">
+            <thead>
+              <tr>${note.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>
+            </thead>
+            <tbody>
+              ${note.table.rows.map(row => `
+                <tr>
+                  ${row.map((c, colIndex) => {
+                    if (colIndex === 0) {
+                      return `<td style="font-weight: 900; white-space: nowrap; background-color: var(--bg-secondary);">${c}</td>`;
+                    } else {
+                      return `
+                        <td class="mask-cell" onclick="toggleCell(this)">
+                          <div class="cell-wrapper">
+                            <span class="cell-mask-card"><i class="fa-solid fa-lock"></i> 點擊揭曉</span>
+                            <span class="cell-real-answer">${formatTableCell(c)}</span>
+                          </div>
+                        </td>
+                      `;
+                    }
+                  }).join("")}
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  let quizHtml = "";
+  if (note.quiz && note.quiz.length > 0) {
+    quizHtml = note.quiz.map((q, qIndex) => `
+      <div class="quiz-panel" id="quiz-${note.id}-${qIndex}">
+        <div class="quiz-header">
+          <span class="quiz-header-title"><i class="fa-solid fa-circle-question"></i> 隨堂觀念自我檢測</span>
+          <span class="quiz-badge">點選即測即評</span>
+        </div>
+        <p class="quiz-question-text">${q.question}</p>
+        <div class="quiz-options-list">
+          ${q.options.map((opt, optIndex) => `
+            <button class="quiz-opt-btn" 
+              data-note-id="${note.id}"
+              data-q-idx="${qIndex}"
+              data-opt-idx="${optIndex}"
+              data-correct="${opt.correct}">
+              <span class="quiz-opt-prefix">${opt.prefix}</span>
+              <span class="quiz-opt-text">${opt.text}</span>
+            </button>
+          `).join("")}
+        </div>
+        <div class="quiz-feedback-box" id="feedback-${note.id}-${qIndex}"></div>
+      </div>
+    `).join("");
+  }
+
+  return `
+    <article class="note-card" id="${note.id}">
+      <div class="card-top-header">
+        <div class="tags-group">
+          <span class="subject-badge badge-${note.subject}">
+            <i class="fa-solid ${note.subjectIcon || 'fa-tag'}"></i> ${note.subjectName}
+          </span>
+          <span class="unit-tag">${note.unit}</span>
+          <span class="concept-tag">${note.gradeVersion}</span>
+        </div>
+      </div>
+
+      <h2 class="note-title">${note.title}</h2>
+
+      ${illustrationHtml}
+
+      <div class="section-block">
+        <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精粹</div>
+        <ul class="concepts-list">
+          ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
+        </ul>
+      </div>
+
+      ${tableHtml}
+
+      ${note.mnemonic ? `
+        <div class="mnemonic-box">
+          <div class="box-title"><i class="fa-solid fa-star"></i> 黃金記憶口訣與秒殺密碼</div>
+          <div>${note.mnemonic}</div>
+        </div>
+      ` : ''}
+
+      ${quizHtml}
+    </article>
+  `;
+}
+
+// 測驗答題監聽
 function attachQuizListeners(container, dataList) {
   container.querySelectorAll(".quiz-opt-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -255,10 +777,7 @@ window.retryQuiz = function(noteId, qIdx) {
   feedbackBox.style.display = "none";
 };
 
-// ========================================================
 // 🃏 翻牌遮蔽背誦功能 (單一切換按鈕，100% 零漏字)
-// ========================================================
-
 window.toggleMaskMode = function(tableId) {
   const table = document.getElementById(tableId);
   const btn = document.getElementById(`btn-mask-${tableId}`);
@@ -267,14 +786,12 @@ window.toggleMaskMode = function(tableId) {
   const isMasked = table.classList.toggle("is-masked");
   if (btn) {
     if (isMasked) {
-      // 進入背誦模式：全部答案預設蓋住
       btn.classList.add("is-active");
       btn.innerHTML = `<i class="fa-solid fa-eye"></i> 退出背誦模式（顯示全部答案）`;
       table.querySelectorAll("tbody td.mask-cell").forEach(cell => {
         cell.classList.remove("is-revealed");
       });
     } else {
-      // 退出背誦模式：恢復正常查看
       btn.classList.remove("is-active");
       btn.innerHTML = `<i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式`;
       table.querySelectorAll("tbody td.mask-cell").forEach(cell => {
@@ -287,9 +804,26 @@ window.toggleMaskMode = function(tableId) {
 window.toggleCell = function(cell) {
   const table = cell.closest(".note-table");
   if (!table || !table.classList.contains("is-masked")) return;
-
-  // 點擊翻開或蓋住
   cell.classList.toggle("is-revealed");
+};
+
+// 🔍 高清插圖燈箱控制
+window.openLightbox = function(imgSrc, caption) {
+  const box = document.getElementById("image-lightbox");
+  const img = document.getElementById("lightbox-img");
+  const cap = document.getElementById("lightbox-caption");
+  if (!box || !img) return;
+  img.src = imgSrc;
+  if (cap) cap.textContent = caption || "";
+  box.classList.add("active");
+  document.body.style.overflow = "hidden";
+};
+
+window.closeLightbox = function(e) {
+  const box = document.getElementById("image-lightbox");
+  if (!box) return;
+  box.classList.remove("active");
+  document.body.style.overflow = "";
 };
 
 function updateTabCounts() {
@@ -306,121 +840,4 @@ function updateTabCounts() {
       }
     }
   });
-}
-
-function createNoteCardHtml(note) {
-  // Table HTML with Single Toggle Mask & Reveal Button
-  let tableHtml = "";
-  if (note.table && note.table.rows && note.table.rows.length > 0) {
-    const tableId = `table-${note.id}`;
-    tableHtml = `
-      <div class="section-block">
-        <div class="table-toolbar">
-          <div class="table-toolbar-left">
-            <span class="section-label" style="margin-bottom: 0;">
-              <i class="fa-solid fa-table"></i> 關鍵速查比較大表
-            </span>
-          </div>
-          <div class="table-toolbar-actions">
-            <button class="mask-mode-btn" id="btn-mask-${tableId}" onclick="toggleMaskMode('${tableId}')">
-              <i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式
-            </button>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="note-table" id="${tableId}">
-            <thead>
-              <tr>${note.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>
-            </thead>
-            <tbody>
-              ${note.table.rows.map(row => `
-                <tr>
-                  ${row.map((c, colIndex) => {
-                    if (colIndex === 0) {
-                      return `<td style="font-weight: 900; white-space: nowrap; background-color: var(--bg-secondary);">${c}</td>`;
-                    } else {
-                      return `
-                        <td class="mask-cell" onclick="toggleCell(this)">
-                          <div class="cell-wrapper">
-                            <span class="cell-mask-card"><i class="fa-solid fa-lock"></i> 點擊揭曉</span>
-                            <span class="cell-real-answer">${formatTableCell(c)}</span>
-                          </div>
-                        </td>
-                      `;
-                    }
-                  }).join("")}
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  }
-
-  // Quiz HTML
-  let quizHtml = "";
-  if (note.quiz && note.quiz.length > 0) {
-    quizHtml = note.quiz.map((q, qIndex) => `
-      <div class="quiz-panel" id="quiz-${note.id}-${qIndex}">
-        <div class="quiz-header">
-          <span class="quiz-header-title"><i class="fa-solid fa-circle-question"></i> 隨堂觀念自我檢測</span>
-          <span class="quiz-badge">點選即測即評</span>
-        </div>
-        <p class="quiz-question-text">${q.question}</p>
-        <div class="quiz-options-list">
-          ${q.options.map((opt, optIndex) => `
-            <button class="quiz-opt-btn" 
-              data-note-id="${note.id}"
-              data-q-idx="${qIndex}"
-              data-opt-idx="${optIndex}"
-              data-correct="${opt.correct}">
-              <span class="quiz-opt-prefix">${opt.prefix}</span>
-              <span class="quiz-opt-text">${opt.text}</span>
-            </button>
-          `).join("")}
-        </div>
-        <div class="quiz-feedback-box" id="feedback-${note.id}-${qIndex}"></div>
-      </div>
-    `).join("");
-  }
-
-  return `
-    <article class="note-card" id="${note.id}">
-      <div class="card-top-header">
-        <div class="tags-group">
-          <span class="subject-badge badge-${note.subject}">
-            <i class="fa-solid ${note.subjectIcon || 'fa-tag'}"></i> ${note.subjectName}
-          </span>
-          <span class="unit-tag">${note.unit}</span>
-          <span class="concept-tag">${note.gradeVersion}</span>
-        </div>
-      </div>
-
-      <h2 class="note-title">${note.title}</h2>
-
-      <!-- 核心觀念精粹 -->
-      <div class="section-block">
-        <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精粹</div>
-        <ul class="concepts-list">
-          ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
-        </ul>
-      </div>
-
-      <!-- 關鍵速查比較大表 (含單一按鈕翻牌背誦模式) -->
-      ${tableHtml}
-
-      <!-- 黃金記憶口訣 -->
-      ${note.mnemonic ? `
-        <div class="mnemonic-box">
-          <div class="box-title"><i class="fa-solid fa-star"></i> 黃金記憶口訣與秒殺密碼</div>
-          <div>${note.mnemonic}</div>
-        </div>
-      ` : ''}
-
-      <!-- 隨堂即時自我檢測 -->
-      ${quizHtml}
-    </article>
-  `;
 }

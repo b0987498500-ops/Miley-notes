@@ -32,6 +32,14 @@
 | **毬果** | × | × | × | ○ (專屬毬果) | × |
 | **花粉管 (受精免水)** | × (精子游水) | × (精子游水) | × (精子游水) | ○ (免水受精) | ○ (免水受精) |
 
+<details open>
+<summary>🔍 <b>[教學重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
+<input type="checkbox" id="zoom-science-1" class="zoom-toggle">
+<label for="zoom-science-1" class="zoom-label">
+  <img src="images/science/plant_evolution_groups.png" alt="植物界五大族群演化與構造特徵全比較" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+</label>
+</details>
+
 ### 🧠 記憶口訣與破題密碼
 > 💡 **【黃金演化階梯口訣】**
 > - **四步演化訣**：「蘚苔長角質，蕨類有血管；裸被通水管（花粉管），被子抱子房！」
@@ -65,6 +73,14 @@
 | **莖維管束** | **環狀排列** (有形成層，能加粗) | **散生排列** (無形成層，不能加粗) | 雙子葉多木本樹木<br>單子葉多草本（竹、玉米） |
 | **根系型態** | **軸根系** (明顯主根深扎) | **鬚根系** (整叢細鬚根) | 拔蔥看根是一把鬚（鬚根系）！ |
 
+<details open>
+<summary>🔍 <b>[教學重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
+<input type="checkbox" id="zoom-science-2" class="zoom-toggle">
+<label for="zoom-science-2" class="zoom-label">
+  <img src="images/science/plant_dicot_monocot.png" alt="被子植物雙子葉 vs 單子葉大對決" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+</label>
+</details>
+
 ### 🧠 記憶口訣與破題密碼
 > 💡 **【單雙子葉秒殺口訣】**
 > - **單子葉口訣**：「一葉三花平行脈，散生鬚根無層次！」
@@ -96,6 +112,14 @@
 | **體溫恆定與否** | 外溫動物 (變溫) | 外溫動物 (變溫) | 外溫動物 (變溫) | 內溫動物 (恆溫) | 內溫動物 (恆溫) |
 | **適應陸地生活** | 不適應 (完全水生) | 最先適應 (不完全) | 完全適應 | 完全適應 | 完全適應 |
 | **常見物種舉例** | 金魚、吳郭魚、鯊魚、魟魚 | 青蛙、蟾蜍、娃娃魚、山椒魚 | 蛇、龜、鱷、蜥蜴、壁虎 | 麻雀、雞、鴨、企鵝、鴕鳥 | 鯨、海豚、蝙蝠、牛、人 |
+
+<details open>
+<summary>🔍 <b>[教學重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
+<input type="checkbox" id="zoom-science-3" class="zoom-toggle">
+<label for="zoom-science-3" class="zoom-label">
+  <img src="images/science/vertebrates_comparison.png" alt="動物界脊椎動物五大類特徵全對照" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+</label>
+</details>
 
 ### 🧠 記憶口訣與破題密碼
 > 💡 **【脊椎動物秒殺口訣】**
