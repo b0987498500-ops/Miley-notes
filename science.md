@@ -33,10 +33,10 @@
 | **花粉管 (受精免水)** | × (精子游水) | × (精子游水) | × (精子游水) | ○ (免水受精) | ○ (免水受精) |
 
 <details open>
-<summary>🔍 <b>[教學重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
+<summary>🔍 <b>[核心觀念教學圖解]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
 <input type="checkbox" id="zoom-science-1" class="zoom-toggle">
 <label for="zoom-science-1" class="zoom-label">
-  <img src="images/science/plant_evolution_groups.png" alt="植物界五大族群演化與構造特徵全比較" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+  <img src="images/science/plant_evolution_diagram.jpg" alt="植物界五大族群演化與構造特徵全比較" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
 </label>
 </details>
 
@@ -74,10 +74,10 @@
 | **根系型態** | **軸根系** (明顯主根深扎) | **鬚根系** (整叢細鬚根) | 拔蔥看根是一把鬚（鬚根系）！ |
 
 <details open>
-<summary>🔍 <b>[教學重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
+<summary>🔍 <b>[核心觀念教學圖解]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
 <input type="checkbox" id="zoom-science-2" class="zoom-toggle">
 <label for="zoom-science-2" class="zoom-label">
-  <img src="images/science/plant_dicot_monocot.png" alt="被子植物雙子葉 vs 單子葉大對決" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+  <img src="images/science/dicot_vs_monocot_diagram.jpg" alt="被子植物雙子葉 vs 單子葉大對決" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
 </label>
 </details>
 
@@ -114,10 +114,10 @@
 | **常見物種舉例** | 金魚、吳郭魚、鯊魚、魟魚 | 青蛙、蟾蜍、娃娃魚、山椒魚 | 蛇、龜、鱷、蜥蜴、壁虎 | 麻雀、雞、鴨、企鵝、鴕鳥 | 鯨、海豚、蝙蝠、牛、人 |
 
 <details open>
-<summary>🔍 <b>[教學重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
+<summary>🔍 <b>[核心觀念教學圖解]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
 <input type="checkbox" id="zoom-science-3" class="zoom-toggle">
 <label for="zoom-science-3" class="zoom-label">
-  <img src="images/science/vertebrates_comparison.png" alt="動物界脊椎動物五大類特徵全對照" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+  <img src="images/science/vertebrates_classes_diagram.jpg" alt="動物界脊椎動物五大類特徵全對照" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
 </label>
 </details>
 

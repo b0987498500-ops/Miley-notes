@@ -510,8 +510,11 @@ function createOpenBookHtml(filtered, pageIdx) {
         <!-- 絲質書籤飄帶 -->
         <div class="book-ribbon" style="background: linear-gradient(180deg, var(--subj-${currentNote.subject}) 0%, var(--primary-hover) 100%);"></div>
 
-        <!-- 中央書脊凹槽陰影 -->
-        <div class="book-spine-crease"></div>
+        <!-- 兩側層疊立體書頁頁緣飾邊 (Book Deck Edges) -->
+        <div class="book-deck-pages left-deck"></div>
+        <div class="book-deck-pages right-deck"></div>
+        <div class="book-side-flourish left-flourish"><i class="fa-solid fa-leaf"></i></div>
+        <div class="book-side-flourish right-flourish"><i class="fa-solid fa-leaf"></i></div>
 
         <!-- 懸浮左側翻頁翅膀 -->
         <button class="book-side-nav prev-side" onclick="prevPage()" ${pageIdx === 0 ? 'disabled' : ''} title="上一頁">
@@ -525,7 +528,7 @@ function createOpenBookHtml(filtered, pageIdx) {
 
         <!-- 書本內頁內容 -->
         <article class="book-page-body ${animClass}" id="${currentNote.id}">
-          <!-- Running Header (頁首資訊) -->
+          <!-- Running Header (頁首資訊含頂部快捷翻頁控制列) -->
           <div class="book-running-head">
             <div class="book-running-left">
               <span class="subject-badge badge-${currentNote.subject}">
@@ -535,9 +538,17 @@ function createOpenBookHtml(filtered, pageIdx) {
               <span class="concept-tag">${currentNote.gradeVersion}</span>
             </div>
 
-            <!-- 金色頁碼徽章印章 -->
-            <div class="book-page-stamp">
-              <i class="fa-solid fa-bookmark"></i> 第 ${pageIdx + 1} 頁 / 共 ${totalPages} 頁
+            <!-- 頂部即時翻頁控制區塊 (免滾動至底部即可翻頁) -->
+            <div class="book-top-flip-bar">
+              <button class="book-top-btn" onclick="prevPage()" ${pageIdx === 0 ? 'disabled' : ''} title="上一頁">
+                <i class="fa-solid fa-arrow-left"></i> 上一頁
+              </button>
+              <div class="book-page-stamp">
+                <i class="fa-solid fa-bookmark"></i> 第 ${pageIdx + 1} 頁 / 共 ${totalPages} 頁
+              </div>
+              <button class="book-top-btn next-top-btn" onclick="nextPage()" ${pageIdx === totalPages - 1 ? 'disabled' : ''} title="下一頁">
+                下一頁 <i class="fa-solid fa-arrow-right"></i>
+              </button>
             </div>
           </div>
 
