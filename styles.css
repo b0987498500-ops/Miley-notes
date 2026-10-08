@@ -129,10 +129,9 @@
   box-sizing: border-box;
 }
 
-/* 核心：將根字級設為 23px，並連動 --font-scale 與 rem，全頁面任何縮放 100% 即時生效！ */
+/* 核心：將根字級固定為標準 16px，整體版面邊框與外框永不變形！字體縮放連動 --font-scale 僅作用於閱讀文字 */
 html {
-  font-size: calc(23px * var(--font-scale));
-  transition: font-size 0.2s ease-out;
+  font-size: 16px;
   scroll-behavior: smooth;
 }
 
@@ -141,7 +140,7 @@ body {
   background-color: var(--bg-body);
   color: var(--text-primary);
   line-height: 1.8;
-  font-size: 1rem;
+  font-size: 1.05rem;
   transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
 }
@@ -544,24 +543,24 @@ body {
 }
 
 .note-title {
-  font-size: 2.35rem;
+  font-size: calc(2.25rem * var(--font-scale, 1));
   font-weight: 900;
   color: var(--text-primary);
-  margin-bottom: 30px;
-  line-height: 1.45;
+  margin-bottom: 24px;
+  line-height: 1.4;
   letter-spacing: -0.01em;
 }
 
 /* Sections */
 .section-block {
-  margin-bottom: 36px;
+  margin-bottom: 34px;
 }
 
 .section-label {
-  font-size: 1.45rem;
+  font-size: calc(1.35rem * var(--font-scale, 1));
   font-weight: 900;
   color: var(--text-primary);
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -572,16 +571,16 @@ body {
 }
 
 .concepts-list {
-  padding-left: 32px;
+  padding-left: 28px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  font-size: 1.25rem;
+  gap: 14px;
+  font-size: calc(1.18rem * var(--font-scale, 1));
 }
 
 .concepts-list li {
   color: var(--text-secondary);
-  line-height: 1.88;
+  line-height: 1.85;
 }
 
 .concepts-list li strong {
@@ -659,26 +658,28 @@ body {
 .note-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1.2rem;
+  font-size: calc(1.08rem * var(--font-scale, 1));
   text-align: left;
 }
 
 .note-table th {
   background-color: var(--bg-table-header);
   color: var(--text-primary);
-  padding: 20px 26px;
+  padding: 16px 20px;
   font-weight: 900;
   border-bottom: 2.5px solid var(--border-color);
   white-space: nowrap;
+  font-size: calc(1.1rem * var(--font-scale, 1));
 }
 
 .note-table td {
-  padding: 20px 26px;
+  padding: 16px 20px;
   border-bottom: 1.5px solid var(--border-color);
   color: var(--text-secondary);
-  line-height: 1.75;
+  line-height: 1.7;
   position: relative;
   transition: background-color 0.2s ease;
+  font-size: calc(1.05rem * var(--font-scale, 1));
 }
 
 .note-table tbody tr:nth-child(even) {
@@ -826,8 +827,8 @@ body {
   padding: 28px 36px;
   margin: 34px 0;
   color: var(--callout-text);
-  font-size: 1.35rem;
-  line-height: 1.88;
+  font-size: calc(1.18rem * var(--font-scale, 1));
+  line-height: 1.85;
   box-shadow: var(--shadow-sm);
   border-top: 1.5px solid rgba(245, 158, 11, 0.3);
   border-right: 1.5px solid rgba(245, 158, 11, 0.3);
@@ -836,7 +837,7 @@ body {
 
 .mnemonic-box .box-title {
   font-weight: 900;
-  font-size: 1.45rem;
+  font-size: calc(1.25rem * var(--font-scale, 1));
   display: flex;
   align-items: center;
   gap: 12px;
@@ -882,7 +883,7 @@ body {
 }
 
 .quiz-question-text {
-  font-size: 1.35rem;
+  font-size: calc(1.22rem * var(--font-scale, 1));
   font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 28px;
@@ -911,7 +912,7 @@ body {
   background-color: var(--bg-card);
   color: var(--text-primary);
   text-align: left;
-  font-size: 1.1rem;
+  font-size: calc(1.08rem * var(--font-scale, 1));
   font-family: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -993,7 +994,7 @@ body {
   margin-top: 24px;
   padding: 22px 28px;
   border-radius: var(--radius-md);
-  font-size: 1.15rem;
+  font-size: calc(1.08rem * var(--font-scale, 1));
   line-height: 1.7;
   display: none;
   animation: fadeIn 0.3s ease;
@@ -1194,30 +1195,205 @@ body {
   color: #fff;
 }
 
-/* 翻開的精裝書主體 (Open Book Spread) */
+/* ========================================================
+   📖 手帳筆記本立體外裝 (Notebook Aesthetic matching user reference)
+   ======================================================== */
+.open-book-wrapper {
+  position: relative;
+  margin: 32px auto 0;
+  max-width: 1040px;
+}
+
+/* 頂部手帳便條索引標籤貼 (Sticky Index Tabs Flag) */
+.notebook-top-tabs {
+  position: absolute;
+  top: -24px;
+  right: 110px;
+  display: flex;
+  gap: 16px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.notebook-tab-flag {
+  width: 48px;
+  height: 32px;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.12);
+  transform-origin: bottom center;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+}
+
+.notebook-tab-flag.flag-amber {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+  transform: rotate(-2deg);
+}
+
+.notebook-tab-flag.flag-rose {
+  background: linear-gradient(180deg, #fb7185 0%, #e11d48 100%);
+  transform: rotate(2deg);
+}
+
+.notebook-tab-flag.flag-teal {
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  transform: rotate(-1deg);
+}
+
+/* 左側層疊筆記紙外露底層 (Layered Sheets on Left Margin) */
+.notebook-left-sheets {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 0;
+  width: 32px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 1. 最底層青色外殼/硬卡護板 (如參考圖最外層青藍色外殼) */
+.sheet-layer.sheet-backing-cover {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: -22px;
+  width: 26px;
+  background: #38bdf8;
+  border: 2.5px solid #0284c7;
+  border-right: none;
+  border-radius: 14px 0 0 14px;
+  box-shadow: -4px 6px 14px rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="dark"] .sheet-layer.sheet-backing-cover {
+  background: #0369a1;
+  border-color: #075985;
+}
+
+[data-theme="eyecare"] .sheet-layer.sheet-backing-cover {
+  background: #7dd3fc;
+  border-color: #0284c7;
+}
+
+/* 2. 中層露出之橫線活頁筆記紙 (Ruled Lined Paper) */
+.sheet-layer.sheet-lined-paper {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: -13px;
+  width: 18px;
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  box-shadow: -2px 3px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+[data-theme="dark"] .sheet-layer.sheet-lined-paper {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="eyecare"] .sheet-layer.sheet-lined-paper {
+  background-color: #fdfbf7;
+  border-color: #d8caba;
+}
+
+.lined-paper-ruled {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 14px,
+    #cbd5e1 15px,
+    #cbd5e1 16px
+  );
+}
+
+[data-theme="dark"] .lined-paper-ruled {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 14px,
+    #475569 15px,
+    #475569 16px
+  );
+}
+
+[data-theme="eyecare"] .lined-paper-ruled {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 14px,
+    #d8caba 15px,
+    #d8caba 16px
+  );
+}
+
+/* 3. 堆疊紙張側緣多層厚度 */
+.sheet-layer.sheet-stacked-leaves {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: -5px;
+  width: 7px;
+  background: repeating-linear-gradient(
+    to right,
+    #cbd5e1 0px,
+    #ffffff 2px,
+    #94a3b8 3px
+  );
+  border-radius: 4px 0 0 4px;
+}
+
+/* 右側堆疊紙張側緣厚度 */
+.notebook-right-sheets {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  right: 0;
+  width: 12px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sheet-layer.sheet-stacked-leaves-right {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  right: -8px;
+  width: 10px;
+  background: repeating-linear-gradient(
+    to left,
+    #cbd5e1 0px,
+    #ffffff 2px,
+    #94a3b8 3px
+  );
+  border-radius: 0 6px 6px 0;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 翻開的筆記本主體 (Open Book Spread) - 平整純淨無中線凹槽 */
 .open-book-spread {
   position: relative;
+  z-index: 4;
   background-color: var(--bg-card);
-  border-radius: 26px;
-  border: 4px solid var(--book-leather);
-  /* 擬真精裝立體書皮厚度與多層紙張陰影 */
+  border-radius: 22px;
+  border: 3.5px solid var(--border-color);
   box-shadow:
-    0 3px 6px var(--book-edge-shadow),
-    0 10px 24px var(--book-edge-shadow),
-    0 24px 56px var(--book-edge-shadow),
-    0 0 0 8px rgba(255, 255, 255, 0.25),
-    0 0 0 16px var(--book-leather);
-  overflow: hidden;
+    0 4px 10px rgba(0, 0, 0, 0.05),
+    0 18px 38px rgba(0, 0, 0, 0.08);
+  overflow: visible;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 [data-theme="dark"] .open-book-spread {
+  border-color: #334155;
   box-shadow:
-    0 4px 10px var(--book-edge-shadow),
-    0 16px 36px var(--book-edge-shadow),
-    0 32px 68px var(--book-edge-shadow),
-    0 0 0 8px rgba(255, 255, 255, 0.04),
-    0 0 0 16px var(--book-leather);
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    0 20px 48px rgba(0, 0, 0, 0.6);
 }
 
 /* 書本兩側真實層疊書頁邊緣裝飾 (Stacked Page Edges on Left & Right Margins) */

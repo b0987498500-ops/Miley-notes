@@ -23,6 +23,22 @@ try {
 } catch (e) {}
 
 document.addEventListener("DOMContentLoaded", () => {
+  // 支援 URL Hash 深度連結 (例如 #p=2 或 #science-2)
+  if (window.location.hash) {
+    const hash = window.location.hash.replace("#", "");
+    if (hash.startsWith("p=") || hash.startsWith("page=")) {
+      const pNum = parseInt(hash.split("=")[1], 10);
+      if (!isNaN(pNum) && pNum > 0) {
+        currentPage = pNum - 1;
+      }
+    } else if (typeof NOTES_DATA !== "undefined") {
+      const idx = NOTES_DATA.findIndex(n => n.id === hash);
+      if (idx !== -1) {
+        currentPage = idx;
+      }
+    }
+  }
+
   initTheme();
   initFontScale();
   initEventListeners();
@@ -79,7 +95,7 @@ function initFontScale() {
 function setFontScale(scale) {
   currentFontScale = scale;
   document.documentElement.style.setProperty("--font-scale", scale.toString());
-  document.documentElement.style.fontSize = (23 * scale) + "px";
+  // 保持 html 根字級固定為 16px，僅放大筆記內文字、題目與表格，確保整體排版比例與外框不會變形！
   try {
     localStorage.setItem("maimai_notes_font_scale", scale.toString());
   } catch (e) {}
@@ -495,36 +511,62 @@ function createOpenBookHtml(filtered, pageIdx) {
     </div>
   `;
 
-  // 組合精裝立體翻開書本
+  // 組合手帳質感立體翻開書本 (外露彩色便籤標記貼 + 左側露出的青色外殼與橫線活頁紙)
   return `
     <div class="open-book-container">
       ${tabsBarHtml}
 
-      <div class="open-book-spread">
-        <!-- 復古金色書角裝飾 -->
-        <div class="book-corner top-left"></div>
-        <div class="book-corner top-right"></div>
-        <div class="book-corner bottom-left"></div>
-        <div class="book-corner bottom-right"></div>
+      <div class="open-book-wrapper">
+        <!-- 頂部手帳便籤突出標記貼 (參考圖頂部的彩色便利貼標籤) -->
+        <div class="notebook-top-tabs" aria-hidden="true">
+          <div class="notebook-tab-flag flag-amber" title="核心重點標記"></div>
+          <div class="notebook-tab-flag flag-rose" title="精選考點標記"></div>
+          <div class="notebook-tab-flag flag-teal" title="圖解速查標記"></div>
+        </div>
 
-        <!-- 絲質書籤飄帶 -->
-        <div class="book-ribbon" style="background: linear-gradient(180deg, var(--subj-${currentNote.subject}) 0%, var(--primary-hover) 100%);"></div>
+        <!-- 左側層疊筆記紙外露底層 (參考圖左側突出的青色封皮護板與橫線活頁紙) -->
+        <div class="notebook-left-sheets" aria-hidden="true">
+          <!-- 底層青色封皮護板 -->
+          <div class="sheet-layer sheet-backing-cover"></div>
+          <!-- 橫線活頁筆記紙露出一角 -->
+          <div class="sheet-layer sheet-lined-paper">
+            <div class="lined-paper-ruled"></div>
+          </div>
+          <!-- 堆疊紙張側緣多層厚度 -->
+          <div class="sheet-layer sheet-stacked-leaves"></div>
+        </div>
 
-        <!-- 兩側層疊立體書頁頁緣飾邊 (Book Deck Edges) -->
-        <div class="book-deck-pages left-deck"></div>
-        <div class="book-deck-pages right-deck"></div>
-        <div class="book-side-flourish left-flourish"><i class="fa-solid fa-leaf"></i></div>
-        <div class="book-side-flourish right-flourish"><i class="fa-solid fa-leaf"></i></div>
+        <!-- 右側堆疊紙張厚度 -->
+        <div class="notebook-right-sheets" aria-hidden="true">
+          <div class="sheet-layer sheet-stacked-leaves-right"></div>
+        </div>
 
-        <!-- 懸浮左側翻頁翅膀 -->
-        <button class="book-side-nav prev-side" onclick="prevPage()" ${pageIdx === 0 ? 'disabled' : ''} title="上一頁">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
+        <!-- 主筆記紙本體 (乾淨平整白紙，絕無中央凹下折痕) -->
+        <div class="open-book-spread">
+          <!-- 復古金色書角裝飾 -->
+          <div class="book-corner top-left"></div>
+          <div class="book-corner top-right"></div>
+          <div class="book-corner bottom-left"></div>
+          <div class="book-corner bottom-right"></div>
 
-        <!-- 懸浮右側翻頁翅膀 -->
-        <button class="book-side-nav next-side" onclick="nextPage()" ${pageIdx === totalPages - 1 ? 'disabled' : ''} title="下一頁">
-          <i class="fa-solid fa-chevron-right"></i>
-        </button>
+          <!-- 絲質書籤飄帶 -->
+          <div class="book-ribbon" style="background: linear-gradient(180deg, var(--subj-${currentNote.subject}) 0%, var(--primary-hover) 100%);"></div>
+
+          <!-- 兩側層疊立體書頁頁緣飾邊 (Book Deck Edges) -->
+          <div class="book-deck-pages left-deck"></div>
+          <div class="book-deck-pages right-deck"></div>
+          <div class="book-side-flourish left-flourish"><i class="fa-solid fa-leaf"></i></div>
+          <div class="book-side-flourish right-flourish"><i class="fa-solid fa-leaf"></i></div>
+
+          <!-- 懸浮左側翻頁翅膀 -->
+          <button class="book-side-nav prev-side" onclick="prevPage()" ${pageIdx === 0 ? 'disabled' : ''} title="上一頁">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+
+          <!-- 懸浮右側翻頁翅膀 -->
+          <button class="book-side-nav next-side" onclick="nextPage()" ${pageIdx === totalPages - 1 ? 'disabled' : ''} title="下一頁">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
 
         <!-- 書本內頁內容 -->
         <article class="book-page-body ${animClass}" id="${currentNote.id}">
@@ -591,11 +633,12 @@ function createOpenBookHtml(filtered, pageIdx) {
           </div>
         </article>
       </div>
-
-      <!-- 底部翻頁主控制中心 -->
-      ${bottomNavHtml}
     </div>
-  `;
+
+    <!-- 底部翻頁主控制中心 -->
+    ${bottomNavHtml}
+  </div>
+`;
 }
 
 // 備用：清單連續瀏覽模式 Note Card HTML
