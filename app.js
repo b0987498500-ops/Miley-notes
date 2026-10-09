@@ -40,7 +40,191 @@ try {
   }
 } catch (e) {}
 
+
+// ========================================================
+// 🚪 麥麥筆記自訂手帳資料庫與【錯題傳送門】跨站同步系統
+// ========================================================
+
+/**
+ * 取得使用者自訂傳送門筆記 (存於 localStorage)
+ */
+function getCustomNotes() {
+  try {
+    const raw = localStorage.getItem("maimai_custom_notes");
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error("解析自訂筆記失敗:", e);
+    return [];
+  }
+}
+
+/**
+ * 取得全站整合筆記清單 (自訂筆記置頂優先 + 內建精華筆記)
+ */
+function getAllNotesData() {
+  const baseList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const customList = getCustomNotes();
+  return [...customList, ...baseList];
+}
+
+/**
+ * 學科對應 Icon 輔助函式
+ */
+function getSubjectIcon(subj) {
+  const map = {
+    science: "fa-flask",
+    math: "fa-calculator",
+    chinese: "fa-book-bookmark",
+    social: "fa-landmark",
+    english: "fa-language"
+  };
+  return map[subj] || "fa-bookmark";
+}
+
+/**
+ * 刪除自訂傳送門筆記
+ */
+window.deletePortalNote = function(id) {
+  if (!confirm("確定要刪除這則來自錯題本的自訂筆記嗎？")) return;
+  try {
+    let list = getCustomNotes();
+    list = list.filter(n => n.id !== id);
+    localStorage.setItem("maimai_custom_notes", JSON.stringify(list));
+    currentPage = 0;
+    renderNotes();
+    updateTabCounts();
+    showToast("🗑️ 自訂筆記已成功刪除");
+  } catch (e) {
+    console.error("刪除失敗:", e);
+  }
+};
+
+/**
+ * 輕量化全站浮動 Toast 提示
+ */
+function showToast(msg) {
+  let toast = document.getElementById("portal-floating-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "portal-floating-toast";
+    toast.className = "portal-floating-toast";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2600);
+}
+
+/**
+ * 接收傳送門筆記歡迎彈窗與動效
+ */
+function showPortalWelcomeToast(note) {
+  const toast = document.createElement("div");
+  toast.className = "portal-welcome-toast";
+  toast.innerHTML = `
+    <div class="toast-portal-icon">🚪✨</div>
+    <div class="toast-portal-body">
+      <div class="toast-portal-title">已成功接收來自錯題本的新筆記！</div>
+      <div class="toast-portal-desc"><b>【${note.stageName} · ${note.subjectName}】</b> ${note.title}</div>
+    </div>
+    <button class="toast-portal-close" onclick="this.parentElement.remove()" title="關閉">&times;</button>
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 60);
+
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 80, spread: 70, origin: { y: 0.2 } });
+  }
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 5500);
+}
+
+/**
+ * 核心：解析 URL 參數並收錄來自麥麥錯題網站的【筆記傳送門】資料
+ */
+function handleIncomingPortalNote() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const action = urlParams.get("action");
+    if (action !== "add_note") return false;
+
+    const stageParam = urlParams.get("stage") || "review";
+    const subjParam = urlParams.get("subject") || "science";
+    const titleParam = urlParams.get("title");
+    const contentParam = urlParams.get("content");
+    const conceptParam = urlParams.get("concept") || "";
+    const unitParam = urlParams.get("unit") || "錯題精華速記";
+    const qidParam = urlParams.get("qid") || "";
+
+    if (!titleParam && !contentParam) return false;
+
+    const finalTitle = titleParam || (conceptParam ? conceptParam : "錯題重點速記");
+    const stageName = stageParam === "progress" ? "進度手帳" : "複習手帳";
+    const volume = stageParam === "progress" ? "第 5～6 冊" : "第 1～4 冊";
+    const subjectName = SUBJECT_NAMES[subjParam] || "自然";
+    const subjectIcon = getSubjectIcon(subjParam);
+
+    const coreConcepts = contentParam
+      ? contentParam.split("\n").map(s => s.trim()).filter(Boolean)
+      : [finalTitle];
+
+    const newNote = {
+      id: "portal-" + Date.now(),
+      stage: stageParam,
+      volume: volume,
+      stageName: stageName,
+      subject: subjParam,
+      subjectName: subjectName,
+      subjectIcon: subjectIcon,
+      gradeVersion: "錯題傳送門 · 重點速記",
+      unit: unitParam,
+      title: finalTitle,
+      concept: conceptParam || finalTitle,
+      coreConcepts: coreConcepts,
+      isPortalNote: true,
+      createdTime: new Date().toLocaleString("zh-TW", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+      sourceQuestionId: qidParam
+    };
+
+    let customList = getCustomNotes();
+    const isDupe = customList.some(n => n.title === newNote.title && JSON.stringify(n.coreConcepts) === JSON.stringify(newNote.coreConcepts));
+    if (!isDupe) {
+      customList.unshift(newNote);
+      localStorage.setItem("maimai_custom_notes", JSON.stringify(customList));
+    }
+
+    // 自動切換至對應手帳與科目，並置於第一頁
+    currentStage = stageParam;
+    currentSubject = subjParam;
+    currentPage = 0;
+
+    // 清除 URL 參數防重整重複加入
+    try {
+      const cleanUrl = window.location.pathname + (window.location.hash || "");
+      window.history.replaceState({}, document.title, cleanUrl);
+    } catch(e) {}
+
+    setTimeout(() => {
+      showPortalWelcomeToast(newNote);
+    }, 350);
+
+    return true;
+  } catch (err) {
+    console.error("處理傳送門筆記時發生異常:", err);
+    return false;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  // 🚪 優先檢查並處理來自錯題網站的【筆記傳送門】資料
+  handleIncomingPortalNote();
+
   // 支援 URL Hash 深度連結 (例如 #stage=progress 或 #p=2 或 #social-1)
   if (window.location.hash) {
     const hash = window.location.hash.replace("#", "");
@@ -56,12 +240,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (["math", "science", "chinese", "social", "english", "all"].includes(s)) currentSubject = s;
     } else if (["math", "science", "chinese", "social", "english"].includes(hash)) {
       currentSubject = hash;
-    } else if (typeof NOTES_DATA !== "undefined") {
-      const idx = NOTES_DATA.findIndex(n => n.id === hash);
+    } else {
+      const allNotes = getAllNotesData();
+      const idx = allNotes.findIndex(n => n.id === hash);
       if (idx !== -1) {
         currentPage = idx;
-        if (NOTES_DATA[idx].stage) {
-          currentStage = NOTES_DATA[idx].stage;
+        if (allNotes[idx].stage) {
+          currentStage = allNotes[idx].stage;
         }
       }
     }
@@ -182,7 +367,7 @@ function setStage(stage) {
   updateTabCounts();
 
   // 若當前所選科目在該手帳中沒有內容，自動切換至 "all"
-  const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const dataList = getAllNotesData();
   const stageNotes = dataList.filter(n => n.stage === currentStage);
   if (currentSubject !== "all") {
     const hasSubjectInStage = stageNotes.some(n => n.subject === currentSubject);
@@ -742,7 +927,7 @@ const SUBJECT_NAMES = {
 };
 
 function getFilteredNotes() {
-  const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const dataList = getAllNotesData();
   return dataList.filter(item => {
     // 嚴格分流：先依當前選中手帳階段篩選 (複習 vs. 進度)
     if (item.stage && item.stage !== currentStage) return false;
@@ -774,7 +959,7 @@ function renderNotes() {
   const statsLabel = document.getElementById("stats-label");
   if (!container) return;
 
-  const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const dataList = getAllNotesData();
   const filtered = getFilteredNotes();
 
   // 更新統計文字
@@ -1076,6 +1261,10 @@ function createOpenBookHtml(filtered, pageIdx) {
               </span>
               <span class="unit-tag"><i class="fa-solid fa-seedling"></i> ${currentNote.unit}</span>
               <span class="concept-tag"><i class="fa-solid fa-feather-pointed"></i> ${currentNote.gradeVersion}</span>
+              ${currentNote.isPortalNote ? `
+                <span class="portal-badge-tag"><i class="fa-solid fa-door-open"></i> 錯題傳送門 · ${currentNote.createdTime || ''}</span>
+                <button type="button" class="portal-delete-btn" onclick="deletePortalNote('${currentNote.id}')" title="刪除此則自訂筆記"><i class="fa-solid fa-trash-can"></i> 刪除</button>
+              ` : ''}
             </div>
 
             <!-- 頂部即時翻頁控制區塊 (免滾動至底部即可翻頁) -->
@@ -1213,6 +1402,10 @@ function createNoteCardHtml(note) {
           </span>
           <span class="unit-tag">${note.unit}</span>
           <span class="concept-tag">${note.gradeVersion}</span>
+          ${note.isPortalNote ? `
+            <span class="portal-badge-tag"><i class="fa-solid fa-door-open"></i> 錯題傳送門 · ${note.createdTime || ''}</span>
+            <button type="button" class="portal-delete-btn" onclick="deletePortalNote('${note.id}')" title="刪除此則自訂筆記"><i class="fa-solid fa-trash-can"></i> 刪除</button>
+          ` : ''}
         </div>
       </div>
 
@@ -1356,7 +1549,7 @@ window.closeLightbox = function(e) {
 };
 
 function updateTabCounts() {
-  const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const dataList = getAllNotesData();
   const currentStageNotes = (currentStage === "all") 
     ? dataList 
     : dataList.filter(n => (n.stage || "review") === currentStage);

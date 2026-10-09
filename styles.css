@@ -5631,3 +5631,235 @@ body {
   color: #1e40af;
   border: 1.5px solid #bfdbfe;
 }
+
+
+/* ========================================================
+   🚪 錯題傳送門 (Note Portal) 雙向導航與自訂筆記專屬樣式
+   ======================================================== */
+
+/* 頂部導航跨站捷徑按鈕 */
+.cross-link-portal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  color: #c2410c;
+  border: 1.5px solid #fed7aa;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(194, 65, 12, 0.12);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .cross-link-portal-btn {
+  background: linear-gradient(135deg, #431407 0%, #7c2d12 100%);
+  color: #fdba74;
+  border-color: #9a3412;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.cross-link-portal-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 16px rgba(194, 65, 12, 0.22);
+  background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+  color: #9a3412;
+}
+
+.cross-link-portal-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.cross-link-portal-btn .cross-link-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+/* 筆記標籤列中的傳送門專屬徽章 */
+.portal-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  color: #6d28d9;
+  border: 1.5px solid #c4b5fd;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(109, 40, 217, 0.1);
+  vertical-align: middle;
+}
+
+[data-theme="dark"] .portal-badge-tag {
+  background: linear-gradient(135deg, #2e1065 0%, #3b0764 100%);
+  color: #ddd6fe;
+  border-color: #6b21a8;
+}
+
+/* 傳送門筆記刪除按鈕 */
+.portal-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+}
+
+.portal-delete-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #dc2626;
+  transform: scale(1.05);
+}
+
+[data-theme="dark"] .portal-delete-btn {
+  background: #450a0a;
+  color: #fca5a5;
+  border-color: #7f1d1d;
+}
+
+[data-theme="dark"] .portal-delete-btn:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* 傳送門歡迎專屬浮動 Toast */
+.portal-welcome-toast {
+  position: fixed;
+  top: 76px;
+  right: 24px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 16px 22px;
+  border-radius: 20px;
+  border: 2px solid #8b5cf6;
+  box-shadow: 0 12px 36px rgba(139, 92, 246, 0.28), 0 4px 12px rgba(0, 0, 0, 0.08);
+  color: #1e293b;
+  transform: translateX(130%);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 440px;
+}
+
+[data-theme="dark"] .portal-welcome-toast {
+  background: rgba(30, 27, 75, 0.96);
+  border-color: #a78bfa;
+  color: #f8fafc;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+.portal-welcome-toast.show {
+  transform: translateX(0);
+}
+
+.toast-portal-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+  animation: bouncePortal 1.6s ease infinite;
+}
+
+@keyframes bouncePortal {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px) scale(1.12); }
+}
+
+.toast-portal-body {
+  flex: 1;
+}
+
+.toast-portal-title {
+  font-weight: 900;
+  font-size: 1rem;
+  color: #6d28d9;
+  margin-bottom: 3px;
+}
+
+[data-theme="dark"] .toast-portal-title {
+  color: #c4b5fd;
+}
+
+.toast-portal-desc {
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+[data-theme="dark"] .toast-portal-desc {
+  color: #cbd5e1;
+}
+
+.toast-portal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.toast-portal-close:hover {
+  color: #ef4444;
+}
+
+/* 輕量通訊 Toast */
+.portal-floating-toast {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%) translateY(40px);
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.portal-floating-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .cross-link-portal-btn .cross-link-text {
+    display: none;
+  }
+  .cross-link-portal-btn {
+    padding: 8px 10px;
+  }
+  .portal-welcome-toast {
+    top: auto;
+    bottom: 20px;
+    right: 12px;
+    left: 12px;
+    max-width: calc(100% - 24px);
+    transform: translateY(120%);
+  }
+  .portal-welcome-toast.show {
+    transform: translateY(0);
+  }
+}
