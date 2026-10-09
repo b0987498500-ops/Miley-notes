@@ -18,7 +18,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <!-- Project Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="styles.css?v=1.3.0">
+  <link rel="stylesheet" href="styles.css?v=1.7.0">
 </head>
 <body>
 
@@ -53,6 +53,16 @@
 
   <!-- Main Container -->
   <main class="main-container">
+    <!-- Ambient Corner Tree Branches in Top Margins (空白角落樹枝裝飾) -->
+    <div class="ambient-branches-frame" aria-hidden="true">
+      <div class="ambient-branch branch-corner-left" title="清新植物枝葉">
+        <img src="images/illustrations/decor_branch_leaves.png" alt="植物樹枝" class="ambient-branch-img">
+      </div>
+      <div class="ambient-branch branch-corner-right" title="櫻花春櫻枝條">
+        <img src="images/illustrations/decor_branch_right.png" alt="櫻花樹枝" class="ambient-branch-img">
+      </div>
+    </div>
+
     <!-- Hero & Search Section with Cute Vector Line Art Mascot -->
     <header class="hero-banner">
       <div class="hero-content-wrapper">
@@ -62,7 +72,7 @@
             <span>Miley 專屬智慧手帳 · 影片重點筆記庫</span>
           </div>
           <h2>隨看隨記 · 智能筆記精華</h2>
-          <p>觀看教學影片截圖傳送，AI 自動提煉觀念、翻牌背誦大表與口訣，免抄寫無負擔！</p>
+          <p class="hero-desc">觀看教學影片截圖傳送，AI 自動提煉觀念、翻牌背誦大表與口訣，<span class="text-nowrap">免抄寫無負擔！</span></p>
           
           <div class="search-wrapper">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -86,7 +96,7 @@
         <button class="subject-tab-btn active tab-btn-all" data-subject="all">
           <img src="images/illustrations/tab_all.png" alt="全部" class="tab-cute-icon">
           <span>全部重點</span>
-          <span class="badge-count">4</span>
+          <span class="badge-count">5</span>
         </button>
         <button class="subject-tab-btn tab-btn-science" data-subject="science">
           <img src="images/illustrations/tab_science.png" alt="自然" class="tab-cute-icon">
@@ -106,7 +116,7 @@
         <button class="subject-tab-btn tab-btn-social" data-subject="social">
           <img src="images/illustrations/tab_social.png" alt="社會" class="tab-cute-icon">
           <span>社會</span>
-          <span class="badge-count">0</span>
+          <span class="badge-count">1</span>
         </button>
         <button class="subject-tab-btn tab-btn-english" data-subject="english">
           <img src="images/illustrations/tab_english.png" alt="英文" class="tab-cute-icon">
@@ -116,30 +126,31 @@
       </div>
     </div>
 
-    <!-- Stats Ribbon -->
-    <div class="stats-bar">
-      <div class="stats-left">
-        <span id="stats-label"><i class="fa-solid fa-bookmark"></i> 目前顯示 <b>3</b> 則重點筆記</span>
-        <span class="stats-tip"><i class="fa-solid fa-wand-magic-sparkles"></i> 支援翻牌背誦測試</span>
-      </div>
-      <div class="stats-right">
-        <!-- 閱讀模式切換：預設精裝翻書模式 -->
-        <div class="view-mode-toggle" title="切換閱讀版面模式">
-          <button class="mode-btn active" id="btn-mode-book" data-mode="book">
-            <i class="fa-solid fa-book-open"></i> 翻書模式
-          </button>
-          <button class="mode-btn" id="btn-mode-list" data-mode="list">
-            <i class="fa-solid fa-list-ul"></i> 清單模式
-          </button>
-        </div>
-      </div>
-    </div>
+
 
     <!-- Dynamic Notes Container (Book Mode / List Mode) -->
     <section id="notes-container" class="notes-content-area">
       <!-- Injected by app.js -->
     </section>
   </main>
+
+  <!-- Cute Floating Back-to-Top Button (不管在哪裡都能一鍵秒回頂端) -->
+  <button id="btn-back-to-top" class="back-to-top-btn" onclick="scrollToTop()" aria-label="回到最頂端" title="飛回頂端 🚀">
+    <div class="btt-inner">
+      <span class="btt-sprout" aria-hidden="true">🌱</span>
+      <div class="btt-avatar-box">
+        <img src="images/illustrations/miley_mascot.png" alt="麥麥" class="btt-avatar-img">
+        <span class="btt-sparkle" aria-hidden="true">✨</span>
+      </div>
+      <div class="btt-arrow-icon" aria-hidden="true">
+        <i class="fa-solid fa-chevron-up"></i>
+      </div>
+      <span class="btt-label">回頂端</span>
+    </div>
+    <div class="btt-tooltip" aria-hidden="true">
+      <span>咻～回到最上方！🚀</span>
+    </div>
+  </button>
 
   <!-- High Definition Image Lightbox Modal -->
   <div id="image-lightbox" class="image-lightbox" onclick="closeLightbox(event)">
@@ -151,7 +162,7 @@
   </div>
 
   <!-- Scripts with Cache Buster -->
-  <script src="notes_data.js?v=1.2.0"></script>
-  <script src="app.js?v=1.2.0"></script>
+  <script src="notes_data.js?v=1.3.0"></script>
+  <script src="app.js?v=1.7.0"></script>
 </body>
 </html>

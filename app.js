@@ -48,6 +48,29 @@ document.addEventListener("DOMContentLoaded", () => {
   initFontScale();
   initEventListeners();
   renderNotes();
+
+  // 支援 URL 參數與 Hash 滾動跳轉 (例如 ?scroll=800 或 ?scroll=bottom 或 ?test_visible=1)
+  const urlParams = new URLSearchParams(window.location.search);
+  const scrollParam = urlParams.get("scroll");
+  if (scrollParam) {
+    setTimeout(() => {
+      const scrollPos = scrollParam === "bottom" ? (document.documentElement.scrollHeight || 5000) : (parseInt(scrollParam, 10) || 0);
+      window.scrollTo(0, scrollPos);
+      checkBackToTopVisibility();
+    }, 200);
+  }
+  if (urlParams.get("test_visible") === "1") {
+    document.getElementById("btn-back-to-top")?.classList.add("is-visible");
+  }
+
+  if (window.location.hash && window.location.hash.includes("scroll=")) {
+    const rawVal = window.location.hash.split("scroll=")[1];
+    setTimeout(() => {
+      const scrollPos = rawVal === "bottom" ? (document.documentElement.scrollHeight || 5000) : (parseInt(rawVal, 10) || 0);
+      window.scrollTo(0, scrollPos);
+      checkBackToTopVisibility();
+    }, 250);
+  }
 });
 
 // Theme Management
@@ -163,17 +186,20 @@ function initEventListeners() {
     }
   });
 
-  // 手機與平板觸控左右滑動翻頁
+  // 手機與平板觸控左右滑動翻頁 (防呆機制：排除表格、標籤列與時間軸膠囊滑動)
+  let touchTarget = null;
   window.addEventListener("touchstart", (e) => {
     if (e.changedTouches && e.changedTouches[0]) {
       touchStartX = e.changedTouches[0].screenX;
       touchStartY = e.changedTouches[0].screenY;
+      touchTarget = e.target;
     }
   }, { passive: true });
 
   window.addEventListener("touchend", (e) => {
     if (currentViewMode !== "book") return;
     if (document.getElementById("image-lightbox")?.classList.contains("active")) return;
+    if (touchTarget && touchTarget.closest('.table-responsive, .tabs-scroll-container, .timeline-nav-pills, .book-tabs-bar')) return;
     if (e.changedTouches && e.changedTouches[0]) {
       const diffX = e.changedTouches[0].screenX - touchStartX;
       const diffY = e.changedTouches[0].screenY - touchStartY;
@@ -187,6 +213,39 @@ function initEventListeners() {
       }
     }
   }, { passive: true });
+
+  // 🚀 回到頂端懸浮精靈按鈕事件監聽與滑動偵測
+  const backToTopBtn = document.getElementById("btn-back-to-top");
+  if (backToTopBtn) {
+    backToTopBtn.addEventListener("click", () => {
+      scrollToTop();
+    });
+  }
+
+  let isScrollTicking = false;
+  window.addEventListener("scroll", () => {
+    if (!isScrollTicking) {
+      window.requestAnimationFrame(() => {
+        checkBackToTopVisibility();
+        isScrollTicking = false;
+      });
+      isScrollTicking = true;
+    }
+  }, { passive: true });
+
+  // 初始載入時檢查一次顯示狀態
+  checkBackToTopVisibility();
+}
+
+function checkBackToTopVisibility() {
+  const btn = document.getElementById("btn-back-to-top");
+  if (!btn) return;
+  const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+  if (scrollY > 220) {
+    btn.classList.add("is-visible");
+  } else {
+    btn.classList.remove("is-visible");
+  }
 }
 
 function setViewMode(mode) {
@@ -284,18 +343,314 @@ function scrollToBookTop() {
   }
 }
 
+// 🚀 一鍵平滑回到網頁最頂端 (不管在哪裡都能秒回頂端)
+window.scrollToTop = function() {
+  const btn = document.getElementById("btn-back-to-top");
+  if (btn) {
+    btn.classList.add("launching");
+    setTimeout(() => {
+      btn.classList.remove("launching");
+    }, 700);
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
 // Format bold text
 function formatRichText(str) {
   if (!str) return "";
   return str.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 }
 
-// Format symbols ○ and × with high-end badges
+// 優化表頭排版：若包含括號副標（例如「被子植物 (開花植物)」），分拆為主標與小標籤，整齊不擠字
+function formatTableHeader(h) {
+  if (!h) return "";
+  const m = h.match(/^([^\(（]+)[\(（](.+?)[\)）]$/);
+  if (m) {
+    return `<div class="th-content-stack"><span class="th-main-title">${m[1].trim()}</span><span class="th-sub-badge">${m[2].trim()}</span></div>`;
+  }
+  return `<span class="th-main-title">${h}</span>`;
+}
+
+// 格式化單元格：精美符號徽章與直向緊湊排版，杜絕文字水平暴撐
 function formatTableCell(str) {
   if (!str) return "";
-  if (str === "○") return '<span class="sym-check">✓</span>';
-  if (str === "×") return '<span class="sym-cross">✕</span>';
-  return str;
+
+  // 1. 單純的 ○ 或 × / ✓ / ✕
+  if (str === "○" || str === "✓") {
+    return '<span class="sym-check">✓</span>';
+  }
+  if (str === "×" || str === "✕") {
+    return '<span class="sym-cross">✕</span>';
+  }
+
+  // 2. 組合型連三符號，如 "× / × / ×" 或 "○ / ○ / ○ (唯一開花結實)"
+  if (str.startsWith("× / × / ×")) {
+    const note = str.replace("× / × / ×", "").replace(/[()（）]/g, "").trim();
+    return `
+      <div class="cell-stack">
+        <div class="cell-combo-trio">
+          <span class="sym-cross sym-mini">✕</span><span class="sym-sep">/</span>
+          <span class="sym-cross sym-mini">✕</span><span class="sym-sep">/</span>
+          <span class="sym-cross sym-mini">✕</span>
+        </div>
+        ${note ? `<span class="cell-note-pill note-red">${note}</span>` : ""}
+      </div>
+    `;
+  }
+  if (str.startsWith("○ / ○ / ○") || str.startsWith("✓ / ✓ / ✓")) {
+    const note = str.replace(/^[○✓] \/ [○✓] \/ [○✓]/, "").replace(/[()（）]/g, "").trim();
+    return `
+      <div class="cell-stack">
+        <div class="cell-combo-trio">
+          <span class="sym-check sym-mini">✓</span><span class="sym-sep">/</span>
+          <span class="sym-check sym-mini">✓</span><span class="sym-sep">/</span>
+          <span class="sym-check sym-mini">✓</span>
+        </div>
+        ${note ? `<span class="cell-note-pill note-green">${note}</span>` : ""}
+      </div>
+    `;
+  }
+
+  // 3. 帶有補充註解的符號，例如 "× (無真根莖葉)", "○ (首度演化出)", "○ (免水受精)"
+  const checkMatch = str.match(/^[○✓]\s*[\(（](.+?)[\)）]$/);
+  if (checkMatch) {
+    return `
+      <div class="cell-stack">
+        <span class="sym-check">✓</span>
+        <span class="cell-note-pill note-green">${checkMatch[1]}</span>
+      </div>
+    `;
+  }
+  const crossMatch = str.match(/^[×✕]\s*[\(（](.+?)[\)）]$/);
+  if (crossMatch) {
+    return `
+      <div class="cell-stack">
+        <span class="sym-cross">✕</span>
+        <span class="cell-note-pill note-red">${crossMatch[1]}</span>
+      </div>
+    `;
+  }
+
+  // 4. 關鍵字標籤，如 "孢子" / "種子"
+  if (str === "孢子") {
+    return '<span class="cell-keyword-tag tag-spore">孢子</span>';
+  }
+  if (str === "種子") {
+    return '<span class="cell-keyword-tag tag-seed">種子</span>';
+  }
+
+  // 5. 一般文字：若包含括號補充說明，分層垂直排版
+  const textWithNoteMatch = str.match(/^([^\(（]+)[\(（](.+?)[\)）]$/);
+  if (textWithNoteMatch) {
+    const mainText = textWithNoteMatch[1].trim();
+    const subText = textWithNoteMatch[2].trim();
+    return `
+      <div class="cell-text-stack">
+        <span class="cell-text-main">${formatRichText(mainText)}</span>
+        <span class="cell-note-sub">(${subText})</span>
+      </div>
+    `;
+  }
+
+  return `<span class="cell-text-plain">${formatRichText(str)}</span>`;
+}
+
+// ========================================================
+// ⏳ 產生縱貫時序全景時間線 HTML (Timeline Component)
+// ========================================================
+function renderTimelineHtml(timelineData, noteId) {
+  if (!timelineData || !Array.isArray(timelineData) || timelineData.length === 0) return "";
+
+  // 1. 分期快速定位膠囊
+  const navPillsHtml = `
+    <div class="timeline-nav-pills" role="tablist" aria-label="歷史時期快速導覽">
+      <button type="button" class="timeline-nav-pill active" onclick="filterTimelineEra('${noteId}', 'all')">
+        <i class="fa-solid fa-layer-group"></i> 全部時序全景
+      </button>
+      ${timelineData.map(era => `
+        <button type="button" class="timeline-nav-pill" onclick="filterTimelineEra('${noteId}', '${era.eraId}')" style="--era-color: ${era.color};">
+          <i class="fa-solid ${era.icon}"></i> ${era.eraName.replace(/第[一二三四五]階段：/, '')}
+        </button>
+      `).join('')}
+    </div>
+  `;
+
+  // 2. 時期區塊與事件節點
+  const erasHtml = timelineData.map((era, eraIdx) => `
+    <div class="timeline-era-block" id="era-${noteId}-${era.eraId}" data-era-id="${era.eraId}">
+      <!-- 時代大里程碑標頭 -->
+      <div class="timeline-era-header" style="--era-theme: ${era.color};">
+        <div class="timeline-era-icon-box">
+          <i class="fa-solid ${era.icon}"></i>
+        </div>
+        <div class="timeline-era-meta">
+          <div class="timeline-era-badge-row">
+            <span class="timeline-era-badge">${era.badge || `階段 ${eraIdx + 1}`}</span>
+            <span class="timeline-era-period"><i class="fa-regular fa-clock"></i> ${era.period}</span>
+          </div>
+          <h3 class="timeline-era-title">${era.eraName}</h3>
+        </div>
+      </div>
+
+      <!-- 該時代事件垂直時間軌道 -->
+      <div class="timeline-events-track">
+        ${era.events.map((ev, evIdx) => `
+          <div class="timeline-event-item" id="event-${noteId}-${era.eraId}-${evIdx}">
+            <div class="timeline-node-stem" aria-hidden="true">
+              <div class="timeline-node-dot" style="border-color: ${era.color}; color: ${era.color};">
+                <i class="fa-solid ${ev.icon || 'fa-landmark'}"></i>
+              </div>
+            </div>
+
+            <div class="timeline-event-card">
+              <div class="timeline-event-top">
+                <span class="timeline-time-badge">
+                  <i class="fa-solid fa-calendar-days"></i> ${ev.time}
+                </span>
+                ${ev.tag ? `<span class="timeline-tag-pill">${ev.tag}</span>` : ''}
+              </div>
+
+              <h4 class="timeline-event-heading">${ev.title}</h4>
+
+              ${ev.summary ? `<p class="timeline-event-summary">${formatRichText(ev.summary)}</p>` : ''}
+
+              ${ev.highlights && ev.highlights.length > 0 ? `
+                <div class="timeline-highlights-box">
+                  <div class="timeline-hl-label">
+                    <i class="fa-solid fa-star" style="color: #f59e0b;"></i> 會考核心考點精華
+                  </div>
+                  <ul class="timeline-hl-list">
+                    ${ev.highlights.map(h => `<li>${formatRichText(h)}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+
+              ${ev.tip ? `
+                <div class="timeline-mnemonic-sticky">
+                  <div class="sticky-pin">📌</div>
+                  <span class="sticky-text">${formatRichText(ev.tip)}</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="section-block timeline-section-wrapper" id="timeline-${noteId}">
+      <div class="table-toolbar" style="margin-bottom: 14px;">
+        <div class="table-toolbar-left">
+          <span class="section-label" style="margin-bottom: 0;">
+            <i class="fa-solid fa-hourglass-half" style="color: #0284c7;"></i> 縱貫時序全景時間線 (Historical Timeline)
+          </span>
+        </div>
+        <div class="table-toolbar-actions">
+          <span class="timeline-stage-chip"><i class="fa-solid fa-award"></i> 國三上第一次段考核心時序架構</span>
+        </div>
+      </div>
+
+      ${navPillsHtml}
+
+      <div class="timeline-tree-container">
+        ${erasHtml}
+      </div>
+    </div>
+  `;
+}
+
+window.filterTimelineEra = function(noteId, eraId) {
+  const container = document.getElementById(`timeline-${noteId}`);
+  if (!container) return;
+
+  container.querySelectorAll(".timeline-nav-pill").forEach(pill => {
+    const isAll = eraId === "all" && pill.textContent.includes("全部");
+    const isThis = pill.getAttribute("onclick")?.includes(`'${eraId}'`);
+    pill.classList.toggle("active", isAll || isThis);
+  });
+
+  const eraBlocks = container.querySelectorAll(".timeline-era-block");
+  if (eraId === "all") {
+    eraBlocks.forEach(b => {
+      b.style.display = "";
+      b.classList.remove("era-focused");
+    });
+  } else {
+    eraBlocks.forEach(b => {
+      if (b.dataset.eraId === eraId) {
+        b.style.display = "";
+        b.classList.add("era-focused");
+        b.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } else {
+        b.style.display = "none";
+        b.classList.remove("era-focused");
+      }
+    });
+  }
+};
+
+// 產生完整比較大表 HTML（百分之百寬度鎖定，零橫向捲軸）
+function renderComparisonTableHtml(tableData, noteId) {
+  if (!tableData || !tableData.rows || tableData.rows.length === 0) return "";
+  const tableId = `table-${noteId}`;
+  const colCount = tableData.headers ? tableData.headers.length : 0;
+  
+  return `
+    <div class="section-block">
+      <div class="table-toolbar">
+        <div class="table-toolbar-left">
+          <span class="section-label" style="margin-bottom: 0;">
+            <i class="fa-solid fa-table"></i> 關鍵速查比較大表
+          </span>
+        </div>
+        <div class="table-toolbar-actions">
+          <button class="mask-mode-btn" id="btn-mask-${tableId}" onclick="toggleMaskMode('${tableId}')">
+            <i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="note-table col-count-${colCount}" id="${tableId}">
+          <thead>
+            <tr>
+              ${tableData.headers.map((h, i) => `
+                <th class="col-${i}">${formatTableHeader(h)}</th>
+              `).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${tableData.rows.map(row => `
+              <tr>
+                ${row.map((c, colIndex) => {
+                  if (colIndex === 0) {
+                    return `
+                      <td class="cell-row-header col-0">
+                        <div class="row-header-content">${formatRichText(c)}</div>
+                      </td>
+                    `;
+                  } else {
+                    return `
+                      <td class="mask-cell col-${colIndex}" onclick="toggleCell(this)">
+                        <div class="cell-wrapper">
+                          <span class="cell-mask-card" title="點擊翻牌揭曉">
+                            <i class="fa-solid fa-lock"></i>
+                            <span class="mask-text">揭曉</span>
+                          </span>
+                          <div class="cell-real-answer">${formatTableCell(c)}</div>
+                        </div>
+                      </td>
+                    `;
+                  }
+                }).join("")}
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
 }
 
 const SUBJECT_NAMES = {
@@ -384,10 +739,20 @@ function renderNotes() {
     // 📖 精裝立體翻書模式
     container.innerHTML = createOpenBookHtml(filtered, currentPage);
   } else {
-    // 📜 清單連續瀏覽模式
+    // 📜 清單連續瀏覽模式 (同樣具備精美空白兩側手帳學習插圖)
     container.innerHTML = `
-      <div class="notes-list">
-        ${filtered.map(note => createNoteCardHtml(note)).join("")}
+      <div class="notes-stage-layout list-stage-layout">
+        ${createFlankDecorHtml()}
+        <div class="notes-list">
+          ${filtered.map(note => createNoteCardHtml(note)).join("")}
+          <div class="list-bottom-back-top-wrap">
+            <button type="button" class="book-bottom-back-top" onclick="scrollToTop()" title="平滑回到頂端">
+              <i class="fa-solid fa-arrow-up"></i>
+              <span>回到頂端</span>
+              <span class="btn-top-sparkle">🚀</span>
+            </button>
+          </div>
+        </div>
       </div>
     `;
   }
@@ -408,6 +773,224 @@ function renderNotes() {
 }
 
 // ========================================================
+// 🌿 產生筆記空白兩側手帳學習與植物裝飾插圖 HTML (Flank Decor)
+// ========================================================
+// 🌿 產生筆記空白兩側手帳學習與可愛卡通藤蔓裝飾 HTML (Flank Decor)
+// 支援向下超長無縫流動延展，多階層豐富插圖與藤蔓伴隨全文至最底部，保證兩側零空白、零碰撞！
+// ========================================================
+function createFlankDecorHtml() {
+  return `
+    <!-- 筆記本左側空白區插圖群：可愛卡通綠葉攀爬藤蔓群 ＋ 多階層學習插圖與小昆蟲 (一路延伸至最底部零空白) -->
+    <aside class="book-flank-decor flank-left" aria-label="左側學習與卡通藤蔓飾物">
+      <div class="flank-scroll-flow">
+        <!-- 🌿 1. 可愛卡通主攀爬綠葉藤蔓 (頂部舒展) -->
+        <div class="flank-card cartoon-side-vine vine-left" title="🌿 可愛卡通綠葉藤蔓 · 自然舒心">
+          <img src="images/illustrations/cartoon_vine_left.png" alt="卡通綠葉藤蔓" class="vine-img">
+        </div>
+
+        <!-- 📚 2. 同款動漫小女孩風格之學習書堆與小芽 -->
+        <div class="flank-card flank-book-stack" title="📚 點滴累積知識 · 快樂學習">
+          <img src="images/illustrations/decor_books_stack.png" alt="動漫風學習書堆" class="flank-img">
+          <span class="flank-badge"><i class="fa-solid fa-seedling"></i> 快樂學習</span>
+        </div>
+
+        <!-- 🐞 3. 向下延伸之攀爬綠藤蔓（含小瓢蟲與花朵） -->
+        <div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🐞 森林小瓢蟲與攀爬綠藤蔓">
+          <img src="images/illustrations/cartoon_vine_extension.png" alt="延伸綠藤蔓與小瓢蟲" class="vine-img-ext">
+        </div>
+
+        <!-- 🧪 4. 探索求知魔法試劑燒瓶貼紙 -->
+        <div class="flank-card flank-flask-sticker" title="🧪 勇於實驗探索 · 發現新知">
+          <img src="images/illustrations/sticker_flask.png" alt="實驗燒瓶貼紙" class="flank-img-sticker">
+          <span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 探索求知</span>
+        </div>
+
+        <!-- 🌿 5. 繼續向下生長之曲折綠藤蔓 (自然盤繞延伸) -->
+        <div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 自然盤繞綠藤蔓">
+          <img src="images/illustrations/cartoon_vine_extension_flip.png" alt="曲折綠藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- ✏️ 6. 勤做筆記手繪鉛筆貼紙 -->
+        <div class="flank-card flank-pencil-sticker" title="✏️ 麥麥好記性不如爛筆頭">
+          <img src="images/illustrations/sticker_pencil.png" alt="可愛鉛筆貼紙" class="flank-img-sticker">
+          <span class="flank-badge"><i class="fa-solid fa-pencil"></i> 勤做筆記</span>
+        </div>
+
+        <!-- 🌿 7. 攀登延伸綠葉藤蔓末梢 -->
+        <div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 向上攀爬生機盎然">
+          <img src="images/illustrations/cartoon_vine_extension.png" alt="延伸綠藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- ⭐ 8. 榮耀金色成就星星 -->
+        <div class="flank-card flank-star-sticker" title="⭐ 滿分達成 · 學習大贏家">
+          <img src="images/illustrations/sticker_star.png" alt="榮耀之星" class="flank-img-sticker">
+          <span class="flank-badge badge-star"><i class="fa-solid fa-star"></i> 學習大贏家</span>
+        </div>
+
+        <!-- 🌿 9. 繼續向下延伸之翠綠藤蔓 (深層流動) -->
+        <div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 翠綠藤蔓盤旋">
+          <img src="images/illustrations/cartoon_vine_extension_flip.png" alt="深層翠綠藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- 📖 10. 可愛微笑翻開筆記本 -->
+        <div class="flank-card flank-openbook-sticker" title="📖 融會貫通 · 知識在心">
+          <img src="images/illustrations/sticker_book.png" alt="學習手帳貼紙" class="flank-img-sticker">
+          <span class="flank-badge"><i class="fa-solid fa-book-open"></i> 融會貫通</span>
+        </div>
+
+        <!-- 🌿 11. 連續延伸攀爬藤蔓 -->
+        <div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 向上攀爬藤蔓">
+          <img src="images/illustrations/cartoon_vine_extension.png" alt="向上攀爬藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- 📚 12. 動漫風學習教材書堆 -->
+        <div class="flank-card flank-book-stack" title="📚 博覽群書 · 積少成多">
+          <img src="images/illustrations/decor_books_stack.png" alt="學習教材書堆" class="flank-img">
+          <span class="flank-badge"><i class="fa-solid fa-seedling"></i> 積少成多</span>
+        </div>
+
+        <!-- 🌿 13. 自然盤繞翠綠枝藤 -->
+        <div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 盎然生機藤蔓">
+          <img src="images/illustrations/cartoon_vine_extension_flip.png" alt="盎然生機藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- 🧪 14. 智慧探索科學燒瓶 -->
+        <div class="flank-card flank-flask-sticker" title="🧪 理化自然觀念通">
+          <img src="images/illustrations/sticker_flask.png" alt="科學燒瓶" class="flank-img-sticker">
+          <span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 觀念透徹</span>
+        </div>
+
+        <!-- 🌿 15. 延伸攀爬綠藤蔓 -->
+        <div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 綠意常伴">
+          <img src="images/illustrations/cartoon_vine_extension.png" alt="綠意常伴" class="vine-img-ext">
+        </div>
+
+        <!-- ✏️ 16. 彩色鉛筆手帳貼紙 -->
+        <div class="flank-card flank-pencil-sticker" title="✏️ 點石成金 · 題題得分">
+          <img src="images/illustrations/sticker_pencil.png" alt="彩色鉛筆" class="flank-img-sticker">
+          <span class="flank-badge"><i class="fa-solid fa-pencil"></i> 題題得分</span>
+        </div>
+
+        <!-- 🌿 17. 底部延伸綠葉藤蔓 -->
+        <div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 枝繁葉茂生機勃勃">
+          <img src="images/illustrations/cartoon_vine_extension_flip.png" alt="底部綠葉藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- ⭐ 18. 終點榮譽金色之星 -->
+        <div class="flank-card flank-star-sticker" title="⭐ 滿分通關 · 學習成果棒！">
+          <img src="images/illustrations/sticker_star.png" alt="滿分通關之星" class="flank-img-sticker">
+          <span class="flank-badge badge-star"><i class="fa-solid fa-award"></i> 滿分通關</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 筆記本右側空白區插圖群：可愛卡通櫻花攀爬藤蔓群 ＋ 智慧貓頭鷹與探索飾物 (一路延伸至最底部零空白) -->
+    <aside class="book-flank-decor flank-right" aria-label="右側學習與卡通藤蔓飾物">
+      <div class="flank-scroll-flow">
+        <!-- 🌸 1. 可愛卡通主攀爬櫻花藤蔓 (頂部舒展) -->
+        <div class="flank-card cartoon-side-vine vine-right" title="🌸 可愛卡通櫻花藤蔓 · 舒心陪伴">
+          <img src="images/illustrations/cartoon_vine_right.png" alt="卡通櫻花藤蔓" class="vine-img">
+        </div>
+
+        <!-- 🦉 2. 戴博士帽認真讀書的智慧小貓頭鷹 -->
+        <div class="flank-card flank-owl-reading" title="🦉 智慧貓頭鷹：麥麥今天表現超棒！">
+          <img src="images/illustrations/decor_owl_reading.png" alt="智慧讀書小貓頭鷹" class="flank-img">
+          <span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 每天進步一點點</span>
+        </div>
+
+        <!-- 🐝 3. 向下延伸之櫻花藤蔓（含嗡嗡小蜜蜂） -->
+        <div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🐝 嗡嗡小蜜蜂與櫻花藤蔓">
+          <img src="images/illustrations/cartoon_vine_extension_right.png" alt="延伸櫻花藤蔓與小蜜蜂" class="vine-img-ext">
+        </div>
+
+        <!-- 🌍 4. 古典探知地球儀 -->
+        <div class="flank-card flank-study-globe" title="✨ 探索世界 · 知識就是力量">
+          <img src="images/illustrations/decor_study_globe.png" alt="古典探索地球儀" class="flank-img">
+          <span class="flank-badge badge-globe"><i class="fa-solid fa-earth-americas"></i> 知識就是力量</span>
+        </div>
+
+        <!-- 🌸 5. 繼續向下綻放之櫻花藤蔓 (花苞朵朵綻放) -->
+        <div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 盛開春櫻藤蔓">
+          <img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="盛開櫻花藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- 📖 6. 翻開的彩色學習筆記本貼紙 -->
+        <div class="flank-card flank-openbook-sticker" title="📖 深入理解核心觀念">
+          <img src="images/illustrations/sticker_book.png" alt="筆記手帳貼紙" class="flank-img-sticker">
+          <span class="flank-badge"><i class="fa-solid fa-book-open"></i> 融會貫通</span>
+        </div>
+
+        <!-- 🌸 7. 攀登延伸櫻花藤蔓末梢 -->
+        <div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 芬芳陪伴成長">
+          <img src="images/illustrations/cartoon_vine_extension_right.png" alt="延伸櫻花藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- 🏆 8. 麥麥學業徽章獎章 -->
+        <div class="flank-card flank-logo-sticker" title="🏆 麥麥專屬榮耀認證">
+          <img src="images/illustrations/miley_brand_logo.png" alt="麥麥榮譽徽章" class="flank-img-sticker">
+          <span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 實力滿分</span>
+        </div>
+
+        <!-- 🌸 9. 繼續向下綻放之櫻花花瀑 -->
+        <div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春櫻花瀑垂墜">
+          <img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="春櫻花瀑" class="vine-img-ext">
+        </div>
+
+        <!-- ✏️ 10. 可愛學習鉛筆貼紙 -->
+        <div class="flank-card flank-pencil-sticker" title="✏️ 專注筆耕 · 下筆有神">
+          <img src="images/illustrations/sticker_pencil.png" alt="手繪筆記鉛筆" class="flank-img-sticker">
+          <span class="flank-badge"><i class="fa-solid fa-pencil"></i> 下筆有神</span>
+        </div>
+
+        <!-- 🌸 11. 延伸櫻花蔓藤伴讀 -->
+        <div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 櫻花繁茂蔓延">
+          <img src="images/illustrations/cartoon_vine_extension_right.png" alt="櫻花繁茂蔓延" class="vine-img-ext">
+        </div>
+
+        <!-- 🦉 12. 鼓舞應援小貓頭鷹 -->
+        <div class="flank-card flank-owl-reading" title="🦉 貓頭鷹導師：持之以恆，妳是最棒的！">
+          <img src="images/illustrations/decor_owl_reading.png" alt="應援小貓頭鷹" class="flank-img">
+          <span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 持之以恆</span>
+        </div>
+
+        <!-- 🌸 13. 盛開櫻花藤蔓反向曲折 -->
+        <div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 柔美櫻花藤蔓">
+          <img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="柔美櫻花藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- 🌍 14. 探索世界地球儀 -->
+        <div class="flank-card flank-study-globe" title="✨ 視野開闊 · 放眼世界">
+          <img src="images/illustrations/decor_study_globe.png" alt="世界探索地球儀" class="flank-img">
+          <span class="flank-badge badge-globe"><i class="fa-solid fa-earth-americas"></i> 放眼世界</span>
+        </div>
+
+        <!-- 🌸 15. 芬芳櫻花延伸藤蔓 -->
+        <div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 芬芳花語陪伴">
+          <img src="images/illustrations/cartoon_vine_extension_right.png" alt="芬芳櫻花" class="vine-img-ext">
+        </div>
+
+        <!-- 📖 16. 彩色手帳筆記貼紙 -->
+        <div class="flank-card flank-openbook-sticker" title="📖 滿載智慧的筆記">
+          <img src="images/illustrations/sticker_book.png" alt="智慧筆記本" class="flank-img-sticker">
+          <span class="flank-badge"><i class="fa-solid fa-book-open"></i> 滿載智慧</span>
+        </div>
+
+        <!-- 🌸 17. 底部延伸櫻花藤蔓 -->
+        <div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春櫻陪伴到最後一頁">
+          <img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="底部櫻花藤蔓" class="vine-img-ext">
+        </div>
+
+        <!-- 🏆 18. 滿分榮譽徽章認證 -->
+        <div class="flank-card flank-logo-sticker" title="🏆 金牌學霸 · 完美收官！">
+          <img src="images/illustrations/miley_brand_logo.png" alt="金牌學霸徽章" class="flank-img-sticker">
+          <span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 完美收官</span>
+        </div>
+      </div>
+    </aside>
+  `;
+}
+
+// ========================================================
 // 📖 產生精裝立體翻書模式 HTML (含頁碼、快捷標籤與插圖)
 // ========================================================
 function createOpenBookHtml(filtered, pageIdx) {
@@ -418,15 +1001,14 @@ function createOpenBookHtml(filtered, pageIdx) {
 
   const animClass = flipDirection === "next" ? "page-flip-next-enter" : "page-flip-prev-enter";
 
-  // 1. 書頂快捷頁數標籤條 (Book Tabs Ribbon)
+  // 1. 書頂快捷頁數標籤條 (Book Tabs Ribbon) - 依使用者指示往內縮，純淨簡短標籤「第 1 頁」「第 2 頁」...
   const tabsBarHtml = `
     <div class="book-tabs-bar" role="tablist" aria-label="章節頁數快捷導覽">
       ${filtered.map((note, idx) => `
         <button class="book-tab-item ${idx === pageIdx ? 'active' : ''}" 
           onclick="goToPage(${idx})" 
-          title="前往第 ${idx + 1} 頁：${note.title}">
-          <span class="tab-page-num">第 ${idx + 1} 頁</span>
-          <span>${note.title.length > 15 ? note.title.substring(0, 15) + '...' : note.title}</span>
+          title="${note.title}">
+          <span class="tab-page-num"><i class="fa-solid fa-bookmark"></i> 第 ${idx + 1} 頁</span>
         </button>
       `).join('')}
     </div>
@@ -457,55 +1039,8 @@ function createOpenBookHtml(filtered, pageIdx) {
     `;
   }
 
-  // 3. 關鍵速查比較大表 (含單鍵翻牌背誦)
-  let tableHtml = "";
-  if (currentNote.table && currentNote.table.rows && currentNote.table.rows.length > 0) {
-    const tableId = `table-${currentNote.id}`;
-    tableHtml = `
-      <div class="section-block">
-        <div class="table-toolbar">
-          <div class="table-toolbar-left">
-            <span class="section-label" style="margin-bottom: 0;">
-              <i class="fa-solid fa-table"></i> 關鍵速查比較大表
-            </span>
-          </div>
-          <div class="table-toolbar-actions">
-            <button class="mask-mode-btn" id="btn-mask-${tableId}" onclick="toggleMaskMode('${tableId}')">
-              <i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式
-            </button>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="note-table" id="${tableId}">
-            <thead>
-              <tr>${currentNote.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>
-            </thead>
-            <tbody>
-              ${currentNote.table.rows.map(row => `
-                <tr>
-                  ${row.map((c, colIndex) => {
-                    if (colIndex === 0) {
-                      return `<td style="font-weight: 900; white-space: nowrap; background-color: var(--bg-secondary);">${c}</td>`;
-                    } else {
-                      return `
-                        <td class="mask-cell" onclick="toggleCell(this)">
-                          <div class="cell-wrapper">
-                            <span class="cell-mask-card"><i class="fa-solid fa-lock"></i> 點擊揭曉</span>
-                            <span class="cell-real-answer">${formatTableCell(c)}</span>
-                          </div>
-                        </td>
-                      `;
-                    }
-                  }).join("")}
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  }
+  // 3. 關鍵速查比較大表 (含單鍵翻牌背誦，100% 筆記本寬度自適應)
+  const tableHtml = renderComparisonTableHtml(currentNote.table, currentNote.id);
 
   // 4. 隨堂自我檢測 (Quiz Panel)
   let quizHtml = "";
@@ -534,20 +1069,21 @@ function createOpenBookHtml(filtered, pageIdx) {
     `).join("");
   }
 
-  // 5. 底部主翻頁控制列
+  // 5. 底部主翻頁控制列 (依據使用者圖二指示：全面升級為 3D 卡通立體木板招牌與手繪飾圖)
   const bottomNavHtml = `
     <div class="book-bottom-nav">
       <div class="flip-btn-group">
-        <!-- 上一頁大按鈕 -->
+        <!-- 上一頁大木牌按鈕 (卡通手繪風格) -->
         <button class="book-flip-btn btn-prev-action" onclick="prevPage()" ${pageIdx === 0 ? 'disabled' : ''} title="翻到上一頁">
-          <span class="btn-main-label"><i class="fa-solid fa-arrow-left"></i> 上一頁</span>
+          <span class="wood-sprout-accent">🌱</span>
+          <span class="btn-main-label"><i class="fa-solid fa-chevron-left"></i> 上一頁</span>
           <span class="btn-sub-label">${prevNote ? `第 ${pageIdx} 頁：${prevNote.title}` : '已是第一頁'}</span>
         </button>
 
-        <!-- 中間頁數與進度圓點 -->
-        <div class="page-indicator-center">
+        <!-- 中間頁數卡通木質告示牌與進度圓點 -->
+        <div class="page-indicator-wood-sign">
           <div class="page-indicator-text">
-            <i class="fa-solid fa-book-open"></i> 第 ${pageIdx + 1} 頁 / 共 ${totalPages} 頁
+            <i class="fa-solid fa-bookmark"></i> 第 ${pageIdx + 1} 頁 / 共 ${totalPages} 頁
           </div>
           <div class="page-dots-list" title="頁碼跳頁">
             ${filtered.map((_, idx) => `
@@ -558,15 +1094,24 @@ function createOpenBookHtml(filtered, pageIdx) {
           </div>
         </div>
 
-        <!-- 下一頁大按鈕 (醒目亮麗漸層) -->
+        <!-- 下一頁大木牌按鈕 (藍色魔法探險木牌) -->
         <button class="book-flip-btn btn-next-action" onclick="nextPage()" ${pageIdx === totalPages - 1 ? 'disabled' : ''} title="翻到下一頁">
-          <span class="btn-main-label">下一頁 <i class="fa-solid fa-arrow-right"></i></span>
+          <span class="wood-sprout-accent">🌸</span>
+          <span class="btn-main-label">下一頁 <i class="fa-solid fa-chevron-right"></i></span>
           <span class="btn-sub-label">${nextNote ? `第 ${pageIdx + 2} 頁：${nextNote.title}` : '<img src="images/illustrations/sticker_star.png" class="btn-mini-star" alt="星星"> 🎉 本單元全部完成'}</span>
         </button>
       </div>
 
       <div class="flip-shortcut-hint">
-        <i class="fa-solid fa-keyboard"></i> 鍵盤快速鍵：可使用左右方向鍵 <b>← / →</b> 翻頁 · 手機平板支援左右滑動
+        <div class="shortcut-tip-content">
+          <img src="images/illustrations/sticker_pencil.png" class="hint-cute-sticker" alt="鉛筆">
+          <span>鍵盤快速鍵：可使用左右方向鍵 <b>← / →</b> 翻頁 · 手機平板支援左右滑動</span>
+        </div>
+        <button type="button" class="book-bottom-back-top" onclick="scrollToTop()" title="滑動回到最頂端">
+          <i class="fa-solid fa-arrow-up"></i>
+          <span>回到頂端</span>
+          <span class="btn-top-sparkle">🚀</span>
+        </button>
       </div>
     </div>
   `;
@@ -576,7 +1121,10 @@ function createOpenBookHtml(filtered, pageIdx) {
     <div class="open-book-container">
       ${tabsBarHtml}
 
-      <div class="open-book-wrapper">
+      <div class="notes-stage-layout">
+        ${createFlankDecorHtml()}
+
+        <div class="open-book-wrapper">
         <!-- 頂部手帳便籤突出標記貼 (參考圖頂部的彩色便利貼標籤) -->
         <div class="notebook-top-tabs" aria-hidden="true">
           <div class="notebook-tab-flag flag-amber" title="核心重點標記"></div>
@@ -637,26 +1185,26 @@ function createOpenBookHtml(filtered, pageIdx) {
 
         <!-- 書本內頁內容 -->
         <article class="book-page-body ${animClass}" id="${currentNote.id}">
-          <!-- Running Header (頁首資訊含頂部快捷翻頁控制列) -->
+          <!-- Running Header (頁首資訊含頂部快捷翻頁控制列 - 卡通手繪風格小木牌與花枝分隔線) -->
           <div class="book-running-head">
             <div class="book-running-left">
               <span class="subject-badge badge-${currentNote.subject}">
                 <i class="fa-solid ${currentNote.subjectIcon || 'fa-tag'}"></i> ${currentNote.subjectName}
               </span>
-              <span class="unit-tag">${currentNote.unit}</span>
-              <span class="concept-tag">${currentNote.gradeVersion}</span>
+              <span class="unit-tag"><i class="fa-solid fa-seedling"></i> ${currentNote.unit}</span>
+              <span class="concept-tag"><i class="fa-solid fa-feather-pointed"></i> ${currentNote.gradeVersion}</span>
             </div>
 
             <!-- 頂部即時翻頁控制區塊 (免滾動至底部即可翻頁) -->
             <div class="book-top-flip-bar">
               <button class="book-top-btn" onclick="prevPage()" ${pageIdx === 0 ? 'disabled' : ''} title="上一頁">
-                <i class="fa-solid fa-arrow-left"></i> 上一頁
+                <i class="fa-solid fa-chevron-left"></i> 上一頁
               </button>
               <div class="book-page-stamp">
                 <i class="fa-solid fa-bookmark"></i> 第 ${pageIdx + 1} 頁 / 共 ${totalPages} 頁
               </div>
               <button class="book-top-btn next-top-btn" onclick="nextPage()" ${pageIdx === totalPages - 1 ? 'disabled' : ''} title="下一頁">
-                下一頁 <i class="fa-solid fa-arrow-right"></i>
+                下一頁 <i class="fa-solid fa-chevron-right"></i>
               </button>
             </div>
           </div>
@@ -677,6 +1225,9 @@ function createOpenBookHtml(filtered, pageIdx) {
               ${currentNote.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
             </ul>
           </div>
+
+          <!-- 縱貫時序全景時間線 (若有) -->
+          ${currentNote.timeline ? renderTimelineHtml(currentNote.timeline, currentNote.id) : ''}
 
           <!-- 關鍵速查比較大表 -->
           ${tableHtml}
@@ -707,10 +1258,11 @@ function createOpenBookHtml(filtered, pageIdx) {
         </article>
       </div>
     </div>
-
-    <!-- 底部翻頁主控制中心 -->
-    ${bottomNavHtml}
   </div>
+
+  <!-- 底部翻頁主控制中心 -->
+  ${bottomNavHtml}
+</div>
 `;
 }
 
@@ -735,54 +1287,8 @@ function createNoteCardHtml(note) {
     `;
   }
 
-  let tableHtml = "";
-  if (note.table && note.table.rows && note.table.rows.length > 0) {
-    const tableId = `table-${note.id}`;
-    tableHtml = `
-      <div class="section-block">
-        <div class="table-toolbar">
-          <div class="table-toolbar-left">
-            <span class="section-label" style="margin-bottom: 0;">
-              <i class="fa-solid fa-table"></i> 關鍵速查比較大表
-            </span>
-          </div>
-          <div class="table-toolbar-actions">
-            <button class="mask-mode-btn" id="btn-mask-${tableId}" onclick="toggleMaskMode('${tableId}')">
-              <i class="fa-solid fa-graduation-cap"></i> 進入翻牌背誦模式
-            </button>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="note-table" id="${tableId}">
-            <thead>
-              <tr>${note.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>
-            </thead>
-            <tbody>
-              ${note.table.rows.map(row => `
-                <tr>
-                  ${row.map((c, colIndex) => {
-                    if (colIndex === 0) {
-                      return `<td style="font-weight: 900; white-space: nowrap; background-color: var(--bg-secondary);">${c}</td>`;
-                    } else {
-                      return `
-                        <td class="mask-cell" onclick="toggleCell(this)">
-                          <div class="cell-wrapper">
-                            <span class="cell-mask-card"><i class="fa-solid fa-lock"></i> 點擊揭曉</span>
-                            <span class="cell-real-answer">${formatTableCell(c)}</span>
-                          </div>
-                        </td>
-                      `;
-                    }
-                  }).join("")}
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  }
+  // 關鍵速查比較大表 (含單鍵翻牌背誦，100% 筆記本寬度自適應)
+  const tableHtml = renderComparisonTableHtml(note.table, note.id);
 
   let quizHtml = "";
   if (note.quiz && note.quiz.length > 0) {
@@ -832,6 +1338,9 @@ function createNoteCardHtml(note) {
           ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
         </ul>
       </div>
+
+      <!-- 縱貫時序全景時間線 (若有) -->
+      ${note.timeline ? renderTimelineHtml(note.timeline, note.id) : ''}
 
       ${tableHtml}
 
