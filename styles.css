@@ -477,7 +477,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 36px;
+  gap: 22px;
   max-width: 1260px;
   margin: 0 auto;
 }
@@ -1057,7 +1057,7 @@ body {
   border: 2.5px solid #0369a1;
   border-radius: 14px 8px 12px 10px / 10px 14px 8px 12px;
   color: #075985;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--font-scale, 1));
   font-weight: 900;
   box-shadow: 0 3px 0 #0c4a6e, 0 4px 10px rgba(2, 132, 199, 0.15);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -2073,7 +2073,7 @@ body {
 .open-book-wrapper {
   position: relative;
   margin: 32px auto 0;
-  max-width: 1040px;
+  max-width: min(1240px, calc(100% - 170px));
   perspective: 2500px;
   perspective-origin: center center;
 }
@@ -2864,7 +2864,7 @@ body {
 .illustration-caption {
   margin-top: 16px;
   text-align: center;
-  font-size: 1.25rem;
+  font-size: calc(1.25rem * var(--font-scale, 1));
   font-weight: 800;
   color: var(--text-secondary);
   line-height: 1.65;
@@ -3851,7 +3851,7 @@ body {
 }
 
 .list-stage-layout .notes-list {
-  max-width: 1040px;
+  max-width: min(1240px, calc(100% - 170px));
   margin: 0 auto;
 }
 
@@ -3860,7 +3860,7 @@ body {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 150px;
+  width: 80px;
   display: flex;
   flex-direction: column;
   pointer-events: auto;
@@ -3910,12 +3910,12 @@ body {
 
 .cartoon-side-vine .vine-img {
   width: 100%;
-  max-width: 125px;
+  max-width: 68px;
   height: auto;
-  max-height: 800px;
+  max-height: 550px;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.12));
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.1));
   transition: filter 0.3s ease, transform 0.3s ease;
 }
 
@@ -3943,12 +3943,12 @@ body {
 
 .cartoon-side-vine-ext .vine-img-ext {
   width: 100%;
-  max-width: 125px;
+  max-width: 68px;
   height: auto;
-  max-height: 750px;
+  max-height: 550px;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.12));
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.1));
   transition: filter 0.3s ease, transform 0.3s ease;
 }
 
@@ -3966,13 +3966,13 @@ body {
 
 /* 左側空白翼：緊鄰筆記本左側 (避開左側外露青色護板) */
 .book-flank-decor.flank-left {
-  right: calc(50% + 548px);
+  right: calc(50% + 626px);
   left: auto;
 }
 
 /* 右側空白翼：緊鄰筆記本右側 */
 .book-flank-decor.flank-right {
-  left: calc(50% + 540px);
+  left: calc(50% + 624px);
   right: auto;
 }
 
@@ -4278,17 +4278,21 @@ body {
 /* 超寬螢幕 (>= 1600px)：增加側翼寬度與藤蔓呈現 */
 @media (min-width: 1600px) {
   .book-flank-decor {
-    width: 175px;
+    width: 85px;
   }
   .book-flank-decor.flank-left {
-    right: calc(50% + 545px);
+    right: calc(50% + 636px);
   }
   .book-flank-decor.flank-right {
-    left: calc(50% + 545px);
+    left: calc(50% + 634px);
   }
   .cartoon-side-vine .vine-img,
   .cartoon-side-vine-ext .vine-img-ext {
-    max-width: 140px;
+    max-width: 74px;
+  }
+  .flank-card .flank-img,
+  .flank-card .flank-img-sticker {
+    max-width: 60px;
   }
   .ambient-branch.branch-corner-left {
     width: 240px;
@@ -4301,47 +4305,51 @@ body {
 /* 標準筆電與桌面螢幕 (1360px ~ 1599px) */
 @media (max-width: 1599px) and (min-width: 1360px) {
   .book-flank-decor {
-    width: 140px;
+    width: 78px;
   }
   .book-flank-decor.flank-left {
-    right: calc(50% + 548px);
+    right: calc(50% + 616px);
   }
   .book-flank-decor.flank-right {
-    left: calc(50% + 540px);
+    left: calc(50% + 614px);
   }
   .cartoon-side-vine .vine-img,
   .cartoon-side-vine-ext .vine-img-ext {
-    max-width: 120px;
+    max-width: 68px;
+  }
+  .flank-card .flank-img,
+  .flank-card .flank-img-sticker {
+    max-width: 54px;
   }
 }
 
 /* 🎯 中型視窗/筆記型電腦螢幕 (860px ~ 1359px) 
-   完全對應使用者圖片一截圖：確保左右兩側紅框空白區必定呈現可愛卡通藤蔓與插圖！ */
+   完全對應使用者需求：筆記本更寬、邊界空白縮小、可愛插圖精緻伴讀！ */
 @media (max-width: 1359px) and (min-width: 860px) {
   .open-book-wrapper,
   .list-stage-layout .notes-list {
-    max-width: min(870px, calc(100% - 170px));
+    max-width: min(1140px, calc(100% - 150px));
   }
   .book-flank-decor {
-    width: 65px;
+    width: 64px;
     z-index: 25;
   }
   .book-flank-decor.flank-left {
-    left: 10px;
+    left: 8px;
     right: auto;
   }
   .book-flank-decor.flank-right {
-    right: 10px;
+    right: 8px;
     left: auto;
   }
   .cartoon-side-vine .vine-img,
   .cartoon-side-vine-ext .vine-img-ext {
-    max-width: 58px;
-    max-height: 550px;
+    max-width: 54px;
+    max-height: 500px;
   }
   .flank-card .flank-img,
   .flank-card .flank-img-sticker {
-    max-width: 48px;
+    max-width: 44px;
   }
   .flank-badge {
     display: none !important;
@@ -4452,7 +4460,7 @@ body {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   border: 1.5px solid #f59e0b;
   color: #92400e;
-  font-size: 0.88rem;
+  font-size: calc(0.88rem * var(--font-scale, 1));
   font-weight: 800;
   box-shadow: 0 2px 6px rgba(245, 158, 11, 0.18);
 }
@@ -4485,7 +4493,7 @@ body {
   border: 1.5px solid var(--border-color);
   background-color: var(--bg-card);
   color: var(--text-secondary);
-  font-size: 0.88rem;
+  font-size: calc(0.88rem * var(--font-scale, 1));
   font-weight: 800;
   cursor: pointer;
   transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -4567,7 +4575,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.35rem;
+  font-size: calc(1.35rem * var(--font-scale, 1));
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
 }
 
@@ -4589,20 +4597,20 @@ body {
   border-radius: var(--radius-full);
   background-color: var(--era-theme, var(--primary));
   color: #ffffff;
-  font-size: 0.76rem;
+  font-size: calc(0.76rem * var(--font-scale, 1));
   font-weight: 900;
   letter-spacing: 0.04em;
 }
 
 .timeline-era-period {
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--font-scale, 1));
   font-weight: 700;
   color: var(--text-muted);
 }
 
 .timeline-era-title {
   margin: 0;
-  font-size: 1.32rem;
+  font-size: calc(1.32rem * var(--font-scale, 1));
   font-weight: 900;
   color: var(--text-primary);
   line-height: 1.3;
@@ -4662,7 +4670,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--font-scale, 1));
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
   transition: transform 0.25s ease;
 }
@@ -4708,7 +4716,7 @@ body {
   border: 1.5px solid var(--border-color);
   color: var(--primary);
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--font-scale, 1));
 }
 
 .timeline-tag-pill {
@@ -4718,12 +4726,12 @@ body {
   background-color: rgba(79, 70, 229, 0.08);
   color: var(--primary);
   font-weight: 700;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--font-scale, 1));
 }
 
 .timeline-event-heading {
   margin: 0 0 8px 0;
-  font-size: 1.18rem;
+  font-size: calc(1.18rem * var(--font-scale, 1));
   font-weight: 900;
   color: var(--text-primary);
   line-height: 1.35;
@@ -4731,7 +4739,7 @@ body {
 
 .timeline-event-summary {
   margin: 0 0 12px 0;
-  font-size: 0.98rem;
+  font-size: calc(0.98rem * var(--font-scale, 1));
   line-height: 1.6;
   color: var(--text-secondary);
 }
@@ -4745,7 +4753,7 @@ body {
 }
 
 .timeline-hl-label {
-  font-size: 0.86rem;
+  font-size: calc(0.86rem * var(--font-scale, 1));
   font-weight: 900;
   color: var(--text-primary);
   margin-bottom: 6px;
@@ -4763,7 +4771,7 @@ body {
 }
 
 .timeline-hl-list li {
-  font-size: 0.94rem;
+  font-size: calc(0.94rem * var(--font-scale, 1));
   line-height: 1.55;
   color: var(--text-primary);
 }
@@ -4787,12 +4795,12 @@ body {
 }
 
 .sticky-pin {
-  font-size: 1rem;
+  font-size: calc(1rem * var(--font-scale, 1));
   line-height: 1;
 }
 
 .sticky-text {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--font-scale, 1));
   font-weight: 800;
   color: #854d0e;
   line-height: 1.5;
@@ -5035,7 +5043,7 @@ body {
     white-space: nowrap;
     flex-shrink: 0;
     padding: 6px 12px;
-    font-size: 0.82rem;
+    font-size: calc(0.82rem * var(--font-scale, 1));
   }
   .timeline-era-header {
     padding: 12px 14px;
@@ -5048,7 +5056,7 @@ body {
     font-size: 1.15rem;
   }
   .timeline-era-title {
-    font-size: 1.15rem;
+    font-size: calc(1.15rem * var(--font-scale, 1));
   }
   .timeline-events-track::before {
     left: 17px;
@@ -5069,13 +5077,13 @@ body {
     padding: 14px 12px;
   }
   .timeline-event-heading {
-    font-size: 1.05rem;
+    font-size: calc(1.05rem * var(--font-scale, 1));
   }
   .timeline-event-summary {
-    font-size: 0.92rem;
+    font-size: calc(0.92rem * var(--font-scale, 1));
   }
   .timeline-hl-list li {
-    font-size: 0.88rem;
+    font-size: calc(0.88rem * var(--font-scale, 1));
   }
 
   /* 翻頁大木牌按鈕垂直流暢堆疊 */

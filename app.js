@@ -16,9 +16,15 @@ let touchStartY = 0;
 // 預設字體縮放：1.0 (對應 html 根字級 23px，大字清晰護眼)
 let currentFontScale = 1.0;
 try {
-  const savedScale = parseFloat(localStorage.getItem("maimai_notes_font_scale"));
-  if (!isNaN(savedScale) && savedScale >= 0.8 && savedScale <= 2.2) {
-    currentFontScale = savedScale;
+  const urlParams = new URLSearchParams(window.location.search);
+  const qScale = parseFloat(urlParams.get("fontScale"));
+  if (!isNaN(qScale) && qScale >= 0.8 && qScale <= 2.2) {
+    currentFontScale = qScale;
+  } else {
+    const savedScale = parseFloat(localStorage.getItem("maimai_notes_font_scale"));
+    if (!isNaN(savedScale) && savedScale >= 0.8 && savedScale <= 2.2) {
+      currentFontScale = savedScale;
+    }
   }
 } catch (e) {}
 
@@ -779,212 +785,96 @@ function renderNotes() {
 // 支援向下超長無縫流動延展，多階層豐富插圖與藤蔓伴隨全文至最底部，保證兩側零空白、零碰撞！
 // ========================================================
 function createFlankDecorHtml() {
+  // 左側綠意藤蔓與學習插圖群 (共 36 層，涵蓋長頁面向下延伸至底部零空白)
+  const leftCards = [
+    '<div class="flank-card cartoon-side-vine vine-left" title="🌿 可愛卡通綠葉藤蔓 · 自然舒心"><img src="images/illustrations/cartoon_vine_left.png" alt="卡通綠葉藤蔓" class="vine-img"></div>',
+    '<div class="flank-card flank-book-stack" title="📚 點滴累積知識 · 快樂學習"><img src="images/illustrations/decor_books_stack.png" alt="動漫風學習書堆" class="flank-img"><span class="flank-badge"><i class="fa-solid fa-seedling"></i> 快樂學習</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🐞 森林小瓢蟲與攀爬綠藤蔓"><img src="images/illustrations/cartoon_vine_extension.png" alt="延伸綠藤蔓與小瓢蟲" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-flask-sticker" title="🧪 勇於實驗探索 · 發現新知"><img src="images/illustrations/sticker_flask.png" alt="實驗燒瓶貼紙" class="flank-img-sticker"><span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 探索求知</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 自然盤繞綠藤蔓"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="曲折綠藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-pencil-sticker" title="✏️ 麥麥好記性不如爛筆頭"><img src="images/illustrations/sticker_pencil.png" alt="可愛鉛筆貼紙" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 勤做筆記</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 向上攀爬生機盎然"><img src="images/illustrations/cartoon_vine_extension.png" alt="延伸綠藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-star-sticker" title="⭐ 滿分達成 · 學習大贏家"><img src="images/illustrations/sticker_star.png" alt="榮耀之星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-star"></i> 學習大贏家</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 翠綠藤蔓盤旋"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="深層翠綠藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-openbook-sticker" title="📖 融會貫通 · 知識在心"><img src="images/illustrations/sticker_book.png" alt="學習手帳貼紙" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 融會貫通</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 向上攀爬藤蔓"><img src="images/illustrations/cartoon_vine_extension.png" alt="向上攀爬藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-book-stack" title="📚 博覽群書 · 積少成多"><img src="images/illustrations/decor_books_stack.png" alt="學習教材書堆" class="flank-img"><span class="flank-badge"><i class="fa-solid fa-seedling"></i> 積少成多</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 盎然生機藤蔓"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="盎然生機藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-flask-sticker" title="🧪 理化自然觀念通"><img src="images/illustrations/sticker_flask.png" alt="科學燒瓶" class="flank-img-sticker"><span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 觀念透徹</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 綠意常伴"><img src="images/illustrations/cartoon_vine_extension.png" alt="綠意常伴" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-pencil-sticker" title="✏️ 點石成金 · 題題得分"><img src="images/illustrations/sticker_pencil.png" alt="彩色鉛筆" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 題題得分</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 枝繁葉茂生機勃勃"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="底部綠葉藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-star-sticker" title="⭐ 滿分通關 · 學習成果棒！"><img src="images/illustrations/sticker_star.png" alt="滿分通關之星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-award"></i> 滿分通關</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 綠藤伴讀 · 步步踏實"><img src="images/illustrations/cartoon_vine_extension.png" alt="伴讀綠藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-owl-reading" title="🦉 智慧貓頭鷹：靜心專注更清晰！"><img src="images/illustrations/decor_owl_reading.png" alt="智慧讀書小貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 靜心專注</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 春風吹拂翠綠枝芽"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="盤旋翠綠藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-flask-sticker" title="🧪 勇於求真 · 洞悉原理"><img src="images/illustrations/sticker_flask.png" alt="求真科學燒瓶" class="flank-img-sticker"><span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 實驗求真</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 長青綠藤攀爬不止"><img src="images/illustrations/cartoon_vine_extension.png" alt="長青綠藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-openbook-sticker" title="📖 溫故知新 · 歷久彌新"><img src="images/illustrations/sticker_book.png" alt="溫故知新手帳" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 溫故知新</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 向上茁壯生命力"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="茁壯綠藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-pencil-sticker" title="✏️ 下筆有神 · 答題如流"><img src="images/illustrations/sticker_pencil.png" alt="彩色鉛筆" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 下筆有神</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 葉片舒展綠意盎然"><img src="images/illustrations/cartoon_vine_extension.png" alt="舒展綠藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-book-stack" title="📚 博古通今 · 智囊相伴"><img src="images/illustrations/decor_books_stack.png" alt="學術書堆" class="flank-img"><span class="flank-badge"><i class="fa-solid fa-seedling"></i> 學識淵博</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 自然生生不息"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="生生不息藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-star-sticker" title="⭐ 智慧光芒 · 照亮前路"><img src="images/illustrations/sticker_star.png" alt="智慧星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-star"></i> 智慧光芒</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 綠意指引大道"><img src="images/illustrations/cartoon_vine_extension.png" alt="綠色大道藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-flask-sticker" title="🧪 精準推理 · 融會貫通"><img src="images/illustrations/sticker_flask.png" alt="精準燒瓶" class="flank-img-sticker"><span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 精準推理</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 繁茂綠葉一路相隨"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="繁茂藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-openbook-sticker" title="📖 全書通曉 · 無懈可擊"><img src="images/illustrations/sticker_book.png" alt="全書通曉筆記" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 全書通曉</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 攀向巔峰綠藤"><img src="images/illustrations/cartoon_vine_extension.png" alt="巔峰綠藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-logo-sticker" title="🏆 金牌學霸 · 完美收官！"><img src="images/illustrations/miley_brand_logo.png" alt="金牌學霸徽章" class="flank-img-sticker"><span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 完美通關</span></div>'
+  ];
+
+  // 右側粉櫻藤蔓與智慧貓頭鷹飾物群 (共 36 層，涵蓋長頁面向下延伸至底部零空白)
+  const rightCards = [
+    '<div class="flank-card cartoon-side-vine vine-right" title="🌸 可愛卡通櫻花藤蔓 · 舒心陪伴"><img src="images/illustrations/cartoon_vine_right.png" alt="卡通櫻花藤蔓" class="vine-img"></div>',
+    '<div class="flank-card flank-owl-reading" title="🦉 智慧貓頭鷹：麥麥今天表現超棒！"><img src="images/illustrations/decor_owl_reading.png" alt="智慧讀書小貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 每天進步一點點</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🐝 嗡嗡小蜜蜂與櫻花藤蔓"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="延伸櫻花藤蔓與小蜜蜂" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-study-globe" title="✨ 探索世界 · 知識就是力量"><img src="images/illustrations/decor_study_globe.png" alt="古典探索地球儀" class="flank-img"><span class="flank-badge badge-globe"><i class="fa-solid fa-earth-americas"></i> 知識就是力量</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 盛開春櫻藤蔓"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="盛開櫻花藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-openbook-sticker" title="📖 深入理解核心觀念"><img src="images/illustrations/sticker_book.png" alt="筆記手帳貼紙" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 融會貫通</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 芬芳陪伴成長"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="延伸櫻花藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-logo-sticker" title="🏆 麥麥專屬榮耀認證"><img src="images/illustrations/miley_brand_logo.png" alt="麥麥榮譽徽章" class="flank-img-sticker"><span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 實力滿分</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春櫻花瀑垂墜"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="春櫻花瀑" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-pencil-sticker" title="✏️ 專注筆耕 · 下筆有神"><img src="images/illustrations/sticker_pencil.png" alt="手繪筆記鉛筆" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 下筆有神</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 櫻花繁茂蔓延"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="櫻花繁茂蔓延" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-owl-reading" title="🦉 智慧隨行 · 洞察秋毫"><img src="images/illustrations/decor_owl_reading.png" alt="智慧讀書小貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-feather"></i> 智慧隨行</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 繁花似錦映日紅"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="繁花櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-study-globe" title="🌍 放眼天下 · 融會貫通"><img src="images/illustrations/decor_study_globe.png" alt="探索地球儀" class="flank-img"><span class="flank-badge badge-globe"><i class="fa-solid fa-globe"></i> 放眼天下</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 櫻枝吐蕊伴身旁"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="吐蕊櫻枝" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-openbook-sticker" title="📖 滿載智慧的筆記"><img src="images/illustrations/sticker_book.png" alt="智慧筆記本" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 滿載智慧</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春櫻陪伴到最後一頁"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="底部櫻花藤蔓" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-star-sticker" title="⭐ 榮耀星光燦爛"><img src="images/illustrations/sticker_star.png" alt="榮耀之星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-star"></i> 星光燦爛</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 春暖花開一路相隨"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="春暖花開櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-owl-reading" title="🦉 步步為營 · 穩紮穩打"><img src="images/illustrations/decor_owl_reading.png" alt="智慧貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 穩紮穩打</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 柔美櫻藤垂掛"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="柔美櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-study-globe" title="🌍 胸懷大志 · 知識領航"><img src="images/illustrations/decor_study_globe.png" alt="領航地球儀" class="flank-img"><span class="flank-badge badge-globe"><i class="fa-solid fa-earth-americas"></i> 知識領航</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 枝頭粉櫻迎風展"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="迎風櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-pencil-sticker" title="✏️ 筆耕不輟 · 妙筆生花"><img src="images/illustrations/sticker_pencil.png" alt="手繪筆記鉛筆" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 妙筆生花</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 櫻花浪漫盤旋"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="浪漫櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-openbook-sticker" title="📖 溫故知新深入核心"><img src="images/illustrations/sticker_book.png" alt="筆記手帳貼紙" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 核心透徹</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 花香滿徑"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="花香櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-book-stack" title="📚 博古通今 · 才高八斗"><img src="images/illustrations/decor_books_stack.png" alt="博學書堆" class="flank-img"><span class="flank-badge"><i class="fa-solid fa-seedling"></i> 才高八斗</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 櫻雪芬芳"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="芬芳櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-star-sticker" title="⭐ 璀璨榮耀之星"><img src="images/illustrations/sticker_star.png" alt="榮耀之星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-award"></i> 璀璨榮耀</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 連綿櫻藤攀援"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="連綿櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-owl-reading" title="🦉 領悟大師 · 運籌帷幄"><img src="images/illustrations/decor_owl_reading.png" alt="領悟貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 融會貫通</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春華秋實繁盛"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="秋實櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-openbook-sticker" title="📖 智慧寶庫全通"><img src="images/illustrations/sticker_book.png" alt="寶庫手帳" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 智慧寶庫</span></div>',
+    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 花團錦簇慶祝"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="錦簇櫻藤" class="vine-img-ext"></div>',
+    '<div class="flank-card flank-logo-sticker" title="🏆 金牌學霸 · 完美收官！"><img src="images/illustrations/miley_brand_logo.png" alt="金牌學霸徽章" class="flank-img-sticker"><span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 完美通關</span></div>'
+  ];
+
   return `
-    <!-- 筆記本左側空白區插圖群：可愛卡通綠葉攀爬藤蔓群 ＋ 多階層學習插圖與小昆蟲 (一路延伸至最底部零空白) -->
     <aside class="book-flank-decor flank-left" aria-label="左側學習與卡通藤蔓飾物">
       <div class="flank-scroll-flow">
-        <!-- 🌿 1. 可愛卡通主攀爬綠葉藤蔓 (頂部舒展) -->
-        <div class="flank-card cartoon-side-vine vine-left" title="🌿 可愛卡通綠葉藤蔓 · 自然舒心">
-          <img src="images/illustrations/cartoon_vine_left.png" alt="卡通綠葉藤蔓" class="vine-img">
-        </div>
-
-        <!-- 📚 2. 同款動漫小女孩風格之學習書堆與小芽 -->
-        <div class="flank-card flank-book-stack" title="📚 點滴累積知識 · 快樂學習">
-          <img src="images/illustrations/decor_books_stack.png" alt="動漫風學習書堆" class="flank-img">
-          <span class="flank-badge"><i class="fa-solid fa-seedling"></i> 快樂學習</span>
-        </div>
-
-        <!-- 🐞 3. 向下延伸之攀爬綠藤蔓（含小瓢蟲與花朵） -->
-        <div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🐞 森林小瓢蟲與攀爬綠藤蔓">
-          <img src="images/illustrations/cartoon_vine_extension.png" alt="延伸綠藤蔓與小瓢蟲" class="vine-img-ext">
-        </div>
-
-        <!-- 🧪 4. 探索求知魔法試劑燒瓶貼紙 -->
-        <div class="flank-card flank-flask-sticker" title="🧪 勇於實驗探索 · 發現新知">
-          <img src="images/illustrations/sticker_flask.png" alt="實驗燒瓶貼紙" class="flank-img-sticker">
-          <span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 探索求知</span>
-        </div>
-
-        <!-- 🌿 5. 繼續向下生長之曲折綠藤蔓 (自然盤繞延伸) -->
-        <div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 自然盤繞綠藤蔓">
-          <img src="images/illustrations/cartoon_vine_extension_flip.png" alt="曲折綠藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- ✏️ 6. 勤做筆記手繪鉛筆貼紙 -->
-        <div class="flank-card flank-pencil-sticker" title="✏️ 麥麥好記性不如爛筆頭">
-          <img src="images/illustrations/sticker_pencil.png" alt="可愛鉛筆貼紙" class="flank-img-sticker">
-          <span class="flank-badge"><i class="fa-solid fa-pencil"></i> 勤做筆記</span>
-        </div>
-
-        <!-- 🌿 7. 攀登延伸綠葉藤蔓末梢 -->
-        <div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 向上攀爬生機盎然">
-          <img src="images/illustrations/cartoon_vine_extension.png" alt="延伸綠藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- ⭐ 8. 榮耀金色成就星星 -->
-        <div class="flank-card flank-star-sticker" title="⭐ 滿分達成 · 學習大贏家">
-          <img src="images/illustrations/sticker_star.png" alt="榮耀之星" class="flank-img-sticker">
-          <span class="flank-badge badge-star"><i class="fa-solid fa-star"></i> 學習大贏家</span>
-        </div>
-
-        <!-- 🌿 9. 繼續向下延伸之翠綠藤蔓 (深層流動) -->
-        <div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 翠綠藤蔓盤旋">
-          <img src="images/illustrations/cartoon_vine_extension_flip.png" alt="深層翠綠藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- 📖 10. 可愛微笑翻開筆記本 -->
-        <div class="flank-card flank-openbook-sticker" title="📖 融會貫通 · 知識在心">
-          <img src="images/illustrations/sticker_book.png" alt="學習手帳貼紙" class="flank-img-sticker">
-          <span class="flank-badge"><i class="fa-solid fa-book-open"></i> 融會貫通</span>
-        </div>
-
-        <!-- 🌿 11. 連續延伸攀爬藤蔓 -->
-        <div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 向上攀爬藤蔓">
-          <img src="images/illustrations/cartoon_vine_extension.png" alt="向上攀爬藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- 📚 12. 動漫風學習教材書堆 -->
-        <div class="flank-card flank-book-stack" title="📚 博覽群書 · 積少成多">
-          <img src="images/illustrations/decor_books_stack.png" alt="學習教材書堆" class="flank-img">
-          <span class="flank-badge"><i class="fa-solid fa-seedling"></i> 積少成多</span>
-        </div>
-
-        <!-- 🌿 13. 自然盤繞翠綠枝藤 -->
-        <div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 盎然生機藤蔓">
-          <img src="images/illustrations/cartoon_vine_extension_flip.png" alt="盎然生機藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- 🧪 14. 智慧探索科學燒瓶 -->
-        <div class="flank-card flank-flask-sticker" title="🧪 理化自然觀念通">
-          <img src="images/illustrations/sticker_flask.png" alt="科學燒瓶" class="flank-img-sticker">
-          <span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 觀念透徹</span>
-        </div>
-
-        <!-- 🌿 15. 延伸攀爬綠藤蔓 -->
-        <div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 綠意常伴">
-          <img src="images/illustrations/cartoon_vine_extension.png" alt="綠意常伴" class="vine-img-ext">
-        </div>
-
-        <!-- ✏️ 16. 彩色鉛筆手帳貼紙 -->
-        <div class="flank-card flank-pencil-sticker" title="✏️ 點石成金 · 題題得分">
-          <img src="images/illustrations/sticker_pencil.png" alt="彩色鉛筆" class="flank-img-sticker">
-          <span class="flank-badge"><i class="fa-solid fa-pencil"></i> 題題得分</span>
-        </div>
-
-        <!-- 🌿 17. 底部延伸綠葉藤蔓 -->
-        <div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 枝繁葉茂生機勃勃">
-          <img src="images/illustrations/cartoon_vine_extension_flip.png" alt="底部綠葉藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- ⭐ 18. 終點榮譽金色之星 -->
-        <div class="flank-card flank-star-sticker" title="⭐ 滿分通關 · 學習成果棒！">
-          <img src="images/illustrations/sticker_star.png" alt="滿分通關之星" class="flank-img-sticker">
-          <span class="flank-badge badge-star"><i class="fa-solid fa-award"></i> 滿分通關</span>
-        </div>
+        ${leftCards.join('\n        ')}
       </div>
     </aside>
 
-    <!-- 筆記本右側空白區插圖群：可愛卡通櫻花攀爬藤蔓群 ＋ 智慧貓頭鷹與探索飾物 (一路延伸至最底部零空白) -->
     <aside class="book-flank-decor flank-right" aria-label="右側學習與卡通藤蔓飾物">
       <div class="flank-scroll-flow">
-        <!-- 🌸 1. 可愛卡通主攀爬櫻花藤蔓 (頂部舒展) -->
-        <div class="flank-card cartoon-side-vine vine-right" title="🌸 可愛卡通櫻花藤蔓 · 舒心陪伴">
-          <img src="images/illustrations/cartoon_vine_right.png" alt="卡通櫻花藤蔓" class="vine-img">
-        </div>
-
-        <!-- 🦉 2. 戴博士帽認真讀書的智慧小貓頭鷹 -->
-        <div class="flank-card flank-owl-reading" title="🦉 智慧貓頭鷹：麥麥今天表現超棒！">
-          <img src="images/illustrations/decor_owl_reading.png" alt="智慧讀書小貓頭鷹" class="flank-img">
-          <span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 每天進步一點點</span>
-        </div>
-
-        <!-- 🐝 3. 向下延伸之櫻花藤蔓（含嗡嗡小蜜蜂） -->
-        <div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🐝 嗡嗡小蜜蜂與櫻花藤蔓">
-          <img src="images/illustrations/cartoon_vine_extension_right.png" alt="延伸櫻花藤蔓與小蜜蜂" class="vine-img-ext">
-        </div>
-
-        <!-- 🌍 4. 古典探知地球儀 -->
-        <div class="flank-card flank-study-globe" title="✨ 探索世界 · 知識就是力量">
-          <img src="images/illustrations/decor_study_globe.png" alt="古典探索地球儀" class="flank-img">
-          <span class="flank-badge badge-globe"><i class="fa-solid fa-earth-americas"></i> 知識就是力量</span>
-        </div>
-
-        <!-- 🌸 5. 繼續向下綻放之櫻花藤蔓 (花苞朵朵綻放) -->
-        <div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 盛開春櫻藤蔓">
-          <img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="盛開櫻花藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- 📖 6. 翻開的彩色學習筆記本貼紙 -->
-        <div class="flank-card flank-openbook-sticker" title="📖 深入理解核心觀念">
-          <img src="images/illustrations/sticker_book.png" alt="筆記手帳貼紙" class="flank-img-sticker">
-          <span class="flank-badge"><i class="fa-solid fa-book-open"></i> 融會貫通</span>
-        </div>
-
-        <!-- 🌸 7. 攀登延伸櫻花藤蔓末梢 -->
-        <div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 芬芳陪伴成長">
-          <img src="images/illustrations/cartoon_vine_extension_right.png" alt="延伸櫻花藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- 🏆 8. 麥麥學業徽章獎章 -->
-        <div class="flank-card flank-logo-sticker" title="🏆 麥麥專屬榮耀認證">
-          <img src="images/illustrations/miley_brand_logo.png" alt="麥麥榮譽徽章" class="flank-img-sticker">
-          <span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 實力滿分</span>
-        </div>
-
-        <!-- 🌸 9. 繼續向下綻放之櫻花花瀑 -->
-        <div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春櫻花瀑垂墜">
-          <img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="春櫻花瀑" class="vine-img-ext">
-        </div>
-
-        <!-- ✏️ 10. 可愛學習鉛筆貼紙 -->
-        <div class="flank-card flank-pencil-sticker" title="✏️ 專注筆耕 · 下筆有神">
-          <img src="images/illustrations/sticker_pencil.png" alt="手繪筆記鉛筆" class="flank-img-sticker">
-          <span class="flank-badge"><i class="fa-solid fa-pencil"></i> 下筆有神</span>
-        </div>
-
-        <!-- 🌸 11. 延伸櫻花蔓藤伴讀 -->
-        <div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 櫻花繁茂蔓延">
-          <img src="images/illustrations/cartoon_vine_extension_right.png" alt="櫻花繁茂蔓延" class="vine-img-ext">
-        </div>
-
-        <!-- 🦉 12. 鼓舞應援小貓頭鷹 -->
-        <div class="flank-card flank-owl-reading" title="🦉 貓頭鷹導師：持之以恆，妳是最棒的！">
-          <img src="images/illustrations/decor_owl_reading.png" alt="應援小貓頭鷹" class="flank-img">
-          <span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 持之以恆</span>
-        </div>
-
-        <!-- 🌸 13. 盛開櫻花藤蔓反向曲折 -->
-        <div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 柔美櫻花藤蔓">
-          <img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="柔美櫻花藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- 🌍 14. 探索世界地球儀 -->
-        <div class="flank-card flank-study-globe" title="✨ 視野開闊 · 放眼世界">
-          <img src="images/illustrations/decor_study_globe.png" alt="世界探索地球儀" class="flank-img">
-          <span class="flank-badge badge-globe"><i class="fa-solid fa-earth-americas"></i> 放眼世界</span>
-        </div>
-
-        <!-- 🌸 15. 芬芳櫻花延伸藤蔓 -->
-        <div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 芬芳花語陪伴">
-          <img src="images/illustrations/cartoon_vine_extension_right.png" alt="芬芳櫻花" class="vine-img-ext">
-        </div>
-
-        <!-- 📖 16. 彩色手帳筆記貼紙 -->
-        <div class="flank-card flank-openbook-sticker" title="📖 滿載智慧的筆記">
-          <img src="images/illustrations/sticker_book.png" alt="智慧筆記本" class="flank-img-sticker">
-          <span class="flank-badge"><i class="fa-solid fa-book-open"></i> 滿載智慧</span>
-        </div>
-
-        <!-- 🌸 17. 底部延伸櫻花藤蔓 -->
-        <div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春櫻陪伴到最後一頁">
-          <img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="底部櫻花藤蔓" class="vine-img-ext">
-        </div>
-
-        <!-- 🏆 18. 滿分榮譽徽章認證 -->
-        <div class="flank-card flank-logo-sticker" title="🏆 金牌學霸 · 完美收官！">
-          <img src="images/illustrations/miley_brand_logo.png" alt="金牌學霸徽章" class="flank-img-sticker">
-          <span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 完美收官</span>
-        </div>
+        ${rightCards.join('\n        ')}
       </div>
     </aside>
   `;
