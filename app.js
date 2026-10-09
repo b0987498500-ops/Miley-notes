@@ -1098,7 +1098,8 @@ function createOpenBookHtml(filtered, pageIdx) {
           <!-- 精選教學插圖區塊 -->
           ${illustrationHtml}
 
-          <!-- 核心觀念精粹 -->
+          <!-- 核心觀念精粹 (若有) -->
+          ${currentNote.coreConcepts && currentNote.coreConcepts.length > 0 ? `
           <div class="section-block">
             <div class="section-label">
               <img src="images/illustrations/sticker_pencil.png" class="section-label-sticker" alt="魔法鉛筆">
@@ -1108,6 +1109,7 @@ function createOpenBookHtml(filtered, pageIdx) {
               ${currentNote.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
             </ul>
           </div>
+          ` : ''}
 
           <!-- 縱貫時序全景時間線 (若有) -->
           ${currentNote.timeline ? renderTimelineHtml(currentNote.timeline, currentNote.id) : ''}
@@ -1218,12 +1220,14 @@ function createNoteCardHtml(note) {
 
       ${illustrationHtml}
 
+      ${note.coreConcepts && note.coreConcepts.length > 0 ? `
       <div class="section-block">
         <div class="section-label"><i class="fa-solid fa-lightbulb"></i> 核心觀念精粹</div>
         <ul class="concepts-list">
           ${note.coreConcepts.map(c => `<li>${formatRichText(c)}</li>`).join("")}
         </ul>
       </div>
+      ` : ''}
 
       <!-- 縱貫時序全景時間線 (若有) -->
       ${note.timeline ? renderTimelineHtml(note.timeline, note.id) : ''}
