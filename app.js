@@ -3,6 +3,7 @@
  * (精裝立體翻書模式 + 大字清晰版 + 完美遮蔽背誦系統 + 高清插圖燈箱 v1.2.0)
  */
 
+let currentStage = "review"; // "review" (第1~4冊複習手帳) 或 "progress" (第5~6冊進度手帳)
 let currentSubject = "all";
 let currentSearch = "";
 let currentPage = 0; // 當前正在閱讀的頁碼 (0-indexed)
@@ -26,12 +27,25 @@ try {
       currentFontScale = savedScale;
     }
   }
+
+  // 讀取 URL 參數 stage=review 或 stage=progress
+  const qStage = urlParams.get("stage");
+  if (qStage === "review" || qStage === "progress") {
+    currentStage = qStage;
+  } else {
+    const savedStage = localStorage.getItem("maimai_notes_stage");
+    if (savedStage === "review" || savedStage === "progress") {
+      currentStage = savedStage;
+    }
+  }
 } catch (e) {}
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 支援 URL Hash 深度連結 (例如 #p=2 或 #math, #chinese, #science-2)
+  // 支援 URL Hash 深度連結 (例如 #stage=progress 或 #p=2 或 #social-1)
   if (window.location.hash) {
     const hash = window.location.hash.replace("#", "");
+    if (hash.includes("stage=progress")) currentStage = "progress";
+    if (hash.includes("stage=review")) currentStage = "review";
     if (hash.startsWith("p=") || hash.startsWith("page=")) {
       const pNum = parseInt(hash.split("=")[1], 10);
       if (!isNaN(pNum) && pNum > 0) {
@@ -46,12 +60,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const idx = NOTES_DATA.findIndex(n => n.id === hash);
       if (idx !== -1) {
         currentPage = idx;
+        if (NOTES_DATA[idx].stage) {
+          currentStage = NOTES_DATA[idx].stage;
+        }
       }
     }
   }
 
   initTheme();
   initFontScale();
+  initStageSwitcher();
   initEventListeners();
   renderNotes();
 
@@ -139,6 +157,61 @@ function setFontScale(scale) {
     const pct = Math.round(scale * 100);
     label.textContent = `${pct}%`;
     label.title = `點擊重設為 100% (目前: ${pct}%)`;
+  }
+}
+
+// 📚 學習手帳階段切換管理 (複習 1~4 冊 vs. 進度 5~6 冊)
+function initStageSwitcher() {
+  document.getElementById("nb-card-review")?.addEventListener("click", () => {
+    setStage("review");
+  });
+  document.getElementById("nb-card-progress")?.addEventListener("click", () => {
+    setStage("progress");
+  });
+  updateStageUI();
+}
+
+function setStage(stage) {
+  if (stage !== "review" && stage !== "progress") return;
+  currentStage = stage;
+  try {
+    localStorage.setItem("maimai_notes_stage", stage);
+  } catch (e) {}
+
+  updateStageUI();
+  updateTabCounts();
+
+  // 若當前所選科目在該手帳中沒有內容，自動切換至 "all"
+  const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const stageNotes = dataList.filter(n => n.stage === currentStage);
+  if (currentSubject !== "all") {
+    const hasSubjectInStage = stageNotes.some(n => n.subject === currentSubject);
+    if (!hasSubjectInStage) {
+      currentSubject = "all";
+      document.querySelectorAll(".subject-tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.subject === "all");
+      });
+    }
+  }
+
+  currentPage = 0;
+  renderNotes();
+}
+
+function updateStageUI() {
+  document.querySelectorAll(".notebook-card").forEach(card => {
+    const isAct = card.dataset.stage === currentStage;
+    card.classList.toggle("active", isAct);
+    card.setAttribute("aria-pressed", isAct ? "true" : "false");
+  });
+
+  const indicator = document.getElementById("current-stage-indicator");
+  if (indicator) {
+    if (currentStage === "review") {
+      indicator.innerHTML = `目前筆記本：<b>📗 複習筆記本（第 1～4 冊 會考總複習）</b>`;
+    } else {
+      indicator.innerHTML = `目前筆記本：<b>📘 進度筆記本（第 5 冊開始 國三進度）</b>`;
+    }
   }
 }
 
@@ -671,6 +744,9 @@ const SUBJECT_NAMES = {
 function getFilteredNotes() {
   const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
   return dataList.filter(item => {
+    // 嚴格分流：先依當前選中手帳階段篩選 (複習 vs. 進度)
+    if (item.stage && item.stage !== currentStage) return false;
+
     if (currentSubject !== "all" && item.subject !== currentSubject) return false;
 
     if (currentSearch) {
@@ -680,6 +756,8 @@ function getFilteredNotes() {
         item.concept,
         item.subjectName,
         item.gradeVersion,
+        item.volume || "",
+        item.stageName || "",
         item.mnemonic || "",
         ...(item.coreConcepts || [])
       ].join(" ").toLowerCase();
@@ -702,10 +780,11 @@ function renderNotes() {
   // 更新統計文字
   if (statsLabel) {
     const subjName = SUBJECT_NAMES[currentSubject] || currentSubject;
+    const stagePrefix = currentStage === "review" ? "【第 1～4 冊 複習手帳】" : "【第 5～6 冊 進度手帳】";
     if (currentViewMode === "book" && filtered.length > 0) {
-      statsLabel.innerHTML = `<i class="fa-solid fa-book-open"></i> 目前正在閱讀【${subjName}】第 <b>${currentPage + 1}</b> 頁 / 共 <b>${filtered.length}</b> 頁`;
+      statsLabel.innerHTML = `<i class="fa-solid fa-book-open"></i> ${stagePrefix} 正在閱讀【${subjName}】第 <b>${currentPage + 1}</b> 頁 / 共 <b>${filtered.length}</b> 頁`;
     } else {
-      statsLabel.innerHTML = `<i class="fa-solid fa-bookmark"></i> 目前顯示 <b>${filtered.length}</b> 則重點筆記 ${currentSubject !== "all" ? `（學科：${subjName}）` : ""}`;
+      statsLabel.innerHTML = `<i class="fa-solid fa-bookmark"></i> ${stagePrefix} 目前顯示 <b>${filtered.length}</b> 則重點筆記 ${currentSubject !== "all" ? `（學科：${subjName}）` : ""}`;
     }
   }
 
@@ -717,19 +796,21 @@ function renderNotes() {
   // 空狀態判斷
   if (filtered.length === 0) {
     const subjName = SUBJECT_NAMES[currentSubject] || "該學科";
+    const stageTitle = currentStage === "review" ? "📘 第 1～4 冊 複習手帳" : "📙 第 5～6 冊 進度手帳";
     container.innerHTML = `
       <div class="empty-subject-card">
         <div class="empty-mascot-wrapper">
           <img src="images/illustrations/empty_state_cat.png" alt="等待記錄的可愛貓咪" class="empty-mascot-img">
           <img src="images/illustrations/sticker_pencil.png" alt="魔法鉛筆" class="empty-pencil-badge">
         </div>
-        <h3 class="empty-subject-title">目前尚無【${subjName}】科筆記</h3>
+        <div class="empty-stage-pill">${stageTitle}</div>
+        <h3 class="empty-subject-title">此手帳目前尚無【${subjName}】重點筆記</h3>
         <p class="empty-subject-desc">
           當您在看教學影片時，只要隨時截圖傳到對話中，AI 就會立即為您提煉精華重點、翻牌比較大表與隨堂互動測驗！
         </p>
         <div class="empty-action-hint">
           <img src="images/illustrations/sticker_star.png" alt="笑臉星星" class="mini-inline-sticker">
-          <span>隨看隨記 · 免手抄更輕鬆</span>
+          <span>1～4 冊自動收錄至「複習手帳」· 5～6 冊自動收錄至「進度手帳」</span>
         </div>
       </div>
     `;
@@ -785,99 +866,8 @@ function renderNotes() {
 // 支援向下超長無縫流動延展，多階層豐富插圖與藤蔓伴隨全文至最底部，保證兩側零空白、零碰撞！
 // ========================================================
 function createFlankDecorHtml() {
-  // 左側綠意藤蔓與學習插圖群 (共 36 層，涵蓋長頁面向下延伸至底部零空白)
-  const leftCards = [
-    '<div class="flank-card cartoon-side-vine vine-left" title="🌿 可愛卡通綠葉藤蔓 · 自然舒心"><img src="images/illustrations/cartoon_vine_left.png" alt="卡通綠葉藤蔓" class="vine-img"></div>',
-    '<div class="flank-card flank-book-stack" title="📚 點滴累積知識 · 快樂學習"><img src="images/illustrations/decor_books_stack.png" alt="動漫風學習書堆" class="flank-img"><span class="flank-badge"><i class="fa-solid fa-seedling"></i> 快樂學習</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🐞 森林小瓢蟲與攀爬綠藤蔓"><img src="images/illustrations/cartoon_vine_extension.png" alt="延伸綠藤蔓與小瓢蟲" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-flask-sticker" title="🧪 勇於實驗探索 · 發現新知"><img src="images/illustrations/sticker_flask.png" alt="實驗燒瓶貼紙" class="flank-img-sticker"><span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 探索求知</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 自然盤繞綠藤蔓"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="曲折綠藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-pencil-sticker" title="✏️ 麥麥好記性不如爛筆頭"><img src="images/illustrations/sticker_pencil.png" alt="可愛鉛筆貼紙" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 勤做筆記</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 向上攀爬生機盎然"><img src="images/illustrations/cartoon_vine_extension.png" alt="延伸綠藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-star-sticker" title="⭐ 滿分達成 · 學習大贏家"><img src="images/illustrations/sticker_star.png" alt="榮耀之星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-star"></i> 學習大贏家</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 翠綠藤蔓盤旋"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="深層翠綠藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-openbook-sticker" title="📖 融會貫通 · 知識在心"><img src="images/illustrations/sticker_book.png" alt="學習手帳貼紙" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 融會貫通</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 向上攀爬藤蔓"><img src="images/illustrations/cartoon_vine_extension.png" alt="向上攀爬藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-book-stack" title="📚 博覽群書 · 積少成多"><img src="images/illustrations/decor_books_stack.png" alt="學習教材書堆" class="flank-img"><span class="flank-badge"><i class="fa-solid fa-seedling"></i> 積少成多</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 盎然生機藤蔓"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="盎然生機藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-flask-sticker" title="🧪 理化自然觀念通"><img src="images/illustrations/sticker_flask.png" alt="科學燒瓶" class="flank-img-sticker"><span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 觀念透徹</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 綠意常伴"><img src="images/illustrations/cartoon_vine_extension.png" alt="綠意常伴" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-pencil-sticker" title="✏️ 點石成金 · 題題得分"><img src="images/illustrations/sticker_pencil.png" alt="彩色鉛筆" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 題題得分</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 枝繁葉茂生機勃勃"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="底部綠葉藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-star-sticker" title="⭐ 滿分通關 · 學習成果棒！"><img src="images/illustrations/sticker_star.png" alt="滿分通關之星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-award"></i> 滿分通關</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 綠藤伴讀 · 步步踏實"><img src="images/illustrations/cartoon_vine_extension.png" alt="伴讀綠藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-owl-reading" title="🦉 智慧貓頭鷹：靜心專注更清晰！"><img src="images/illustrations/decor_owl_reading.png" alt="智慧讀書小貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 靜心專注</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 春風吹拂翠綠枝芽"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="盤旋翠綠藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-flask-sticker" title="🧪 勇於求真 · 洞悉原理"><img src="images/illustrations/sticker_flask.png" alt="求真科學燒瓶" class="flank-img-sticker"><span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 實驗求真</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 長青綠藤攀爬不止"><img src="images/illustrations/cartoon_vine_extension.png" alt="長青綠藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-openbook-sticker" title="📖 溫故知新 · 歷久彌新"><img src="images/illustrations/sticker_book.png" alt="溫故知新手帳" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 溫故知新</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 向上茁壯生命力"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="茁壯綠藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-pencil-sticker" title="✏️ 下筆有神 · 答題如流"><img src="images/illustrations/sticker_pencil.png" alt="彩色鉛筆" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 下筆有神</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 葉片舒展綠意盎然"><img src="images/illustrations/cartoon_vine_extension.png" alt="舒展綠藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-book-stack" title="📚 博古通今 · 智囊相伴"><img src="images/illustrations/decor_books_stack.png" alt="學術書堆" class="flank-img"><span class="flank-badge"><i class="fa-solid fa-seedling"></i> 學識淵博</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 自然生生不息"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="生生不息藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-star-sticker" title="⭐ 智慧光芒 · 照亮前路"><img src="images/illustrations/sticker_star.png" alt="智慧星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-star"></i> 智慧光芒</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 綠意指引大道"><img src="images/illustrations/cartoon_vine_extension.png" alt="綠色大道藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-flask-sticker" title="🧪 精準推理 · 融會貫通"><img src="images/illustrations/sticker_flask.png" alt="精準燒瓶" class="flank-img-sticker"><span class="flank-badge badge-science"><i class="fa-solid fa-flask"></i> 精準推理</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext-flip" title="🌿 繁茂綠葉一路相隨"><img src="images/illustrations/cartoon_vine_extension_flip.png" alt="繁茂藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-openbook-sticker" title="📖 全書通曉 · 無懈可擊"><img src="images/illustrations/sticker_book.png" alt="全書通曉筆記" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 全書通曉</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-left-ext" title="🌿 攀向巔峰綠藤"><img src="images/illustrations/cartoon_vine_extension.png" alt="巔峰綠藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-logo-sticker" title="🏆 金牌學霸 · 完美收官！"><img src="images/illustrations/miley_brand_logo.png" alt="金牌學霸徽章" class="flank-img-sticker"><span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 完美通關</span></div>'
-  ];
-
-  // 右側粉櫻藤蔓與智慧貓頭鷹飾物群 (共 36 層，涵蓋長頁面向下延伸至底部零空白)
-  const rightCards = [
-    '<div class="flank-card cartoon-side-vine vine-right" title="🌸 可愛卡通櫻花藤蔓 · 舒心陪伴"><img src="images/illustrations/cartoon_vine_right.png" alt="卡通櫻花藤蔓" class="vine-img"></div>',
-    '<div class="flank-card flank-owl-reading" title="🦉 智慧貓頭鷹：麥麥今天表現超棒！"><img src="images/illustrations/decor_owl_reading.png" alt="智慧讀書小貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 每天進步一點點</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🐝 嗡嗡小蜜蜂與櫻花藤蔓"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="延伸櫻花藤蔓與小蜜蜂" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-study-globe" title="✨ 探索世界 · 知識就是力量"><img src="images/illustrations/decor_study_globe.png" alt="古典探索地球儀" class="flank-img"><span class="flank-badge badge-globe"><i class="fa-solid fa-earth-americas"></i> 知識就是力量</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 盛開春櫻藤蔓"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="盛開櫻花藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-openbook-sticker" title="📖 深入理解核心觀念"><img src="images/illustrations/sticker_book.png" alt="筆記手帳貼紙" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 融會貫通</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 芬芳陪伴成長"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="延伸櫻花藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-logo-sticker" title="🏆 麥麥專屬榮耀認證"><img src="images/illustrations/miley_brand_logo.png" alt="麥麥榮譽徽章" class="flank-img-sticker"><span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 實力滿分</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春櫻花瀑垂墜"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="春櫻花瀑" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-pencil-sticker" title="✏️ 專注筆耕 · 下筆有神"><img src="images/illustrations/sticker_pencil.png" alt="手繪筆記鉛筆" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 下筆有神</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 櫻花繁茂蔓延"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="櫻花繁茂蔓延" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-owl-reading" title="🦉 智慧隨行 · 洞察秋毫"><img src="images/illustrations/decor_owl_reading.png" alt="智慧讀書小貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-feather"></i> 智慧隨行</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 繁花似錦映日紅"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="繁花櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-study-globe" title="🌍 放眼天下 · 融會貫通"><img src="images/illustrations/decor_study_globe.png" alt="探索地球儀" class="flank-img"><span class="flank-badge badge-globe"><i class="fa-solid fa-globe"></i> 放眼天下</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 櫻枝吐蕊伴身旁"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="吐蕊櫻枝" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-openbook-sticker" title="📖 滿載智慧的筆記"><img src="images/illustrations/sticker_book.png" alt="智慧筆記本" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 滿載智慧</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春櫻陪伴到最後一頁"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="底部櫻花藤蔓" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-star-sticker" title="⭐ 榮耀星光燦爛"><img src="images/illustrations/sticker_star.png" alt="榮耀之星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-star"></i> 星光燦爛</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 春暖花開一路相隨"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="春暖花開櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-owl-reading" title="🦉 步步為營 · 穩紮穩打"><img src="images/illustrations/decor_owl_reading.png" alt="智慧貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 穩紮穩打</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 柔美櫻藤垂掛"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="柔美櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-study-globe" title="🌍 胸懷大志 · 知識領航"><img src="images/illustrations/decor_study_globe.png" alt="領航地球儀" class="flank-img"><span class="flank-badge badge-globe"><i class="fa-solid fa-earth-americas"></i> 知識領航</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 枝頭粉櫻迎風展"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="迎風櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-pencil-sticker" title="✏️ 筆耕不輟 · 妙筆生花"><img src="images/illustrations/sticker_pencil.png" alt="手繪筆記鉛筆" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-pencil"></i> 妙筆生花</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 櫻花浪漫盤旋"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="浪漫櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-openbook-sticker" title="📖 溫故知新深入核心"><img src="images/illustrations/sticker_book.png" alt="筆記手帳貼紙" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 核心透徹</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 花香滿徑"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="花香櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-book-stack" title="📚 博古通今 · 才高八斗"><img src="images/illustrations/decor_books_stack.png" alt="博學書堆" class="flank-img"><span class="flank-badge"><i class="fa-solid fa-seedling"></i> 才高八斗</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 櫻雪芬芳"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="芬芳櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-star-sticker" title="⭐ 璀璨榮耀之星"><img src="images/illustrations/sticker_star.png" alt="榮耀之星" class="flank-img-sticker"><span class="flank-badge badge-star"><i class="fa-solid fa-award"></i> 璀璨榮耀</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 連綿櫻藤攀援"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="連綿櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-owl-reading" title="🦉 領悟大師 · 運籌帷幄"><img src="images/illustrations/decor_owl_reading.png" alt="領悟貓頭鷹" class="flank-img"><span class="flank-badge badge-owl"><i class="fa-solid fa-graduation-cap"></i> 融會貫通</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext-flip" title="🌸 春華秋實繁盛"><img src="images/illustrations/cartoon_vine_extension_right_flip.png" alt="秋實櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-openbook-sticker" title="📖 智慧寶庫全通"><img src="images/illustrations/sticker_book.png" alt="寶庫手帳" class="flank-img-sticker"><span class="flank-badge"><i class="fa-solid fa-book-open"></i> 智慧寶庫</span></div>',
-    '<div class="flank-card cartoon-side-vine-ext vine-right-ext" title="🌸 花團錦簇慶祝"><img src="images/illustrations/cartoon_vine_extension_right.png" alt="錦簇櫻藤" class="vine-img-ext"></div>',
-    '<div class="flank-card flank-logo-sticker" title="🏆 金牌學霸 · 完美收官！"><img src="images/illustrations/miley_brand_logo.png" alt="金牌學霸徽章" class="flank-img-sticker"><span class="flank-badge badge-badge"><i class="fa-solid fa-award"></i> 完美通關</span></div>'
-  ];
-
-  return `
-    <aside class="book-flank-decor flank-left" aria-label="左側學習與卡通藤蔓飾物">
-      <div class="flank-scroll-flow">
-        ${leftCards.join('\n        ')}
-      </div>
-    </aside>
-
-    <aside class="book-flank-decor flank-right" aria-label="右側學習與卡通藤蔓飾物">
-      <div class="flank-scroll-flow">
-        ${rightCards.join('\n        ')}
-      </div>
-    </aside>
-  `;
+  // UI/UX 深度優化：徹底移除兩側 160 張重複卡片干擾，回歸專注、純淨手帳空間
+  return "";
 }
 
 // ========================================================
@@ -1078,6 +1068,9 @@ function createOpenBookHtml(filtered, pageIdx) {
           <!-- Running Header (頁首資訊含頂部快捷翻頁控制列 - 卡通手繪風格小木牌與花枝分隔線) -->
           <div class="book-running-head">
             <div class="book-running-left">
+              <span class="stage-badge badge-${currentNote.stage || 'review'}">
+                <i class="fa-solid ${currentNote.stage === 'progress' ? 'fa-rocket' : 'fa-compass'}"></i> ${currentNote.stageName || (currentNote.stage === 'progress' ? '進度手帳' : '複習手帳')} · ${currentNote.volume || ''}
+              </span>
               <span class="subject-badge badge-${currentNote.subject}">
                 <i class="fa-solid ${currentNote.subjectIcon || 'fa-tag'}"></i> ${currentNote.subjectName}
               </span>
@@ -1210,6 +1203,9 @@ function createNoteCardHtml(note) {
     <article class="note-card" id="${note.id}">
       <div class="card-top-header">
         <div class="tags-group">
+          <span class="stage-badge badge-${note.stage || 'review'}">
+            <i class="fa-solid ${note.stage === 'progress' ? 'fa-rocket' : 'fa-compass'}"></i> ${note.stageName || (note.stage === 'progress' ? '進度手帳' : '複習手帳')} · ${note.volume || ''}
+          </span>
           <span class="subject-badge badge-${note.subject}">
             <i class="fa-solid ${note.subjectIcon || 'fa-tag'}"></i> ${note.subjectName}
           </span>
@@ -1357,16 +1353,30 @@ window.closeLightbox = function(e) {
 
 function updateTabCounts() {
   const dataList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
+  const currentStageNotes = (currentStage === "all") 
+    ? dataList 
+    : dataList.filter(n => (n.stage || "review") === currentStage);
+
   document.querySelectorAll(".subject-tab-btn").forEach(btn => {
     const subj = btn.dataset.subject;
     const badge = btn.querySelector(".badge-count");
     if (badge) {
       if (subj === "all") {
-        badge.textContent = dataList.length;
+        badge.textContent = currentStageNotes.length;
       } else {
-        const count = dataList.filter(n => n.subject === subj).length;
+        const count = currentStageNotes.filter(n => n.subject === subj).length;
         badge.textContent = count;
       }
     }
+  });
+
+  // 更新筆記本書架上的重點總數計數徽章
+  const reviewTotal = dataList.filter(n => (n.stage || "review") === "review").length;
+  const progressTotal = dataList.filter(n => n.stage === "progress").length;
+  const reviewCountEl = document.getElementById("badge-review-total");
+  const progressCountEl = document.getElementById("badge-progress-total");
+  if (reviewCountEl) reviewCountEl.textContent = `${reviewTotal} 則重點`;
+  if (progressCountEl) progressCountEl.textContent = `${progressTotal} 則重點`;
+}
   });
 }

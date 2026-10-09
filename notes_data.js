@@ -5,6 +5,9 @@
 const NOTES_DATA = [
   {
     id: "science-1",
+    stage: "review",
+    volume: "第 2 冊",
+    stageName: "複習筆記本",
     subject: "science",
     subjectName: "自然",
     subjectIcon: "fa-seedling",
@@ -48,6 +51,9 @@ const NOTES_DATA = [
   },
   {
     id: "science-2",
+    stage: "review",
+    volume: "第 2 冊",
+    stageName: "複習筆記本",
     subject: "science",
     subjectName: "自然",
     subjectIcon: "fa-leaf",
@@ -90,6 +96,9 @@ const NOTES_DATA = [
   },
   {
     id: "science-3",
+    stage: "review",
+    volume: "第 2 冊",
+    stageName: "複習筆記本",
     subject: "science",
     subjectName: "自然",
     subjectIcon: "fa-paw",
@@ -132,6 +141,9 @@ const NOTES_DATA = [
   },
   {
     id: "science-4",
+    stage: "review",
+    volume: "第 2 冊",
+    stageName: "複習筆記本",
     subject: "science",
     subjectName: "自然",
     subjectIcon: "fa-seedling",
@@ -184,6 +196,9 @@ const NOTES_DATA = [
   },
   {
     id: "social-1",
+    stage: "progress",
+    volume: "第 5 冊",
+    stageName: "進度筆記本",
     subject: "social",
     subjectName: "社會",
     subjectIcon: "fa-landmark",

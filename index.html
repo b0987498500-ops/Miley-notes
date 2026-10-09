@@ -18,7 +18,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <!-- Project Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="styles.css?v=1.8.0">
+  <link rel="stylesheet" href="styles.css?v=2.0.0">
 </head>
 <body>
 
@@ -53,16 +53,6 @@
 
   <!-- Main Container -->
   <main class="main-container">
-    <!-- Ambient Corner Tree Branches in Top Margins (空白角落樹枝裝飾) -->
-    <div class="ambient-branches-frame" aria-hidden="true">
-      <div class="ambient-branch branch-corner-left" title="清新植物枝葉">
-        <img src="images/illustrations/decor_branch_leaves.png" alt="植物樹枝" class="ambient-branch-img">
-      </div>
-      <div class="ambient-branch branch-corner-right" title="櫻花春櫻枝條">
-        <img src="images/illustrations/decor_branch_right.png" alt="櫻花樹枝" class="ambient-branch-img">
-      </div>
-    </div>
-
     <!-- Hero & Search Section with Cute Vector Line Art Mascot -->
     <header class="hero-banner">
       <div class="hero-content-wrapper">
@@ -90,13 +80,85 @@
       </div>
     </header>
 
-    <!-- Subject Tabs with Cute Hand-Drawn Vector Stickers & Custom Borders -->
+    <!-- Notebook Selector Deck (兩本手帳筆記本：複習 1~4 冊 vs. 進度 5~6 冊) -->
+    <section class="notebook-shelf-container" aria-label="學習手帳筆記本選擇">
+      <div class="notebook-shelf-header">
+        <div class="shelf-pill-tag">
+          <i class="fa-solid fa-book-bookmark"></i>
+          <span>第一步：選擇學習手帳</span>
+        </div>
+        <h3 class="shelf-title">先選好想看的筆記本，再挑選學科重點 📖</h3>
+        <p class="shelf-subtitle">會考 1～4 冊全觀念複習 · 國三 5～6 冊學期最新進度</p>
+      </div>
+
+      <div class="notebook-cards-grid">
+        <!-- 筆記本 1: 複習手帳 (第 1～4 冊) -->
+        <button type="button" class="notebook-card active nb-review-card" data-stage="review" id="nb-card-review" aria-pressed="true">
+          <div class="nb-leather-band"></div>
+          <div class="nb-ribbon-bookmark">
+            <span class="ribbon-tail"></span>
+            <span class="ribbon-text">第 1～4 冊</span>
+          </div>
+          <div class="nb-card-inner">
+            <div class="nb-cover-icon-wrap">
+              <span class="nb-cover-emoji">📘</span>
+              <div class="nb-cover-sparkle">✨</div>
+            </div>
+            <div class="nb-card-details">
+              <div class="nb-badge-row">
+                <span class="nb-type-pill pill-review">會考總複習</span>
+                <span class="nb-count-pill" id="badge-review-total">4 篇重點</span>
+              </div>
+              <h4 class="nb-book-title">📗 複習 筆記本</h4>
+              <p class="nb-book-desc">第 1～4 冊 · 國中會考觀念總複習</p>
+            </div>
+            <div class="nb-active-stamp">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>正在翻閱</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 筆記本 2: 進度手帳 (第 5～6 冊) -->
+        <button type="button" class="notebook-card nb-progress-card" data-stage="progress" id="nb-card-progress" aria-pressed="false">
+          <div class="nb-leather-band"></div>
+          <div class="nb-ribbon-bookmark progress-ribbon">
+            <span class="ribbon-tail"></span>
+            <span class="ribbon-text">第 5～6 冊</span>
+          </div>
+          <div class="nb-card-inner">
+            <div class="nb-cover-icon-wrap">
+              <span class="nb-cover-emoji">📙</span>
+              <div class="nb-cover-sparkle">🚀</div>
+            </div>
+            <div class="nb-card-details">
+              <div class="nb-badge-row">
+                <span class="nb-type-pill pill-progress">學期新進度</span>
+                <span class="nb-count-pill" id="badge-progress-total">1 篇重點</span>
+              </div>
+              <h4 class="nb-book-title">📘 進度 筆記本</h4>
+              <p class="nb-book-desc">第 5 冊開始 · 國三學期最新課堂進度</p>
+            </div>
+            <div class="nb-active-stamp">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>正在翻閱</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Subject Tabs with Cute Hand-Drawn Wooden Plank Buttons (第二步：挑選學科) -->
     <div class="tabs-scroll-container">
+      <div class="subject-step-bar">
+        <span class="subject-step-tag"><i class="fa-solid fa-arrow-down-long"></i> 第二步：挑選學科重點</span>
+        <span class="current-stage-indicator" id="current-stage-indicator">目前手帳：<b>📘 第 1～4 冊 複習手帳</b></span>
+      </div>
       <div class="subject-tabs">
         <button class="subject-tab-btn active tab-btn-all" data-subject="all">
           <img src="images/illustrations/tab_all.png" alt="全部" class="tab-cute-icon">
           <span>全部重點</span>
-          <span class="badge-count">5</span>
+          <span class="badge-count">4</span>
         </button>
         <button class="subject-tab-btn tab-btn-science" data-subject="science">
           <img src="images/illustrations/tab_science.png" alt="自然" class="tab-cute-icon">
@@ -162,7 +224,7 @@
   </div>
 
   <!-- Scripts with Cache Buster -->
-  <script src="notes_data.js?v=1.8.0"></script>
-  <script src="app.js?v=1.8.0"></script>
+  <script src="notes_data.js?v=2.0.0"></script>
+  <script src="app.js?v=2.0.0"></script>
 </body>
 </html>

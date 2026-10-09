@@ -684,6 +684,337 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+/* ========================================================
+   📚 學習手帳筆記本選擇書架 (Notebook Shelf & Stage Switcher)
+   極致精裝立體手帳造型、活頁書脊、絲帶書籤與徽章質感
+   ======================================================== */
+.notebook-shelf-container {
+  max-width: 1080px;
+  margin: 12px auto 28px auto;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border: 2px solid rgba(79, 70, 229, 0.16);
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 14px 36px -4px rgba(79, 70, 229, 0.09);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+}
+
+.notebook-shelf-header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.shelf-pill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.28);
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+
+.shelf-title {
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+}
+
+.shelf-subtitle {
+  font-size: 0.96rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin: 0;
+}
+
+.notebook-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.notebook-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-surface);
+  border: 3px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: visible;
+  outline: none;
+  font-family: inherit;
+}
+
+/* 皮質立體活頁書脊 (Left Spine) */
+.nb-leather-band {
+  width: 16px;
+  flex-shrink: 0;
+  border-radius: 17px 0 0 17px;
+  position: relative;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3) 0px,
+    rgba(255, 255, 255, 0.3) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.15);
+}
+
+.nb-review-card .nb-leather-band {
+  background-color: #3b82f6;
+  border-right: 2px dashed rgba(255, 255, 255, 0.45);
+}
+
+.nb-progress-card .nb-leather-band {
+  background-color: #f97316;
+  border-right: 2px dashed rgba(255, 255, 255, 0.45);
+}
+
+/* 絲帶書籤 (Ribbon Bookmark) */
+.nb-ribbon-bookmark {
+  position: absolute;
+  top: -8px;
+  right: 24px;
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  padding: 8px 12px 14px 12px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+  z-index: 5;
+  transition: transform 0.25s ease;
+}
+
+.nb-ribbon-bookmark.progress-ribbon {
+  background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+  box-shadow: 0 4px 10px rgba(234, 88, 12, 0.35);
+}
+
+.nb-ribbon-bookmark .ribbon-tail {
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: inherit;
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+}
+
+.nb-card-inner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px 20px 18px;
+}
+
+.nb-cover-icon-wrap {
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nb-review-card .nb-cover-icon-wrap {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 2px solid #93c5fd;
+}
+
+.nb-progress-card .nb-cover-icon-wrap {
+  background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+  border: 2px solid #fdba74;
+}
+
+.nb-cover-sparkle {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 1.1rem;
+  animation: stickerWiggle 3s infinite ease-in-out;
+}
+
+.nb-card-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.nb-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.nb-type-pill {
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.pill-review {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.pill-progress {
+  background-color: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
+.nb-count-pill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
+  border-radius: var(--radius-full);
+}
+
+.nb-book-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.nb-book-desc {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.nb-active-stamp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 0.84rem;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1.5px solid #a7f3d0;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+/* Hover & Focus 狀態 */
+.notebook-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.1),
+    0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.notebook-card:hover .nb-cover-icon-wrap {
+  transform: scale(1.1) rotate(-4deg);
+}
+
+.notebook-card:hover .nb-ribbon-bookmark {
+  transform: translateY(4px);
+}
+
+/* 🟢 Active 啟用狀態 (正在閱讀中) */
+.notebook-card.active {
+  transform: translateY(-6px) scale(1.015);
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.12),
+    0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.nb-review-card.active {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+  box-shadow:
+    0 16px 36px rgba(59, 130, 246, 0.22),
+    0 0 0 3px rgba(59, 130, 246, 0.35);
+}
+
+.nb-progress-card.active {
+  border-color: #f97316;
+  background: linear-gradient(135deg, #ffffff 0%, #fff7ed 100%);
+  box-shadow:
+    0 16px 36px rgba(249, 115, 22, 0.22),
+    0 0 0 3px rgba(249, 115, 22, 0.35);
+}
+
+.notebook-card.active .nb-active-stamp {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 第二步：學科分類步驟標籤與當前狀態列 */
+.subject-step-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1080px;
+  margin: 0 auto 16px auto;
+  padding: 0 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.subject-step-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--primary);
+  background-color: var(--primary-light);
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--primary);
+}
+
+.current-stage-indicator {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.current-stage-indicator b {
+  color: var(--primary);
+  font-weight: 800;
+}
+
 /* Subject Tabs */
 .tabs-scroll-container {
   overflow-x: auto;
@@ -2073,7 +2404,7 @@ body {
 .open-book-wrapper {
   position: relative;
   margin: 32px auto 0;
-  max-width: min(1240px, calc(100% - 170px));
+  max-width: min(1200px, 96%);
   perspective: 2500px;
   perspective-origin: center center;
 }
@@ -3851,7 +4182,7 @@ body {
 }
 
 .list-stage-layout .notes-list {
-  max-width: min(1240px, calc(100% - 170px));
+  max-width: min(1200px, 96%);
   margin: 0 auto;
 }
 
@@ -4203,10 +4534,126 @@ body {
   color: #fef3c7;
 }
 
-[data-theme="dark"] .flank-badge.badge-globe {
-  background: rgba(30, 27, 75, 0.92);
+[data-theme="eyecare"] .notebook-shelf-container {
+  background: linear-gradient(135deg, rgba(252, 248, 242, 0.96) 0%, rgba(245, 237, 225, 0.92) 100%);
+  border-color: rgba(180, 83, 9, 0.25);
+  box-shadow: 0 12px 32px rgba(87, 51, 7, 0.08);
+}
+
+[data-theme="eyecare"] .notebook-card {
+  background-color: #fcf8f2;
+  border-color: #d8caba;
+}
+
+[data-theme="eyecare"] .nb-review-card.active {
+  border-color: #2563eb;
+  background: linear-gradient(135deg, #fcf8f2 0%, #eff6ff 100%);
+}
+
+[data-theme="eyecare"] .nb-progress-card.active {
+  border-color: #d97706;
+  background: linear-gradient(135deg, #fcf8f2 0%, #fff7ed 100%);
+}
+
+[data-theme="dark"] .notebook-shelf-container {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .notebook-card {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .nb-review-card.active {
+  border-color: #60a5fa;
+  background: linear-gradient(135deg, #1e293b 0%, #172554 100%);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(96, 165, 250, 0.4);
+}
+
+[data-theme="dark"] .nb-progress-card.active {
+  border-color: #fb923c;
+  background: linear-gradient(135deg, #1e293b 0%, #431407 100%);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(251, 146, 60, 0.4);
+}
+
+[data-theme="dark"] .nb-count-pill {
+  background-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .subject-step-tag {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
   border-color: #6366f1;
-  color: #e0e7ff;
+}
+
+/* ========================================================
+   🏷️ 手帳階段標籤徽章 (Stage Badges & Empty State Pill)
+   ======================================================== */
+.stage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 13px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.stage-badge.badge-review {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1d4ed8;
+  border: 1.5px solid #93c5fd;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.15);
+}
+
+.stage-badge.badge-progress {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  color: #c2410c;
+  border: 1.5px solid #fdba74;
+  box-shadow: 0 2px 6px rgba(249, 115, 22, 0.15);
+}
+
+[data-theme="eyecare"] .stage-badge.badge-review {
+  background: #e0edfd;
+  color: #1e40af;
+  border-color: #93c5fd;
+}
+
+[data-theme="eyecare"] .stage-badge.badge-progress {
+  background: #faeed2;
+  color: #9a3412;
+  border-color: #fcd34d;
+}
+
+[data-theme="dark"] .stage-badge.badge-review {
+  background: rgba(30, 58, 138, 0.55);
+  color: #bfdbfe;
+  border-color: #3b82f6;
+}
+
+[data-theme="dark"] .stage-badge.badge-progress {
+  background: rgba(124, 45, 18, 0.55);
+  color: #fed7aa;
+  border-color: #f97316;
+}
+
+.empty-stage-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 6px 18px;
+  border-radius: var(--radius-full);
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+  margin-bottom: 14px;
 }
 
 /* ========================================================
@@ -5100,5 +5547,87 @@ body {
     width: 100%;
     padding: 10px 14px;
   }
+
+  /* 📚 手機端學習手帳卡片自適應排版 */
+  .notebook-shelf-container {
+    padding: 18px 14px;
+    margin: 10px auto 20px auto;
+  }
+  .shelf-title {
+    font-size: 1.35rem;
+  }
+  .notebook-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .nb-card-inner {
+    padding: 16px 14px;
+    gap: 12px;
+  }
+  .nb-cover-icon-wrap {
+    width: 52px;
+    height: 52px;
+    font-size: 1.7rem;
+  }
+  .nb-book-title {
+    font-size: 1.15rem;
+  }
+  .nb-active-stamp {
+    font-size: 0.76rem;
+    padding: 4px 10px;
+  }
+  .subject-step-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }
 
+
+
+/* ========================================================
+   ✨ UI/UX 深度優化升級 (極致純淨、大器專注的手帳筆記體驗)
+   ======================================================== */
+.ambient-branches-frame {
+  display: none !important;
+}
+
+/* 🌿 筆記兩側手帳學習插圖與可愛藤蔓：整齊有序伴隨長文至文末 */
+.book-flank-decor {
+  display: flex !important;
+  opacity: 0.95;
+}
+
+.open-book-wrapper {
+  margin: 16px auto 0 !important;
+  max-width: min(1200px, 94%) !important;
+  width: 100% !important;
+}
+
+.list-stage-layout .notes-list {
+  max-width: min(1140px, 94%) !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+.note-stage-badge-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.note-stage-badge-inline.badge-review {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1.5px solid #a7f3d0;
+}
+.note-stage-badge-inline.badge-progress {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1.5px solid #bfdbfe;
+}
