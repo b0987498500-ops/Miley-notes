@@ -1378,5 +1378,3 @@ function updateTabCounts() {
   if (reviewCountEl) reviewCountEl.textContent = `${reviewTotal} 則重點`;
   if (progressCountEl) progressCountEl.textContent = `${progressTotal} 則重點`;
 }
-  });
-}
