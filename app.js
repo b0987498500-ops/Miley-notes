@@ -104,16 +104,6 @@ function getAllNotesData() {
 }
 
 /**
- * 取得已放入回收桶之筆記資料列表
- */
-function getDeletedNotes() {
-  const rawList = getRawAllNotesData();
-  const deletedIds = getDeletedNoteIds();
-  if (!deletedIds || deletedIds.length === 0) return [];
-  return rawList.filter(n => deletedIds.includes(n.id));
-}
-
-/**
  * 播放輕柔撕紙/刪除音效 (Web Audio API)
  */
 function playDeleteSound() {
@@ -140,30 +130,6 @@ function playDeleteSound() {
     filter.connect(gain);
     gain.connect(ctx.destination);
     noise.start();
-  } catch (e) {
-    // 忽略音效異常
-  }
-}
-
-/**
- * 播放清脆星星復原音效 (Web Audio API)
- */
-function playRestoreSound() {
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); // A5
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.22);
   } catch (e) {
     // 忽略音效異常
   }
@@ -248,145 +214,9 @@ window.executeDeleteCurrentNote = function() {
   // 刷新畫面與統計
   renderNotes();
   updateTabCounts();
-  updateTrashCountBadge();
 
-  // 彈出帶有一鍵復原的 Toast
-  showToast("🗑️ 已將本頁筆記移至回收桶", { canUndo: true, noteId: noteId });
-};
-
-/**
- * 更新頂端導航回收桶計數徽章
- */
-function updateTrashCountBadge() {
-  const badge = document.getElementById("trash-count-badge");
-  if (!badge) return;
-  const count = getDeletedNoteIds().length;
-  if (count > 0) {
-    badge.textContent = count;
-    badge.style.display = "inline-flex";
-    badge.classList.remove("badge-pulse");
-    void badge.offsetWidth;
-    badge.classList.add("badge-pulse");
-  } else {
-    badge.style.display = "none";
-  }
-}
-
-/**
- * 開啟手帳筆記回收桶彈窗
- */
-window.openTrashModal = function(e) {
-  renderTrashNotesList();
-  const modal = document.getElementById("trash-bin-modal");
-  if (modal) modal.classList.add("active");
-};
-
-/**
- * 關閉手帳筆記回收桶彈窗
- */
-window.closeTrashModal = function(e) {
-  if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains("modal-close-icon") && !e.target.classList.contains("btn-modal-cancel")) {
-    return;
-  }
-  const modal = document.getElementById("trash-bin-modal");
-  if (modal) modal.classList.remove("active");
-};
-
-/**
- * 渲染回收桶內的筆記清單
- */
-function renderTrashNotesList() {
-  const listEl = document.getElementById("trash-notes-list");
-  const restoreAllBtn = document.getElementById("btn-restore-all");
-  if (!listEl) return;
-
-  const deletedNotes = getDeletedNotes();
-  if (deletedNotes.length === 0) {
-    if (restoreAllBtn) restoreAllBtn.style.display = "none";
-    listEl.innerHTML = `
-      <div class="trash-empty-state">
-        <div class="trash-empty-mascot-box">
-          <img src="images/illustrations/empty_state_cat.png" alt="等待記錄的可愛貓咪" class="trash-empty-cat-img">
-          <img src="images/illustrations/sticker_book.png" alt="魔法手帳" class="trash-empty-book-sticker">
-        </div>
-        <h4>回收桶目前乾乾淨淨 🌱</h4>
-        <p>所有重點筆記都在手帳中整齊收錄著，沒有被刪除的頁面喔！</p>
-      </div>
-    `;
-    return;
-  }
-
-  if (restoreAllBtn) restoreAllBtn.style.display = "inline-flex";
-
-  listEl.innerHTML = deletedNotes.map(note => {
-    const stageName = note.stage === "progress" ? "📙 進度手帳" : "📘 複習手帳";
-    return `
-      <div class="trash-item-card" id="trash-item-${note.id}">
-        <div class="trash-item-info">
-          <div class="trash-item-tags">
-            <span class="trash-pill pill-stage">${stageName} · ${note.volume || ''}</span>
-            <span class="trash-pill pill-subj">${note.subjectName || ''}</span>
-            <span class="trash-pill pill-unit">${note.unit || ''}</span>
-          </div>
-          <h4 class="trash-item-title">${note.title}</h4>
-        </div>
-        <div class="trash-item-actions">
-          <button type="button" class="btn-restore-single" onclick="restoreNote('${note.id}')" title="將這頁復原回手帳">
-            <span class="btn-wood-sprout-mini">🌱</span>
-            <i class="fa-solid fa-rotate-left"></i> 復原此頁
-          </button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-/**
- * 單筆復原筆記
- */
-window.restoreNote = function(noteId) {
-  let deletedIds = getDeletedNoteIds();
-  deletedIds = deletedIds.filter(id => id !== noteId);
-  saveDeletedNoteIds(deletedIds);
-
-  playRestoreSound();
-  renderNotes();
-  updateTabCounts();
-  updateTrashCountBadge();
-
-  // 若回收桶彈窗開啟中，重新渲染回收桶列表
-  const trashModal = document.getElementById("trash-bin-modal");
-  if (trashModal && trashModal.classList.contains("active")) {
-    renderTrashNotesList();
-  }
-
-  showToast("✨ 筆記已成功復原回手帳！");
-};
-
-/**
- * 全部一鍵復原
- */
-window.restoreAllNotes = function() {
-  const count = getDeletedNoteIds().length;
-  if (count === 0) return;
-
-  saveDeletedNoteIds([]);
-  playRestoreSound();
-  
-  if (typeof confetti === "function") {
-    confetti({
-      particleCount: 50,
-      spread: 60,
-      origin: { y: 0.6 }
-    });
-  }
-
-  renderNotes();
-  updateTabCounts();
-  updateTrashCountBadge();
-  renderTrashNotesList();
-
-  showToast("🎉 所有筆記已全部復原回手帳！");
+  // 提示本頁筆記已成功刪除
+  showToast("🍃 本頁筆記已成功刪除");
 };
 
 /**
@@ -411,9 +241,9 @@ window.deletePortalNote = function(id) {
 };
 
 /**
- * 輕量化全站浮動 Toast 提示 (支援復原按鈕)
+ * 輕量化全站浮動 Toast 提示 (純淨訊息提示)
  */
-function showToast(msg, options = {}) {
+function showToast(msg) {
   let toast = document.getElementById("portal-floating-toast");
   if (!toast) {
     toast = document.createElement("div");
@@ -422,25 +252,13 @@ function showToast(msg, options = {}) {
     document.body.appendChild(toast);
   }
 
-  if (options.canUndo && options.noteId) {
-    toast.innerHTML = `
-      <span class="toast-msg-text">${msg}</span>
-      <button type="button" class="toast-undo-btn" onclick="restoreNote('${options.noteId}')">
-        <i class="fa-solid fa-rotate-left"></i> 立即復原
-      </button>
-    `;
-    toast.classList.add("has-undo");
-  } else {
-    toast.textContent = msg;
-    toast.classList.remove("has-undo");
-  }
-
+  toast.innerHTML = `<span class="toast-msg-text">${msg}</span>`;
+  toast.classList.remove("has-undo");
   toast.classList.add("show");
   clearTimeout(toast._timer);
-  const duration = (options.canUndo) ? 6000 : 2800;
   toast._timer = setTimeout(() => {
     toast.classList.remove("show");
-  }, duration);
+  }, 2600);
 }
 
 /**
@@ -582,7 +400,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initStageSwitcher();
   initEventListeners();
   renderNotes();
-  updateTrashCountBadge();
 
   // 支援 URL 參數與 Hash 滾動跳轉 (例如 ?scroll=800 或 ?scroll=bottom 或 ?test_visible=1)
   const urlParams = new URLSearchParams(window.location.search);

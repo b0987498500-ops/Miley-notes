@@ -20,7 +20,7 @@
   <!-- Canvas Confetti for Celebration Effects -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Project Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="styles.css?v=2.5.0">
+  <link rel="stylesheet" href="styles.css?v=2.6.0">
 </head>
 <body>
 
@@ -52,13 +52,6 @@
         <button id="btn-font-inc" class="font-btn" aria-label="放大字體">A+</button>
       </div>
 
-      <!-- Trash Bin: 筆記回收桶與一鍵復原 (卡通手繪木牌方塊) -->
-      <button id="btn-trash-bin" class="trash-bin-nav-btn" onclick="openTrashModal()" title="手帳回收桶：查看已刪除的筆記與復原">
-        <span class="trash-wood-sprout" aria-hidden="true">🍃</span>
-        <i class="fa-solid fa-trash-can"></i>
-        <span class="trash-btn-text">回收桶</span>
-        <span id="trash-count-badge" class="trash-count-badge" style="display: none;">0</span>
-      </button>
 
       <!-- Theme Selector -->
       <div class="theme-selector" title="外觀主題切換">
@@ -267,7 +260,7 @@
         <!-- 顯示要刪除的筆記標題 -->
       </div>
       <p class="modal-tip">
-        <i class="fa-solid fa-circle-info"></i> 這頁觀念已經熟記了嗎？刪除後若需要，隨時可至右上角木牌<b>「回收桶」</b>一鍵復原回手帳喔！
+        <i class="fa-solid fa-circle-info"></i> 觀念都已經熟記了嗎？確認刪除後將會直接從手帳中移除喔！
       </p>
       <div class="modal-btn-row">
         <button type="button" class="btn-modal-cancel" onclick="closeDeleteModal()">
@@ -280,37 +273,8 @@
     </div>
   </div>
 
-  <!-- 手帳筆記回收桶彈窗 (查看與個別/全部復原) -->
-  <div id="trash-bin-modal" class="modal-backdrop-custom" onclick="closeTrashModal(event)">
-    <div class="modal-dialog-custom trash-dialog" onclick="event.stopPropagation()">
-      <div class="trash-modal-header">
-        <div class="trash-header-title-wrap">
-          <img src="images/illustrations/decor_owl_reading.png" alt="智慧貓頭鷹" class="trash-header-mascot-img">
-          <div>
-            <h3>手帳筆記回收桶</h3>
-            <p>已刪除的筆記都在這裡安全保管，隨時可一鍵復原回手帳</p>
-          </div>
-        </div>
-        <button class="modal-close-icon" onclick="closeTrashModal()" title="關閉">&times;</button>
-      </div>
-
-      <div id="trash-notes-list" class="trash-notes-list">
-        <!-- 動態渲染已刪除的筆記清單 -->
-      </div>
-
-      <div class="trash-modal-footer">
-        <button type="button" class="btn-restore-all" id="btn-restore-all" onclick="restoreAllNotes()">
-          <i class="fa-solid fa-rotate-left"></i> 全部一鍵復原
-        </button>
-        <button type="button" class="btn-modal-cancel" onclick="closeTrashModal()">
-          關閉
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Scripts with Cache Buster -->
-  <script src="notes_data.js?v=2.5.0"></script>
-  <script src="app.js?v=2.5.0"></script>
+  <script src="notes_data.js?v=2.6.0"></script>
+  <script src="app.js?v=2.6.0"></script>
 </body>
 </html>
