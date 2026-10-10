@@ -305,8 +305,11 @@ function renderTrashNotesList() {
     if (restoreAllBtn) restoreAllBtn.style.display = "none";
     listEl.innerHTML = `
       <div class="trash-empty-state">
-        <div class="trash-empty-emoji">🌱✨</div>
-        <h4>回收桶目前是空的</h4>
+        <div class="trash-empty-mascot-box">
+          <img src="images/illustrations/empty_state_cat.png" alt="等待記錄的可愛貓咪" class="trash-empty-cat-img">
+          <img src="images/illustrations/sticker_book.png" alt="魔法手帳" class="trash-empty-book-sticker">
+        </div>
+        <h4>回收桶目前乾乾淨淨 🌱</h4>
         <p>所有重點筆記都在手帳中整齊收錄著，沒有被刪除的頁面喔！</p>
       </div>
     `;
@@ -329,6 +332,7 @@ function renderTrashNotesList() {
         </div>
         <div class="trash-item-actions">
           <button type="button" class="btn-restore-single" onclick="restoreNote('${note.id}')" title="將這頁復原回手帳">
+            <span class="btn-wood-sprout-mini">🌱</span>
             <i class="fa-solid fa-rotate-left"></i> 復原此頁
           </button>
         </div>
@@ -1642,18 +1646,30 @@ function createOpenBookHtml(filtered, pageIdx) {
           <!-- 隨堂即時自我檢測 -->
           ${quizHtml}
 
-          <!-- 本頁筆記操作列：刪除本頁筆記 (使用者指定於每頁最下方) -->
+          <!-- 本頁筆記操作列：卡通手繪木牌刪除本頁筆記 (依使用者指示徹底告別膠囊與預設線條，融入可愛插圖) -->
           <div class="note-page-action-footer">
+            <div class="footer-action-flank flank-left">
+              <img src="images/illustrations/sticker_pencil.png" alt="魔法鉛筆" class="footer-sticker-icon sticker-pencil-dance">
+              <span class="footer-cute-prompt">🌱 觀念記熟了？</span>
+            </div>
             <button type="button" class="btn-delete-page-note" onclick="openDeleteConfirmModal('${currentNote.id}')" title="刪除本頁筆記">
-              <i class="fa-regular fa-trash-can"></i>
-              <span>刪除本頁筆記</span>
+              <span class="btn-wood-sprout-accent">🌸</span>
+              <span class="btn-wood-icon-wrap"><i class="fa-solid fa-trash-can"></i></span>
+              <span class="btn-wood-label">刪除本頁筆記</span>
+              <span class="btn-wood-sparkle">✨</span>
             </button>
+            <div class="footer-action-flank flank-right">
+              <span class="footer-cute-prompt">可隨時安心移除 📖</span>
+              <img src="images/illustrations/sticker_star.png" alt="星星獎章" class="footer-sticker-icon sticker-star-dance">
+            </div>
           </div>
 
           <!-- Running Footer (頁尾資訊) -->
           <div class="book-running-footer">
             <div class="book-footer-branding">
-              <i class="fa-solid fa-graduation-cap"></i> 麥麥筆記 · 學科重點精華庫
+              <img src="images/illustrations/sticker_book.png" alt="書本貼紙" class="footer-mini-sticker">
+              <span>麥麥筆記 · 學科重點精華庫</span>
+              <img src="images/illustrations/sticker_star.png" alt="星星貼紙" class="footer-mini-sticker">
             </div>
             <div class="book-footer-pagenum">
               - 第 ${pageIdx + 1} 頁 -
@@ -1766,12 +1782,22 @@ function createNoteCardHtml(note) {
 
       ${quizHtml}
 
-      <!-- 本頁筆記操作列：刪除本頁筆記 (使用者指定於每頁最下方) -->
+      <!-- 本頁筆記操作列：卡通手繪木牌刪除本頁筆記 (依使用者指示徹底告別膠囊與預設線條，融入可愛插圖) -->
       <div class="note-page-action-footer">
+        <div class="footer-action-flank flank-left">
+          <img src="images/illustrations/sticker_pencil.png" alt="魔法鉛筆" class="footer-sticker-icon sticker-pencil-dance">
+          <span class="footer-cute-prompt">🌱 觀念記熟了？</span>
+        </div>
         <button type="button" class="btn-delete-page-note" onclick="openDeleteConfirmModal('${note.id}')" title="刪除本頁筆記">
-          <i class="fa-regular fa-trash-can"></i>
-          <span>刪除本頁筆記</span>
+          <span class="btn-wood-sprout-accent">🌸</span>
+          <span class="btn-wood-icon-wrap"><i class="fa-solid fa-trash-can"></i></span>
+          <span class="btn-wood-label">刪除本頁筆記</span>
+          <span class="btn-wood-sparkle">✨</span>
         </button>
+        <div class="footer-action-flank flank-right">
+          <span class="footer-cute-prompt">可隨時安心移除 📖</span>
+          <img src="images/illustrations/sticker_star.png" alt="星星獎章" class="footer-sticker-icon sticker-star-dance">
+        </div>
       </div>
     </article>
   `;

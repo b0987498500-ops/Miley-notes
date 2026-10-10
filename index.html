@@ -20,7 +20,7 @@
   <!-- Canvas Confetti for Celebration Effects -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Project Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="styles.css?v=2.4.1">
+  <link rel="stylesheet" href="styles.css?v=2.5.0">
 </head>
 <body>
 
@@ -37,22 +37,24 @@
     </div>
 
     <div class="top-controls">
-      <!-- Cross-Link: 麥麥錯題本雙向傳送門捷徑 -->
+      <!-- Cross-Link: 麥麥錯題本雙向傳送門捷徑 (卡通手繪木牌方塊) -->
       <a href="https://b0987498500-ops.github.io/Miley-wrong-book/" target="_blank" rel="noopener noreferrer" class="cross-link-portal-btn" title="前往麥麥錯題本">
+        <span class="portal-wood-sprout" aria-hidden="true">🌱</span>
         <span class="cross-link-icon">🎯</span>
         <span class="cross-link-text">麥麥錯題本</span>
-        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem; opacity: 0.85;"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square portal-arrow-icon" style="font-size: 0.72rem; opacity: 0.85;"></i>
       </a>
 
-      <!-- Font Size Controller: 超有感字體放大器 -->
+      <!-- Font Size Controller: 超有感字體放大器 (木牌造型) -->
       <div class="font-control-group" title="字體大小調節">
         <button id="btn-font-dec" class="font-btn" aria-label="縮小字體">A-</button>
         <span id="font-scale-label" class="font-scale-display">100%</span>
         <button id="btn-font-inc" class="font-btn" aria-label="放大字體">A+</button>
       </div>
 
-      <!-- Trash Bin: 筆記回收桶與一鍵復原 -->
+      <!-- Trash Bin: 筆記回收桶與一鍵復原 (卡通手繪木牌方塊) -->
       <button id="btn-trash-bin" class="trash-bin-nav-btn" onclick="openTrashModal()" title="手帳回收桶：查看已刪除的筆記與復原">
+        <span class="trash-wood-sprout" aria-hidden="true">🍃</span>
         <i class="fa-solid fa-trash-can"></i>
         <span class="trash-btn-text">回收桶</span>
         <span id="trash-count-badge" class="trash-count-badge" style="display: none;">0</span>
@@ -99,12 +101,18 @@
     <!-- Notebook Selector Deck (兩本手帳筆記本：複習 1~4 冊 vs. 進度 5~6 冊) -->
     <section class="notebook-shelf-container" aria-label="學習手帳筆記本選擇">
       <div class="notebook-shelf-header">
+        <div class="shelf-decor-illustration decor-shelf-left" aria-hidden="true">
+          <img src="images/illustrations/decor_books_stack.png" alt="書堆裝飾" class="shelf-decor-img">
+        </div>
         <div class="shelf-pill-tag">
           <i class="fa-solid fa-book-bookmark"></i>
           <span>第一步：選擇學習手帳</span>
         </div>
         <h3 class="shelf-title">先選好想看的筆記本，再挑選學科重點 📖</h3>
         <p class="shelf-subtitle">會考 1～4 冊全觀念複習 · 國三 5～6 冊學期最新進度</p>
+        <div class="shelf-decor-illustration decor-shelf-right" aria-hidden="true">
+          <img src="images/illustrations/decor_study_globe.png" alt="地球儀裝飾" class="shelf-decor-img">
+        </div>
       </div>
 
       <div class="notebook-cards-grid">
@@ -128,6 +136,7 @@
               <h4 class="nb-book-title">📗 複習 筆記本</h4>
               <p class="nb-book-desc">第 1～4 冊 · 國中會考觀念總複習</p>
             </div>
+            <img src="images/illustrations/sticker_book.png" alt="書本魔法貼紙" class="nb-floating-sticker nb-sticker-book" loading="lazy">
             <div class="nb-active-stamp">
               <i class="fa-solid fa-circle-check"></i>
               <span>正在翻閱</span>
@@ -155,6 +164,7 @@
               <h4 class="nb-book-title">📘 進度 筆記本</h4>
               <p class="nb-book-desc">第 5 冊開始 · 國三學期最新課堂進度</p>
             </div>
+            <img src="images/illustrations/sticker_star.png" alt="星星獎章貼紙" class="nb-floating-sticker nb-sticker-star" loading="lazy">
             <div class="nb-active-stamp">
               <i class="fa-solid fa-circle-check"></i>
               <span>正在翻閱</span>
@@ -243,15 +253,21 @@
   <div id="delete-confirm-modal" class="modal-backdrop-custom" onclick="closeDeleteModal(event)">
     <div class="modal-dialog-custom delete-dialog" onclick="event.stopPropagation()">
       <button class="modal-close-icon" onclick="closeDeleteModal()" title="關閉">&times;</button>
-      <div class="modal-cute-badge">
-        <span class="delete-icon-bounce">🗑️</span>
+      <div class="modal-cute-mascot-header">
+        <div class="modal-mascot-frame">
+          <img src="images/illustrations/miley_mascot.png" alt="麥麥吉祥物" class="modal-mascot-img">
+          <img src="images/illustrations/sticker_star.png" alt="星星獎章" class="modal-mascot-sparkle-star">
+        </div>
+        <div class="modal-cute-wood-badge">
+          <span>🌱 手帳筆記整理 · 依需留存</span>
+        </div>
       </div>
       <h3 class="modal-title">確定要刪除這頁筆記嗎？</h3>
       <div class="delete-note-preview" id="delete-note-preview-title">
         <!-- 顯示要刪除的筆記標題 -->
       </div>
       <p class="modal-tip">
-        <i class="fa-solid fa-circle-info"></i> 這頁觀念已經熟記了嗎？刪除後若需要，隨時可至右上角<b>「回收桶」</b>一鍵復原回手帳喔！
+        <i class="fa-solid fa-circle-info"></i> 這頁觀念已經熟記了嗎？刪除後若需要，隨時可至右上角木牌<b>「回收桶」</b>一鍵復原回手帳喔！
       </p>
       <div class="modal-btn-row">
         <button type="button" class="btn-modal-cancel" onclick="closeDeleteModal()">
@@ -269,7 +285,7 @@
     <div class="modal-dialog-custom trash-dialog" onclick="event.stopPropagation()">
       <div class="trash-modal-header">
         <div class="trash-header-title-wrap">
-          <span class="trash-icon-emoji">🗑️</span>
+          <img src="images/illustrations/decor_owl_reading.png" alt="智慧貓頭鷹" class="trash-header-mascot-img">
           <div>
             <h3>手帳筆記回收桶</h3>
             <p>已刪除的筆記都在這裡安全保管，隨時可一鍵復原回手帳</p>
@@ -294,7 +310,7 @@
   </div>
 
   <!-- Scripts with Cache Buster -->
-  <script src="notes_data.js?v=2.4.1"></script>
-  <script src="app.js?v=2.4.1"></script>
+  <script src="notes_data.js?v=2.5.0"></script>
+  <script src="app.js?v=2.5.0"></script>
 </body>
 </html>
