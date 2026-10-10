@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>網頁導向中 | 麥麥精華筆記本</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      background: radial-gradient(circle at 50% 20%, #e0e7ff 0%, #f1f5f9 60%, #e2e8f0 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1), 0 0 25px rgba(79, 70, 229, 0.08);
+      animation: fadeIn 0.45s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
+      border: 2px solid #c7d2fe;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      box-shadow: 0 8px 18px rgba(79, 70, 229, 0.15);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #1e1b4b;
+    }
+
+    p.desc {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+    }
+
+    .countdown-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #334155;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .countdown-num {
+      display: inline-block;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 16px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 20px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge-icon">
+      <i class="fa-solid fa-compass"></i>
+    </div>
+    <h1>別擔心，正在為您導向</h1>
+    <p class="desc">
+      您輸入的網址路徑可能有誤或大小寫不符。<br>
+      麥麥的筆記與錯題本全數安然無恙，正自動導航至正確首頁！
+    </p>
+
+    <div class="countdown-box">
+      <i class="fa-solid fa-spinner fa-spin" style="color: #4f46e5;"></i>
+      <span>將在 <span class="countdown-num" id="countdown">3</span> 秒後自動前往筆記首頁...</span>
+    </div>
+
+    <div class="buttons">
+      <a href="https://b0987498500-ops.github.io/Miley-notes/" class="btn btn-primary" id="btn-notes">
+        <i class="fa-solid fa-feather-pointed"></i> 前往 麥麥精華筆記本
+      </a>
+      <a href="https://b0987498500-ops.github.io/Miley-wrong-book/" class="btn btn-secondary" id="btn-wrongbook">
+        <i class="fa-solid fa-book-open"></i> 前往 麥麥錯題網站
+      </a>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var targetUrl = "https://b0987498500-ops.github.io/Miley-notes/";
+      var timeLeft = 3;
+      var countdownEl = document.getElementById("countdown");
+      
+      var timer = setInterval(function() {
+        timeLeft--;
+        if (countdownEl) countdownEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          window.location.replace(targetUrl);
+        }
+      }, 1000);
+    })();
+  </script>
+</body>
+</html>
