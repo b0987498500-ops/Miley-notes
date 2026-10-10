@@ -1313,7 +1313,7 @@ function renderNotes() {
         <div class="empty-stage-pill">${stageTitle}</div>
         <h3 class="empty-subject-title">此手帳目前尚無【${subjName}】重點筆記</h3>
         <p class="empty-subject-desc">
-          當您在看教學影片時，只要隨時截圖傳到對話中，AI 就會立即為您提煉精華重點、翻牌比較大表與隨堂互動測驗！
+          當您看書或讀講義看到重點時，只要隨手截圖傳到對話中，AI 就會立即為您提煉精華重點、翻牌比較大表與隨堂互動測驗！
         </p>
         <div class="empty-action-hint">
           <img src="images/illustrations/sticker_star.png" alt="笑臉星星" class="mini-inline-sticker">
@@ -1409,7 +1409,7 @@ function createOpenBookHtml(filtered, pageIdx) {
       <div class="book-illustration-block">
         <div class="illustration-header">
           <span class="illustration-tag">
-            <i class="fa-solid fa-image"></i> 教學重點插圖精華
+            <i class="fa-solid fa-image"></i> 核心觀念插圖精華
           </span>
           <button class="btn-zoom-img" onclick="openLightbox('${currentNote.image}', '${safeCaption}')" title="點擊放大全螢幕查看">
             <i class="fa-solid fa-magnifying-glass-plus"></i> 點擊放大查看
@@ -1653,7 +1653,7 @@ function createOpenBookHtml(filtered, pageIdx) {
           <!-- Running Footer (頁尾資訊) -->
           <div class="book-running-footer">
             <div class="book-footer-branding">
-              <i class="fa-solid fa-graduation-cap"></i> 麥麥筆記 · 教學影片重點精華庫
+              <i class="fa-solid fa-graduation-cap"></i> 麥麥筆記 · 學科重點精華庫
             </div>
             <div class="book-footer-pagenum">
               - 第 ${pageIdx + 1} 頁 -
@@ -1678,7 +1678,7 @@ function createNoteCardHtml(note) {
     illustrationHtml = `
       <div class="book-illustration-block">
         <div class="illustration-header">
-          <span class="illustration-tag"><i class="fa-solid fa-image"></i> 教學重點插圖精華</span>
+          <span class="illustration-tag"><i class="fa-solid fa-image"></i> 核心觀念插圖精華</span>
           <button class="btn-zoom-img" onclick="openLightbox('${note.image}', '${safeCaption}')">
             <i class="fa-solid fa-magnifying-glass-plus"></i> 放大查看
           </button>
