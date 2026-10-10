@@ -20,7 +20,7 @@
   <!-- Canvas Confetti for Celebration Effects -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Project Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="styles.css?v=2.3.0">
+  <link rel="stylesheet" href="styles.css?v=2.4.0">
 </head>
 <body>
 
@@ -50,6 +50,13 @@
         <span id="font-scale-label" class="font-scale-display">100%</span>
         <button id="btn-font-inc" class="font-btn" aria-label="放大字體">A+</button>
       </div>
+
+      <!-- Trash Bin: 筆記回收桶與一鍵復原 -->
+      <button id="btn-trash-bin" class="trash-bin-nav-btn" onclick="openTrashModal()" title="手帳回收桶：查看已刪除的筆記與復原">
+        <i class="fa-solid fa-trash-can"></i>
+        <span class="trash-btn-text">回收桶</span>
+        <span id="trash-count-badge" class="trash-count-badge" style="display: none;">0</span>
+      </button>
 
       <!-- Theme Selector -->
       <div class="theme-selector" title="外觀主題切換">
@@ -232,8 +239,62 @@
     </div>
   </div>
 
+  <!-- 刪除本頁筆記二次確認彈窗 -->
+  <div id="delete-confirm-modal" class="modal-backdrop-custom" onclick="closeDeleteModal(event)">
+    <div class="modal-dialog-custom delete-dialog" onclick="event.stopPropagation()">
+      <button class="modal-close-icon" onclick="closeDeleteModal()" title="關閉">&times;</button>
+      <div class="modal-cute-badge">
+        <span class="delete-icon-bounce">🗑️</span>
+      </div>
+      <h3 class="modal-title">確定要刪除這頁筆記嗎？</h3>
+      <div class="delete-note-preview" id="delete-note-preview-title">
+        <!-- 顯示要刪除的筆記標題 -->
+      </div>
+      <p class="modal-tip">
+        <i class="fa-solid fa-circle-info"></i> 這頁觀念已經熟記了嗎？刪除後若需要，隨時可至右上角<b>「回收桶」</b>一鍵復原回手帳喔！
+      </p>
+      <div class="modal-btn-row">
+        <button type="button" class="btn-modal-cancel" onclick="closeDeleteModal()">
+          <i class="fa-solid fa-arrow-left"></i> 取消保留
+        </button>
+        <button type="button" class="btn-modal-confirm-delete" id="btn-confirm-delete" onclick="executeDeleteCurrentNote()">
+          <i class="fa-solid fa-trash-can"></i> 確認刪除本頁
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手帳筆記回收桶彈窗 (查看與個別/全部復原) -->
+  <div id="trash-bin-modal" class="modal-backdrop-custom" onclick="closeTrashModal(event)">
+    <div class="modal-dialog-custom trash-dialog" onclick="event.stopPropagation()">
+      <div class="trash-modal-header">
+        <div class="trash-header-title-wrap">
+          <span class="trash-icon-emoji">🗑️</span>
+          <div>
+            <h3>手帳筆記回收桶</h3>
+            <p>已刪除的筆記都在這裡安全保管，隨時可一鍵復原回手帳</p>
+          </div>
+        </div>
+        <button class="modal-close-icon" onclick="closeTrashModal()" title="關閉">&times;</button>
+      </div>
+
+      <div id="trash-notes-list" class="trash-notes-list">
+        <!-- 動態渲染已刪除的筆記清單 -->
+      </div>
+
+      <div class="trash-modal-footer">
+        <button type="button" class="btn-restore-all" id="btn-restore-all" onclick="restoreAllNotes()">
+          <i class="fa-solid fa-rotate-left"></i> 全部一鍵復原
+        </button>
+        <button type="button" class="btn-modal-cancel" onclick="closeTrashModal()">
+          關閉
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts with Cache Buster -->
-  <script src="notes_data.js?v=2.3.0"></script>
-  <script src="app.js?v=2.3.0"></script>
+  <script src="notes_data.js?v=2.4.0"></script>
+  <script src="app.js?v=2.4.0"></script>
 </body>
 </html>

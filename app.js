@@ -58,14 +58,332 @@ function getCustomNotes() {
   }
 }
 
+const DELETED_NOTES_STORAGE_KEY = "maimai_deleted_note_ids";
+
 /**
- * 取得全站整合筆記清單 (自訂筆記置頂優先 + 內建精華筆記)
+ * 讀取已刪除筆記 ID 陣列
  */
-function getAllNotesData() {
+function getDeletedNoteIds() {
+  try {
+    const raw = localStorage.getItem(DELETED_NOTES_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error("讀取已刪除筆記清單失敗:", e);
+    return [];
+  }
+}
+
+/**
+ * 儲存已刪除筆記 ID 陣列
+ */
+function saveDeletedNoteIds(ids) {
+  try {
+    localStorage.setItem(DELETED_NOTES_STORAGE_KEY, JSON.stringify(ids));
+  } catch (e) {
+    console.error("儲存已刪除筆記清單失敗:", e);
+  }
+}
+
+/**
+ * 取得未經刪除過濾之全站所有筆記清單
+ */
+function getRawAllNotesData() {
   const baseList = (typeof NOTES_DATA !== "undefined" && Array.isArray(NOTES_DATA)) ? NOTES_DATA : [];
   const customList = getCustomNotes();
   return [...customList, ...baseList];
 }
+
+/**
+ * 取得全站整合筆記清單 (自動過濾已放入回收桶之筆記)
+ */
+function getAllNotesData() {
+  const rawList = getRawAllNotesData();
+  const deletedIds = getDeletedNoteIds();
+  if (!deletedIds || deletedIds.length === 0) return rawList;
+  return rawList.filter(n => !deletedIds.includes(n.id));
+}
+
+/**
+ * 取得已放入回收桶之筆記資料列表
+ */
+function getDeletedNotes() {
+  const rawList = getRawAllNotesData();
+  const deletedIds = getDeletedNoteIds();
+  if (!deletedIds || deletedIds.length === 0) return [];
+  return rawList.filter(n => deletedIds.includes(n.id));
+}
+
+/**
+ * 播放輕柔撕紙/刪除音效 (Web Audio API)
+ */
+function playDeleteSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const bufferSize = Math.floor(ctx.sampleRate * 0.12);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.035));
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(800, ctx.currentTime);
+    filter.Q.setValueAtTime(1.2, ctx.currentTime);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start();
+  } catch (e) {
+    // 忽略音效異常
+  }
+}
+
+/**
+ * 播放清脆星星復原音效 (Web Audio API)
+ */
+function playRestoreSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); // A5
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.22);
+  } catch (e) {
+    // 忽略音效異常
+  }
+}
+
+let pendingDeleteNoteId = null;
+
+/**
+ * 開啟刪除本頁筆記確認彈窗
+ */
+window.openDeleteConfirmModal = function(noteId) {
+  const allNotes = getRawAllNotesData();
+  const note = allNotes.find(n => n.id === noteId);
+  if (!note) return;
+
+  pendingDeleteNoteId = noteId;
+  const previewEl = document.getElementById("delete-note-preview-title");
+  if (previewEl) {
+    const stageName = note.stage === "progress" ? "📙 進度手帳" : "📘 複習手帳";
+    previewEl.innerHTML = `
+      <div class="delete-preview-badge-row">
+        <span class="delete-preview-pill pill-stage">${stageName} · ${note.volume || ''}</span>
+        <span class="delete-preview-pill pill-subj">${note.subjectName || ''}</span>
+        <span class="delete-preview-pill pill-unit">${note.unit || ''}</span>
+      </div>
+      <div class="delete-preview-title-text">${note.title}</div>
+    `;
+  }
+
+  const modal = document.getElementById("delete-confirm-modal");
+  if (modal) {
+    modal.classList.add("active");
+  }
+};
+
+window.deleteCurrentPageNote = function(noteId) {
+  openDeleteConfirmModal(noteId);
+};
+
+/**
+ * 關閉刪除本頁筆記確認彈窗
+ */
+window.closeDeleteModal = function(e) {
+  if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains("modal-close-icon") && !e.target.classList.contains("btn-modal-cancel")) {
+    return;
+  }
+  const modal = document.getElementById("delete-confirm-modal");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+  pendingDeleteNoteId = null;
+};
+
+/**
+ * 執行確認刪除本頁筆記
+ */
+window.executeDeleteCurrentNote = function() {
+  if (!pendingDeleteNoteId) return;
+  const noteId = pendingDeleteNoteId;
+  
+  // 取得已刪除清單並將其加入
+  const deletedIds = getDeletedNoteIds();
+  if (!deletedIds.includes(noteId)) {
+    deletedIds.push(noteId);
+    saveDeletedNoteIds(deletedIds);
+  }
+
+  // 播放撕紙音效
+  playDeleteSound();
+
+  // 關閉確認視窗
+  const modal = document.getElementById("delete-confirm-modal");
+  if (modal) modal.classList.remove("active");
+  pendingDeleteNoteId = null;
+
+  // 自動調整當前頁碼防呆
+  const filtered = getFilteredNotes();
+  if (currentPage >= filtered.length) {
+    currentPage = Math.max(0, filtered.length - 1);
+  }
+
+  // 刷新畫面與統計
+  renderNotes();
+  updateTabCounts();
+  updateTrashCountBadge();
+
+  // 彈出帶有一鍵復原的 Toast
+  showToast("🗑️ 已將本頁筆記移至回收桶", { canUndo: true, noteId: noteId });
+};
+
+/**
+ * 更新頂端導航回收桶計數徽章
+ */
+function updateTrashCountBadge() {
+  const badge = document.getElementById("trash-count-badge");
+  if (!badge) return;
+  const count = getDeletedNoteIds().length;
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = "inline-flex";
+    badge.classList.remove("badge-pulse");
+    void badge.offsetWidth;
+    badge.classList.add("badge-pulse");
+  } else {
+    badge.style.display = "none";
+  }
+}
+
+/**
+ * 開啟手帳筆記回收桶彈窗
+ */
+window.openTrashModal = function(e) {
+  renderTrashNotesList();
+  const modal = document.getElementById("trash-bin-modal");
+  if (modal) modal.classList.add("active");
+};
+
+/**
+ * 關閉手帳筆記回收桶彈窗
+ */
+window.closeTrashModal = function(e) {
+  if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains("modal-close-icon") && !e.target.classList.contains("btn-modal-cancel")) {
+    return;
+  }
+  const modal = document.getElementById("trash-bin-modal");
+  if (modal) modal.classList.remove("active");
+};
+
+/**
+ * 渲染回收桶內的筆記清單
+ */
+function renderTrashNotesList() {
+  const listEl = document.getElementById("trash-notes-list");
+  const restoreAllBtn = document.getElementById("btn-restore-all");
+  if (!listEl) return;
+
+  const deletedNotes = getDeletedNotes();
+  if (deletedNotes.length === 0) {
+    if (restoreAllBtn) restoreAllBtn.style.display = "none";
+    listEl.innerHTML = `
+      <div class="trash-empty-state">
+        <div class="trash-empty-emoji">🌱✨</div>
+        <h4>回收桶目前是空的</h4>
+        <p>所有重點筆記都在手帳中整齊收錄著，沒有被刪除的頁面喔！</p>
+      </div>
+    `;
+    return;
+  }
+
+  if (restoreAllBtn) restoreAllBtn.style.display = "inline-flex";
+
+  listEl.innerHTML = deletedNotes.map(note => {
+    const stageName = note.stage === "progress" ? "📙 進度手帳" : "📘 複習手帳";
+    return `
+      <div class="trash-item-card" id="trash-item-${note.id}">
+        <div class="trash-item-info">
+          <div class="trash-item-tags">
+            <span class="trash-pill pill-stage">${stageName} · ${note.volume || ''}</span>
+            <span class="trash-pill pill-subj">${note.subjectName || ''}</span>
+            <span class="trash-pill pill-unit">${note.unit || ''}</span>
+          </div>
+          <h4 class="trash-item-title">${note.title}</h4>
+        </div>
+        <div class="trash-item-actions">
+          <button type="button" class="btn-restore-single" onclick="restoreNote('${note.id}')" title="將這頁復原回手帳">
+            <i class="fa-solid fa-rotate-left"></i> 復原此頁
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/**
+ * 單筆復原筆記
+ */
+window.restoreNote = function(noteId) {
+  let deletedIds = getDeletedNoteIds();
+  deletedIds = deletedIds.filter(id => id !== noteId);
+  saveDeletedNoteIds(deletedIds);
+
+  playRestoreSound();
+  renderNotes();
+  updateTabCounts();
+  updateTrashCountBadge();
+
+  // 若回收桶彈窗開啟中，重新渲染回收桶列表
+  const trashModal = document.getElementById("trash-bin-modal");
+  if (trashModal && trashModal.classList.contains("active")) {
+    renderTrashNotesList();
+  }
+
+  showToast("✨ 筆記已成功復原回手帳！");
+};
+
+/**
+ * 全部一鍵復原
+ */
+window.restoreAllNotes = function() {
+  const count = getDeletedNoteIds().length;
+  if (count === 0) return;
+
+  saveDeletedNoteIds([]);
+  playRestoreSound();
+  
+  if (typeof confetti === "function") {
+    confetti({
+      particleCount: 50,
+      spread: 60,
+      origin: { y: 0.6 }
+    });
+  }
+
+  renderNotes();
+  updateTabCounts();
+  updateTrashCountBadge();
+  renderTrashNotesList();
+
+  showToast("🎉 所有筆記已全部復原回手帳！");
+};
 
 /**
  * 學科對應 Icon 輔助函式
@@ -82,27 +400,16 @@ function getSubjectIcon(subj) {
 }
 
 /**
- * 刪除自訂傳送門筆記
+ * 刪除自訂傳送門筆記 (相容原功能)
  */
 window.deletePortalNote = function(id) {
-  if (!confirm("確定要刪除這則來自錯題本的自訂筆記嗎？")) return;
-  try {
-    let list = getCustomNotes();
-    list = list.filter(n => n.id !== id);
-    localStorage.setItem("maimai_custom_notes", JSON.stringify(list));
-    currentPage = 0;
-    renderNotes();
-    updateTabCounts();
-    showToast("🗑️ 自訂筆記已成功刪除");
-  } catch (e) {
-    console.error("刪除失敗:", e);
-  }
+  openDeleteConfirmModal(id);
 };
 
 /**
- * 輕量化全站浮動 Toast 提示
+ * 輕量化全站浮動 Toast 提示 (支援復原按鈕)
  */
-function showToast(msg) {
+function showToast(msg, options = {}) {
   let toast = document.getElementById("portal-floating-toast");
   if (!toast) {
     toast = document.createElement("div");
@@ -110,12 +417,26 @@ function showToast(msg) {
     toast.className = "portal-floating-toast";
     document.body.appendChild(toast);
   }
-  toast.textContent = msg;
+
+  if (options.canUndo && options.noteId) {
+    toast.innerHTML = `
+      <span class="toast-msg-text">${msg}</span>
+      <button type="button" class="toast-undo-btn" onclick="restoreNote('${options.noteId}')">
+        <i class="fa-solid fa-rotate-left"></i> 立即復原
+      </button>
+    `;
+    toast.classList.add("has-undo");
+  } else {
+    toast.textContent = msg;
+    toast.classList.remove("has-undo");
+  }
+
   toast.classList.add("show");
   clearTimeout(toast._timer);
+  const duration = (options.canUndo) ? 6000 : 2800;
   toast._timer = setTimeout(() => {
     toast.classList.remove("show");
-  }, 2600);
+  }, duration);
 }
 
 /**
@@ -257,6 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initStageSwitcher();
   initEventListeners();
   renderNotes();
+  updateTrashCountBadge();
 
   // 支援 URL 參數與 Hash 滾動跳轉 (例如 ?scroll=800 或 ?scroll=bottom 或 ?test_visible=1)
   const urlParams = new URLSearchParams(window.location.search);
@@ -1320,6 +1642,14 @@ function createOpenBookHtml(filtered, pageIdx) {
           <!-- 隨堂即時自我檢測 -->
           ${quizHtml}
 
+          <!-- 本頁筆記操作列：刪除本頁筆記 (使用者指定於每頁最下方) -->
+          <div class="note-page-action-footer">
+            <button type="button" class="btn-delete-page-note" onclick="openDeleteConfirmModal('${currentNote.id}')" title="刪除本頁筆記">
+              <i class="fa-regular fa-trash-can"></i>
+              <span>刪除本頁筆記</span>
+            </button>
+          </div>
+
           <!-- Running Footer (頁尾資訊) -->
           <div class="book-running-footer">
             <div class="book-footer-branding">
@@ -1435,6 +1765,14 @@ function createNoteCardHtml(note) {
       ` : ''}
 
       ${quizHtml}
+
+      <!-- 本頁筆記操作列：刪除本頁筆記 (使用者指定於每頁最下方) -->
+      <div class="note-page-action-footer">
+        <button type="button" class="btn-delete-page-note" onclick="openDeleteConfirmModal('${note.id}')" title="刪除本頁筆記">
+          <i class="fa-regular fa-trash-can"></i>
+          <span>刪除本頁筆記</span>
+        </button>
+      </div>
     </article>
   `;
 }
