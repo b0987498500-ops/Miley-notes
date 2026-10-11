@@ -385,11 +385,18 @@ document.addEventListener("DOMContentLoaded", () => {
       currentSubject = hash;
     } else {
       const allNotes = getAllNotesData();
-      const idx = allNotes.findIndex(n => n.id === hash);
-      if (idx !== -1) {
-        currentPage = idx;
-        if (allNotes[idx].stage) {
-          currentStage = allNotes[idx].stage;
+      const targetNote = allNotes.find(n => n.id === hash);
+      if (targetNote) {
+        if (targetNote.stage) {
+          currentStage = targetNote.stage;
+        }
+        if (targetNote.subject) {
+          currentSubject = targetNote.subject;
+        }
+        const stageNotes = getFilteredNotes();
+        const stageIdx = stageNotes.findIndex(n => n.id === hash);
+        if (stageIdx !== -1) {
+          currentPage = stageIdx;
         }
       }
     }
