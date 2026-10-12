@@ -455,6 +455,39 @@ const NOTES_DATA = [
     image: "images/social/northeast_asia_industry_comparison_table.png",
     imageCaption: "日本、韓國、朝鮮三國農業、製造業與商貿比較圖表",
     mnemonic: "【東北亞產業口訣】：日韓外向原料進口產品銷全球；日本精密科技，南韓財閥半導體，北韓軍工缺糧食！"
+  },
+
+  // ==========================================
+  // 🔤 英文科 (English) - 進度手帳 (第 5 冊)
+  // ==========================================
+  {
+    id: "english-1",
+    stage: "progress",
+    volume: "第 5 冊",
+    stageName: "進度筆記本",
+    subject: "english",
+    subjectName: "英文",
+    subjectIcon: "fa-language",
+    gradeVersion: "九年級上（南一／翰林／康軒版）",
+    unit: "現在完成式核心文法",
+    title: "現在完成式 been 後面三種接法大對決（狀態 vs. 被動 vs. 進行）",
+    concept: "been 後接形容詞/名詞表一直以來的狀態；接 V-p.p. 表完成被動；接 V-ing 表完成進行",
+    coreConcepts: [
+      "**接形容詞 / 名詞（表一直以來的狀態）**：been 後無動詞，接形容詞（如 sick, busy）或名詞（如 student），表示某狀態從過去一直維持到現在。",
+      "**接 V-p.p.（表完成被動：已經被...）**：主詞通常為「物品」（物品無法自主做動作只能被做），表示某事情已經「被」完成了。",
+      "**接 V-ing（表完成進行：一直在做而且還在做）**：主詞通常為「人或動物」（主動作動作），強調動作從過去持續進行到現在沒有停下來。"
+    ],
+    table: {
+      headers: ["接法結構", "文法意義", "判斷關鍵 (怎麼看)", "核心概念", "代表例句與說明"],
+      rows: [
+        ["been ＋ 形容詞 / 名詞", "一直以來的狀態", "無動詞，接 Adj (sick) 或 N (student)", "狀態從過去「一直」維持到現在", "I have been sick for two days.<br>(我這兩天一直生病，形容狀態)"],
+        ["been ＋ V-p.p.", "完成被動 (已經被...)", "接動作 p.p.，主詞通常為「物品」只能被動", "某件事情「已經被」完成了", "The cake has been eaten.<br>(蛋糕已經被吃掉了，被吃)"],
+        ["been ＋ V-ing", "完成進行 (一直在做)", "接 V-ing，主詞通常為「人/動物」主動作動作", "動作從過去持續「動」到現在沒停", "I have been studying English for three hours.<br>(我一直在讀英文讀了三小時，還在讀)"]
+      ]
+    },
+    image: "images/english/have_been_three_usages.png",
+    imageCaption: "現在完成式 been 後接形容詞/名詞、V-p.p. 與 V-ing 三大結構精解",
+    mnemonic: "【been 接法秒殺口訣】：接形名是「狀態」，物加被動「被幹掉 (p.p.)」，人動進行「ing 還在衝」！"
   }
 ];
 
