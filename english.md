@@ -38,3 +38,10 @@
 ### 🧠 記憶口訣與秒殺密碼
 > 💡 **【been 接法秒殺口訣】**
 > - 「接形名是『狀態』，物加被動『被幹掉 (p.p.)』，人動進行『ing 還在衝』！」
+
+### 🎯 隨堂觀念自我檢測
+* **題目**：請選出下列現在完成式句子中，文法結構與語意完全正確的選項：『這間教室已經被學生們打掃乾淨了。』
+  * (A) The classroom has been cleaned by the students. ★（正解：教室為物品只能被動，使用 been + V-p.p. (cleaned)）
+  * (B) The classroom has been cleaning by the students.
+  * (C) The classroom have been cleaned by the students.
+  * (D) The classroom has cleaned by the students.

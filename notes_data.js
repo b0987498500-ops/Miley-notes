@@ -1,7 +1,8 @@
 /**
  * 麥麥筆記 資料庫 (NOTES_DATA)
  * 忠實收錄由書本、講義或課堂精華提煉之重點筆記
- * 每頁筆記精煉控制於 500 字內（最高上限 700 字），完整保留速查比較表格與核心口訣
+ * 每頁筆記精煉控制於 500 字內（最高上限 700 字，題目不計入總字數）
+ * 完整保留速查比較表格、繪圖插圖與即測即評題目
  */
 const NOTES_DATA = [
   // ==========================================
@@ -21,7 +22,7 @@ const NOTES_DATA = [
     concept: "45°-45°-90° 邊長比 1:1:√2 與 30°-60°-90° 邊長比 1:√3:2 特殊角直角三角形三邊比",
     coreConcepts: [
       "**45°-45°-90° 等腰直角三角形**：兩底角相等 $\\implies$ 兩股等長。依畢氏定理：$1^2 + 1^2 = 2 \\implies$ 邊長比為 $1 : 1 : \\sqrt{2}$。",
-      "**30°-60°-90° 特殊直角三角形**：正三角形切半。短股（$30^\\circ$ 對邊）: 長股（$60^\\circ$ 對邊）: 斜邊（$90^\\circ$ 對邊）$= 1 : \\sqrt{3} : 2$。"
+      "**30°-60°-90° 特殊直角三角形**：由正三角形切半而來。短股（$30^\\circ$ 對邊）: 長股（$60^\\circ$ 對邊）: 斜邊（$90^\\circ$ 對邊）$= 1 : \\sqrt{3} : 2$。"
     ],
     table: {
       headers: ["三角形類型", "內角度數", "三邊長比例 (短股 : 長股 : 斜邊)", "速算解題技巧"],
@@ -32,7 +33,18 @@ const NOTES_DATA = [
     },
     image: "images/math/special_right_triangles_45_45_90.png",
     imageCaption: "45°-45°-90° 等腰直角三角形邊長比 1:1:√2 與實例（邊長 5 : 5 : 5√2）",
-    mnemonic: "【45°-45°-90° 口訣】：一股、二股、根號二斜邊！<br>【30°-60°-90° 口訣】：三十對一，六十對根號三，九十對二！"
+    mnemonic: "【45°-45°-90° 口訣】：一股、二股、根號二斜邊！<br>【30°-60°-90° 口訣】：三十對一，六十對根號三，九十對二！",
+    quiz: [
+      {
+        question: "若一個等腰直角三角形的兩股長皆為 7 公分，請問其斜邊長為多少公分？",
+        options: [
+          { prefix: "A", text: "7√2 公分", correct: true, explanation: "太棒了！45°-45°-90° 邊長比為 1 : 1 : √2，已知股長為 7，斜邊即為 7 × √2 = 7√2 公分！" },
+          { prefix: "B", text: "14 公分", correct: false, explanation: "注意：等腰直角三角形不是 1:1:2，斜邊是股長的 √2 倍，不是 2 倍！" },
+          { prefix: "C", text: "7√3 公分", correct: false, explanation: "√3 是 30°-60°-90° 特殊三角形的長股比例喔！" },
+          { prefix: "D", text: "49 公分", correct: false, explanation: "這是股長平方，不是斜邊長度！" }
+        ]
+      }
+    ]
   },
   {
     id: "math-2",
@@ -57,9 +69,18 @@ const NOTES_DATA = [
         ["正三角形面積", "A", "A = (√3 / 4) a²", "由「底 × 高 ÷ 2」計算：a × (√3 / 2) a ÷ 2 = (√3 / 4) a²"]
       ]
     },
-    image: "images/math/equilateral_triangle_height_area.png",
-    imageCaption: "正三角形的高與面積公式推導與計算依據",
-    mnemonic: "【正三角形雙公式秒殺口訣】：高是「二分之根號三 a」，面積是「四分之根號三 a 平方」！"
+    mnemonic: "【正三角形雙公式秒殺口訣】：高是「二分之根號三 a」，面積是「四分之根號三 a 平方」！",
+    quiz: [
+      {
+        question: "已知一個正三角形的邊長為 6 公分，請問其面積為多少平方公分？",
+        options: [
+          { prefix: "A", text: "9√3 平方公分", correct: true, explanation: "答對了！正三角形面積公式為 (√3 / 4) a²。將 a = 6 代入得：(√3 / 4) × 36 = 9√3 平方公分！" },
+          { prefix: "B", text: "3√3 平方公分", correct: false, explanation: "這是高 (h = (√3/2) × 6 = 3√3)，題目問的是面積喔！" },
+          { prefix: "C", text: "18√3 平方公分", correct: false, explanation: "小心！面積公式是四分之根號三 a²，分母是 4 不是 2！" },
+          { prefix: "D", text: "36 平方公分", correct: false, explanation: "正三角形面積不是邊長平方，記得乘以 (√3 / 4)！" }
+        ]
+      }
+    ]
   },
 
   // ==========================================
@@ -98,7 +119,18 @@ const NOTES_DATA = [
     },
     image: "images/science/plant_evolution_diagram.jpg",
     imageCaption: "植物界五大族群演化階梯與器官構造圖解",
-    mnemonic: "【演化突破口訣】：蘚苔長角質，蕨類有血管；裸被通水管（花粉管），被子抱子房！<br>【秒殺金律】：有花、果實、子房必為被子；有毬果必為裸子！"
+    mnemonic: "【演化突破口訣】：蘚苔長角質，蕨類有血管；裸被通水管（花粉管），被子抱子房！<br>【秒殺金律】：有花、果實、子房必為被子；有毬果必為裸子！",
+    quiz: [
+      {
+        question: "在野外發現一種綠色植物，具有維管束，以孢子繁殖，生活史中受精過程仍需要水分為媒介。請問此植物最可能屬於下列哪一類？",
+        options: [
+          { prefix: "A", text: "藻類", correct: false, explanation: "藻類生活在水中，尚未演化出維管束與真正的根、莖、葉。" },
+          { prefix: "B", text: "蘚苔植物", correct: false, explanation: "蘚苔植物雖已登陸，但尚未演化出維管束，植株矮小無法長高。" },
+          { prefix: "C", text: "蕨類植物", correct: true, explanation: "太厲害了！具有維管束（排除藻類、蘚苔），以孢子繁殖且受精需水（排除種子植物），故必定為「蕨類植物」！" },
+          { prefix: "D", text: "裸子植物", correct: false, explanation: "裸子植物是以種子繁殖，具有花粉管受精免水！" }
+        ]
+      }
+    ]
   },
   {
     id: "science-2",
@@ -128,7 +160,18 @@ const NOTES_DATA = [
     },
     image: "images/science/dicot_vs_monocot_diagram.jpg",
     imageCaption: "雙子葉植物 vs. 單子葉植物形態特徵對照圖",
-    mnemonic: "【單雙子葉秒殺口訣】：一葉三花平行脈，散生鬚根無層次；雙葉四五網狀脈，環狀軸根有層次！"
+    mnemonic: "【單雙子葉秒殺口訣】：一葉三花平行脈，散生鬚根無層次；雙葉四五網狀脈，環狀軸根有層次！",
+    quiz: [
+      {
+        question: "小麥在校園中撿到一片具有平行脈的落葉，請推測該植物的莖與根最可能具有下列何種特徵？",
+        options: [
+          { prefix: "A", text: "莖維管束散生排列，根為鬚根系", correct: true, explanation: "完全正確！平行脈為「單子葉植物」典型特徵，其莖維管束呈散生排列（無形成層不能加粗），根為鬚根系！" },
+          { prefix: "B", text: "莖維管束環狀排列，根為軸根系", correct: false, explanation: "環狀排列與軸根系是雙子葉植物（網狀脈）的特徵！" },
+          { prefix: "C", text: "莖具發達形成層能年年加粗", correct: false, explanation: "單子葉植物維管束散生無形成層，不能加粗！" },
+          { prefix: "D", text: "種子具有兩片子葉", correct: false, explanation: "平行脈是單子葉植物，種子僅有 1 片子葉！" }
+        ]
+      }
+    ]
   },
   {
     id: "science-3",
@@ -157,9 +200,20 @@ const NOTES_DATA = [
         ["體表構造", "鱗片 / 黏液", "濕潤裸露皮膚", "乾燥鱗片或骨板", "羽毛", "毛髮"]
       ]
     },
-    image: "images/science/vertebrate_classification_diagram.png",
+    image: "images/science/vertebrates_classes_diagram.jpg",
     imageCaption: "脊椎動物五大類呼吸、體溫、受精與生殖演化圖解",
-    mnemonic: "【五大類秒殺口訣】：外溫魚兩爬，內溫鳥哺乳；兩生皮膚輔呼吸，羊膜卵殼登陸齊！"
+    mnemonic: "【五大類秒殺口訣】：外溫魚兩爬，內溫鳥哺乳；兩生皮膚輔呼吸，羊膜卵殼登陸齊！",
+    quiz: [
+      {
+        question: "下列有關脊椎動物五大類群特徵的敘述，何者完全正確？",
+        options: [
+          { prefix: "A", text: "爬蟲類、鳥類與哺乳類皆為體內受精，並具有防止水分散失的卵殼或胎生構造", correct: true, explanation: "答對了！爬蟲、鳥、哺乳演化出體內受精與羊膜卵/胎生，成功擺脫對水域繁衍的依賴！" },
+          { prefix: "B", text: "兩生類成體已完全適應陸生乾燥環境，繁殖受精不需水分", correct: false, explanation: "兩生類皮膚裸露易散失水分，且體外受精卵無殼，繁殖仍必須依賴水！" },
+          { prefix: "C", text: "魚類與爬蟲類皆為內溫（定溫）動物", correct: false, explanation: "魚類、兩生類、爬蟲類皆為「外溫（變溫）動物」！" },
+          { prefix: "D", text: "鳥類與哺乳類皆為卵生且體表覆蓋鱗片", correct: false, explanation: "鳥類覆蓋羽毛，哺乳類多胎生且覆蓋毛髮！" }
+        ]
+      }
+    ]
   },
   {
     id: "science-4",
@@ -193,7 +247,18 @@ const NOTES_DATA = [
     },
     image: "images/science/cycad_gymnosperm_diagram.png",
     imageCaption: "蘇鐵（裸子植物）羽狀複葉、毬果、裸露種子與花粉管特徵圖解",
-    mnemonic: "【蘇鐵秒殺密碼】：「蘇鐵松杉柏銀杏，毬果裸露不結果；羽葉雖似蕨與棕，通水免水管中游！」"
+    mnemonic: "【蘇鐵秒殺密碼】：「蘇鐵松杉柏銀杏，毬果裸露不結果；羽葉雖似蕨與棕，通水免水管中游！」",
+    quiz: [
+      {
+        question: "俗話說「鐵樹開花」比喻極為罕見。就現代生物分類觀點來看，下列敘述何者最精確？",
+        options: [
+          { prefix: "A", text: "蘇鐵屬於裸子植物，俗稱的開花其實是長出毬果（孢子葉球），並非被子植物的花", correct: true, explanation: "完全正確！蘇鐵為裸子植物，其生殖構造為毬果（孢子葉球），胚珠直接裸生於苞片上無子房包覆，在生物學上沒有花！" },
+          { prefix: "B", text: "蘇鐵秋天結出紅色肉質的果實，藉由鳥類取食傳播種子", correct: false, explanation: "蘇鐵無子房，絕無果實！紅色肉質顆粒是裸露的種子（肉質外種皮）！" },
+          { prefix: "C", text: "蘇鐵具有大型羽狀複葉，以孢子囊群繁殖，屬於蕨類植物", correct: false, explanation: "蘇鐵具種子與毬果，屬於種子植物，不是蕨類！" },
+          { prefix: "D", text: "蘇鐵精卵結合時仍需要雨水為媒介才能完成受精", correct: false, explanation: "裸子植物具花粉管輸送精細胞，受精完全不需要水！" }
+        ]
+      }
+    ]
   },
   {
     id: "science-5",
@@ -220,9 +285,18 @@ const NOTES_DATA = [
         ["火成岩", "花崗岩", "片麻岩", "堅硬鋪路石、建築基石"]
       ]
     },
-    image: "images/science/rock_cycle_diagram.png",
-    imageCaption: "沉積岩、火成岩與變質岩三大岩石循環與成因",
-    mnemonic: "【變質岩秒殺口訣】：砂變石英頁面板，石灰大理花片麻；高溫高壓葉理出！"
+    mnemonic: "【變質岩秒殺口訣】：砂變石英頁面板，石灰大理花片麻；高溫高壓葉理出！",
+    quiz: [
+      {
+        question: "台灣東部著名的太魯閣峽谷壯麗雄偉，其岩壁主要由石灰岩經高溫高壓變質而形成。請問此種變質岩名稱為何？",
+        options: [
+          { prefix: "A", text: "大理岩", correct: true, explanation: "完全正確！石灰岩（沉積岩）經高溫高壓變質後形成「大理岩」，質地堅硬、紋理優美！" },
+          { prefix: "B", text: "板岩", correct: false, explanation: "板岩是由頁岩變質而來的！" },
+          { prefix: "C", text: "石英岩", correct: false, explanation: "石英岩是由砂岩變質而來的！" },
+          { prefix: "D", text: "片麻岩", correct: false, explanation: "片麻岩是由花崗岩變質而來的！" }
+        ]
+      }
+    ]
   },
   {
     id: "science-6",
@@ -249,9 +323,18 @@ const NOTES_DATA = [
         ["變質岩", "地下深處經高溫高壓變質", "葉理構造、礦物重新排列", "片麻岩、大理岩、板岩、片岩", "× 絕大多數化石已變形破壞"]
       ]
     },
-    image: "images/science/three_rock_types_diagram.png",
-    imageCaption: "沉積岩、火成岩、變質岩外觀構造與成因對照圖",
-    mnemonic: "【三大岩石秒殺口訣】：有層有化石選沉積；火山岩漿選火成；高溫高壓葉理變質！"
+    mnemonic: "【三大岩石秒殺口訣】：有層有化石選沉積；火山岩漿選火成；高溫高壓葉理變質！",
+    quiz: [
+      {
+        question: "地質學家在野外地層中採集到三葉蟲化石，請問該地層最可能由下列哪一種岩石構成？",
+        options: [
+          { prefix: "A", text: "沉積岩（如頁岩、砂岩、石灰岩）", correct: true, explanation: "答對了！只有沉積物緩慢堆積掩埋才能保存古生物遺骸，因此「沉積岩」是唯一可能含有化石的岩石！" },
+          { prefix: "B", text: "火成岩（如花崗岩、玄武岩）", correct: false, explanation: "火成岩由高溫岩漿熔融冷卻形成，古生物化石早已被高溫熔毀！" },
+          { prefix: "C", text: "變質岩（如片麻岩）", correct: false, explanation: "變質岩經歷地下高溫高壓作用，原有化石大多變形破壞消失！" },
+          { prefix: "D", text: "岩漿岩", correct: false, explanation: "岩漿岩即火成岩，無法保存化石！" }
+        ]
+      }
+    ]
   },
 
   // ==========================================
@@ -330,7 +413,18 @@ const NOTES_DATA = [
     },
     image: "images/social/ancient_classical_civilizations_timeline.jpg",
     imageCaption: "古代大河文明至古典地中海文明歷史演進圖解",
-    mnemonic: "【時序秒殺口訣】：蘇美造字埃及曆，雅典民主斯巴軍；亞歷山大融東西，屋大維創羅馬平；三一三合法信基督，四七六西羅入中古！"
+    mnemonic: "【時序秒殺口訣】：蘇美造字埃及曆，雅典民主斯巴軍；亞歷山大融東西，屋大維創羅馬平；三一三合法信基督，四七六西羅入中古！",
+    quiz: [
+      {
+        question: "古代西方歷史上，西元 313 年君士坦丁大帝頒布《米蘭詔令》，對基督教發展造成何種劃時代影響？",
+        options: [
+          { prefix: "A", text: "承認基督教具有合法地位，停止迫害教徒", correct: true, explanation: "秒殺正確！西元 313 年君士坦丁《米蘭詔令》是將基督教「合法化」；到西元 392 年狄奧多西皇帝才正式「定為國教」！" },
+          { prefix: "B", text: "正式將基督教定為羅馬帝國唯一的官方國教", correct: false, explanation: "定為國教是西元 392 年狄奧多西皇帝所做，西元 313 年是「合法化」！" },
+          { prefix: "C", text: "基督教分裂為羅馬天主教與希臘正教", correct: false, explanation: "教會大分裂發生於中古時代西元 1054 年！" },
+          { prefix: "D", text: "創立基督教並確立舊約聖經一神信仰", correct: false, explanation: "耶穌於西元 1 世紀初創立基督教，非君士坦丁大帝！" }
+        ]
+      }
+    ]
   },
   {
     id: "social-2",
@@ -358,9 +452,18 @@ const NOTES_DATA = [
         ["總機會成本", "外顯成本 ＋ 隱藏成本", "40,000 ＋ 8,800 ＝ 48,800 元", "★ 唯一標準正解！"]
       ]
     },
-    image: "images/social/opportunity_cost_formula_diagram.png",
-    imageCaption: "機會成本＝外顯成本＋隱藏成本（贈品利益絕非成本）圖解",
-    mnemonic: "【機會成本秒殺金律】：「外顯花錢＋隱藏少賺＝總機會成本！贈品是好康利益莫加它！」"
+    mnemonic: "【機會成本秒殺金律】：「外顯花錢＋隱藏少賺＝總機會成本！贈品是好康利益莫加它！」",
+    quiz: [
+      {
+        question: "小麥決定在週末參加兩天一夜的露營活動，繳交報名費 3,000 元，因此放棄了原本打工可賺得的 2,000 元薪資。營隊主辦單位貼心贈送價值 500 元的露營專用杯。請問小麥參加此次露營的「總機會成本」為多少？",
+        options: [
+          { prefix: "A", text: "5,000 元", correct: true, explanation: "太棒了！機會成本 ＝ 外顯成本 (報名費 3,000) ＋ 隱藏成本 (打工薪資 2,000) ＝ 5,000 元！贈品價值 500 元屬於利益，絕不計入成本！" },
+          { prefix: "B", text: "4,500 元", correct: false, explanation: "陷阱提醒：贈品是獲得的利益，絕不可拿來扣除或折抵機會成本！" },
+          { prefix: "C", text: "5,500 元", correct: false, explanation: "贈品不是付出的代價，絕不可加進機會成本中！" },
+          { prefix: "D", text: "3,000 元", correct: false, explanation: "只算了外顯成本，忽略了放棄的打工薪資（隱藏成本 2,000 元）！" }
+        ]
+      }
+    ]
   },
   {
     id: "social-3",
@@ -393,9 +496,20 @@ const NOTES_DATA = [
         ["ㄆ", "黑潮 (暖流)", "洋流系統", "低緯向北流經太平洋側；寒暖交會湧升流形成世界著名漁場"]
       ]
     },
-    image: "images/social/japan_geography_map_handout.png",
+    image: "images/social/japan_geography_map.png",
     imageCaption: "日本群島主要島嶼、海洋海峽、洋流與工業區地圖",
-    mnemonic: "【日本地理口訣】：北海牧場本州心，寒暖洋流漁場興；冬迎西北海側雪，太平洋側夏雨淋！"
+    mnemonic: "【日本地理口訣】：北海牧場本州心，寒暖洋流漁場興；冬迎西北海側雪，太平洋側夏雨淋！",
+    quiz: [
+      {
+        question: "日本本州面向日本海的地區（如新潟、北陸），冬季降雪量居世界前列。請問造成此氣候現象的最主要原因為何？",
+        options: [
+          { prefix: "A", text: "冬季西北季風掠過日本海吸收豐沛水氣，在迎風面的山地抬升致雪", correct: true, explanation: "答對了！冬季源自西伯利亞的乾燥西北季風越過溫暖的日本海吸收大量水氣，迎風面日本海側受山脈阻擋強烈降雪！" },
+          { prefix: "B", text: "夏季東南季風帶來的對流雨在低溫下凝結成雪", correct: false, explanation: "這是冬季季風的影響，非夏季季風！" },
+          { prefix: "C", text: "黑潮暖流直接流入日本海造成強烈蒸發降雪", correct: false, explanation: "黑潮主要流經太平洋側，日本海側主要受對馬暖流分支影響，關鍵是西北季風迎風面！" },
+          { prefix: "D", text: "終年受西風帶與副熱帶高壓交替籠罩", correct: false, explanation: "主要成因是季風迎風面地形雨（雪）！" }
+        ]
+      }
+    ]
   },
   {
     id: "social-4",
@@ -424,9 +538,20 @@ const NOTES_DATA = [
         ["C", "錦江", "主要河流", "流經西南部，注入「黃海」"]
       ]
     },
-    image: "images/social/korea_geography_map_handout.png",
+    image: "images/social/korea_geography_map.png",
     imageCaption: "朝鮮半島南北韓、太白山脈、蓋馬高原與三大河流地圖",
-    mnemonic: "【朝鮮半島口訣】：東北山嶺西南平，東陡西緩河流西；北韓礦水南平商，太白縱貫脊梁立！"
+    mnemonic: "【朝鮮半島口訣】：東北山嶺西南平，東陡西緩河流西；北韓礦水南平商，太白縱貫脊梁立！",
+    quiz: [
+      {
+        question: "有關朝鮮半島的地形與水系特徵，下列敘述何者完全正確？",
+        options: [
+          { prefix: "A", text: "地勢「東北高、西南低」，太白山脈偏東縱貫，漢江、錦江等主要河流多自東向西注入黃海", correct: true, explanation: "完全正確！太白山脈偏東縱貫形成「東陡西緩」脊梁，西南部地勢平坦為主要農業平原與水系出口！" },
+          { prefix: "B", text: "地勢「西高東低」，主要河流皆向東流入日本海", correct: false, explanation: "朝鮮半島地勢東高西低，主要河流大多向西注入黃海！" },
+          { prefix: "C", text: "南韓境內蓋馬高原蘊藏豐富礦產與水力資源", correct: false, explanation: "蓋馬高原位於「北韓」境內，非南韓！" },
+          { prefix: "D", text: "漢江流經平壤，洛東江流經首爾", correct: false, explanation: "漢江流經首爾（南韓首都），大同江流經平壤（北韓首都）！" }
+        ]
+      }
+    ]
   },
   {
     id: "social-5",
@@ -452,9 +577,20 @@ const NOTES_DATA = [
         ["朝鮮 (北韓)", "多山區、氣候寒冷，糧食產量不足（依賴國際援助）", "礦產豐富，發展重工業與軍工武器", "實行鎖國政策，主要貿易夥伴為中國"]
       ]
     },
-    image: "images/social/northeast_asia_industry_comparison_table.png",
+    image: "images/social/northeast_asia_economy.png",
     imageCaption: "日本、韓國、朝鮮三國農業、製造業與商貿比較圖表",
-    mnemonic: "【東北亞產業口訣】：日韓外向原料進口產品銷全球；日本精密科技，南韓財閥半導體，北韓軍工缺糧食！"
+    mnemonic: "【東北亞產業口訣】：日韓外向原料進口產品銷全球；日本精密科技，南韓財閥半導體，北韓軍工缺糧食！",
+    quiz: [
+      {
+        question: "日本與南韓兩國在工業與經貿發展型態上，具有下列哪一項最顯著的「共同特徵」？",
+        options: [
+          { prefix: "A", text: "國內礦產資源匱乏，均採「進口原料、加工出口」的外向型貿易經濟", correct: true, explanation: "答對了！日韓兩國國內能源與金屬礦產皆嚴重缺乏，高度依賴海外原料進口，並將高階工業產品（汽車、半導體）行銷全球！" },
+          { prefix: "B", text: "國內勞動力充足低廉，以低成本組裝成衣與鞋類製造為主", correct: false, explanation: "日韓兩國工資高昂且面臨高齡化，產業已全面升級為高科技與資本密集！" },
+          { prefix: "C", text: "糧食作物完全自給自足，不需仰賴國外農產進口", correct: false, explanation: "日韓耕地狹小，小麥、黃豆、牛肉等大量依賴海外進口！" },
+          { prefix: "D", text: "實行嚴格鎖國保護政策，極少進行對外投資", correct: false, explanation: "日韓皆積極拓展海外市場並跨國投資！" }
+        ]
+      }
+    ]
   },
 
   // ==========================================
@@ -487,7 +623,18 @@ const NOTES_DATA = [
     },
     image: "images/english/have_been_three_usages.png",
     imageCaption: "現在完成式 been 後接形容詞/名詞、V-p.p. 與 V-ing 三大結構精解",
-    mnemonic: "【been 接法秒殺口訣】：接形名是「狀態」，物加被動「被幹掉 (p.p.)」，人動進行「ing 還在衝」！"
+    mnemonic: "【been 接法秒殺口訣】：接形名是「狀態」，物加被動「被幹掉 (p.p.)」，人動進行「ing 還在衝」！",
+    quiz: [
+      {
+        question: "請選出下列現在完成式句子中，文法結構與語意完全正確的選項：『這間教室已經被學生們打掃乾淨了。』",
+        options: [
+          { prefix: "A", text: "The classroom has been cleaned by the students.", correct: true, explanation: "答對了！主詞 The classroom 為物品（無法自己做動作），故使用「been ＋ V-p.p. (cleaned)」表達完成被動語態！" },
+          { prefix: "B", text: "The classroom has been cleaning by the students.", correct: false, explanation: "教室是物品無法自主動作，若用 cleaning（V-ing）變成教室自己在打掃，語意錯誤！" },
+          { prefix: "C", text: "The classroom have been cleaned by the students.", correct: false, explanation: "主詞 The classroom 為單數第三人稱，助動詞應用 has 而非 have！" },
+          { prefix: "D", text: "The classroom has cleaned by the students.", correct: false, explanation: "缺少 been！has cleaned 變成主動式，教室無法主動打掃！" }
+        ]
+      }
+    ]
   }
 ];
 

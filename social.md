@@ -1,7 +1,7 @@
 # 社會科重點筆記 (Social Studies Notes)
 
 * **教科書版本**：康軒／翰林／南一版通用（國中八～九年級歷史、地理、公民）
-* **收錄原則**：提煉核心知識架構、全景時間線、地圖講義速查表與秒殺口訣，**不記錄日期**。每頁精簡於 500 字內（最高上限 700 字）。
+* **收錄原則**：提煉核心知識架構、全景時間線、地圖講義速查表與秒殺口訣，**不記錄日期**。
 
 ---
 
@@ -43,6 +43,13 @@
 > 💡 **【時序秒殺口訣】**
 > - 「蘇美造字埃及曆，雅典民主斯巴軍；亞歷山大融東西，屋大維創羅馬平；三一三合法信基督，四七六西羅入中古！」
 
+### 🎯 隨堂觀念自我檢測
+* **題目**：古代西方歷史上，西元 313 年君士坦丁大帝頒布《米蘭詔令》，對基督教發展造成何種劃時代影響？
+  * (A) 承認基督教具有合法地位，停止迫害教徒 ★（正解：西元 313 年《米蘭詔令》使基督教「合法化」；西元 392 年狄奧多西才「定為國教」）
+  * (B) 正式將基督教定為羅馬帝國唯一的官方國教
+  * (C) 基督教分裂為羅馬天主教與希臘正教
+  * (D) 創立基督教並確立舊約聖經一神信仰
+
 ---
 
 ## 📌 重點 2：機會成本計算全攻略（外顯成本＋隱藏成本）與非成本項目辨析
@@ -68,17 +75,16 @@
 | **利益 / 贈品** | 店家給予的額外獎勵或附贈價值 | 隨團贈送價值 4,000 元保溫杯與體驗券 | × 絕不計入！（是利益非代價） |
 | **總機會成本** | 外顯成本 ＋ 隱藏成本 | 40,000 ＋ 8,800 ＝ 48,800 元 | ★ 唯一標準正解！ |
 
-<details open>
-<summary>🔍 <b>[核心觀念教學圖解]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
-<input type="checkbox" id="zoom-social-2" class="zoom-toggle">
-<label for="zoom-social-2" class="zoom-label">
-  <img src="images/social/opportunity_cost_formula_diagram.png" alt="機會成本公式圖解" style="width: 100%; max-width: 650px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
-</label>
-</details>
-
 ### 🧠 記憶口訣與秒殺密碼
 > 💡 **【機會成本秒殺金律】**
 > - 「外顯花錢＋隱藏少賺＝總機會成本！贈品是好康利益莫加它！」
+
+### 🎯 隨堂觀念自我檢測
+* **題目**：小麥決定在週末參加兩天一夜的露營活動，繳交報名費 3,000 元，因此放棄了原本打工可賺得的 2,000 元薪資。營隊主辦單位貼心贈送價值 500 元的露營專用杯。請問小麥參加此次露營的「總機會成本」為多少？
+  * (A) 5,000 元 ★（正解：外顯成本 3,000 ＋ 隱藏成本 2,000 ＝ 5,000 元。贈品 500 元屬於利益非成本，絕不計入！）
+  * (B) 4,500 元
+  * (C) 5,500 元
+  * (D) 3,000 元
 
 ---
 
@@ -114,13 +120,20 @@
 <summary>🔍 <b>[地圖講義截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
 <input type="checkbox" id="zoom-social-3" class="zoom-toggle">
 <label for="zoom-social-3" class="zoom-label">
-  <img src="images/social/japan_geography_map_handout.png" alt="日本地理地圖" style="width: 100%; max-width: 650px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
+  <img src="images/social/japan_geography_map.png" alt="日本地理地圖" style="width: 100%; max-width: 650px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
 </label>
 </details>
 
 ### 🧠 記憶口訣與秒殺密碼
 > 💡 **【日本地理口訣】**
 > - 「北海牧場本州心，寒暖洋流漁場興；冬迎西北海側雪，太平洋側夏雨淋！」
+
+### 🎯 隨堂觀念自我檢測
+* **題目**：日本本州面向日本海的地區（如新潟、北陸），冬季降雪量居世界前列。請問造成此氣候現象的最主要原因為何？
+  * (A) 冬季西北季風掠過日本海吸收豐沛水氣，在迎風面的山地抬升致雪 ★（正解：西北季風越過日本海受山脈阻擋，迎風面強烈降雪）
+  * (B) 夏季東南季風帶來的對流雨在低溫下凝結成雪
+  * (C) 黑潮暖流直接流入日本海造成強烈蒸發降雪
+  * (D) 終年受西風帶與副熱帶高壓交替籠罩
 
 ---
 
@@ -152,13 +165,20 @@
 <summary>🔍 <b>[地圖講義截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
 <input type="checkbox" id="zoom-social-4" class="zoom-toggle">
 <label for="zoom-social-4" class="zoom-label">
-  <img src="images/social/korea_geography_map_handout.png" alt="朝鮮半島地理地圖" style="width: 100%; max-width: 650px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
+  <img src="images/social/korea_geography_map.png" alt="朝鮮半島地理地圖" style="width: 100%; max-width: 650px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
 </label>
 </details>
 
 ### 🧠 記憶口訣與秒殺密碼
 > 💡 **【朝鮮半島口訣】**
 > - 「東北山嶺西南平，東陡西緩河流西；北韓礦水南平商，太白縱貫脊梁立！」
+
+### 🎯 隨堂觀念自我檢測
+* **題目**：有關朝鮮半島的地形與水系特徵，下列敘述何者完全正確？
+  * (A) 地勢「東北高、西南低」，太白山脈偏東縱貫，漢江、錦江等主要河流多自東向西注入黃海 ★（正解：太白山脈脊梁東陡西緩，河流多西注入黃海）
+  * (B) 地勢「西高東低」，主要河流皆向東流入日本海
+  * (C) 南韓境內蓋馬高原蘊藏豐富礦產與水力資源
+  * (D) 漢江流經平壤，洛東江流經首爾
 
 ---
 
@@ -187,10 +207,17 @@
 <summary>🔍 <b>[講義圖表截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
 <input type="checkbox" id="zoom-social-5" class="zoom-toggle">
 <label for="zoom-social-5" class="zoom-label">
-  <img src="images/social/northeast_asia_industry_comparison_table.png" alt="東北亞產業比較圖表" style="width: 100%; max-width: 680px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
+  <img src="images/social/northeast_asia_economy.png" alt="東北亞產業比較圖表" style="width: 100%; max-width: 680px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
 </label>
 </details>
 
 ### 🧠 記憶口訣與秒殺密碼
 > 💡 **【東北亞產業口訣】**
 > - 「日韓外向原料進口產品銷全球；日本精密科技，南韓財閥半導體，北韓軍工缺糧食！」
+
+### 🎯 隨堂觀念自我檢測
+* **題目**：日本與南韓兩國在工業與經貿發展型態上，具有下列哪一項最顯著的「共同特徵」？
+  * (A) 國內礦產資源匱乏，均採「進口原料、加工出口」的外向型貿易經濟 ★（正解：日韓缺乏能源礦產，均仰賴原料進口並加工出口行銷全球）
+  * (B) 國內勞動力充足低廉，以低成本組裝成衣與鞋類製造為主
+  * (C) 糧食作物完全自給自足，不需仰賴國外農產進口
+  * (D) 實行嚴格鎖國保護政策，極少進行對外投資
