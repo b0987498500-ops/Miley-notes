@@ -635,9 +635,113 @@ const NOTES_DATA = [
         ]
       }
     ]
+  },
+  {
+    id: "english-2",
+    stage: "review",
+    volume: "第 4 冊",
+    stageName: "複習筆記本",
+    subject: "english",
+    subjectName: "英文",
+    subjectIcon: "fa-language",
+    gradeVersion: "八年級下（南一／翰林／康軒版）",
+    unit: "形容詞與副詞比較級",
+    title: "比較級特殊片語句型：越來越……（三大經典句型全解析）",
+    concept: "表示「越來越……」的三種比較級特殊片語結構：get/become 比較級 and 比較級、more and more ＋ 原級、less and less ＋ 原級",
+    coreConcepts: [
+      "**① get / become ＋ 比較級 ＋ and ＋ 比較級**：適用於單音節或雙音節加 -er 的形容詞，表示「越來越……」。例如：The sky is getting brighter and brighter.（天空變得越來越亮了。）",
+      "**② more and more ＋ 原級**：適用於多音節或字前加 more 的形容詞，表示「越來越……」。例如：Ivan becomes more and more handsome.（Ivan 變得越來越帥了。）【重點：後方必接原級】",
+      "**③ less and less ＋ 原級**：表示程度遞減「越來越不……」。例如：The old man is less and less happy.（這位老先生變得越來越不快樂了。）【重點：後方必接原級】"
+    ],
+    table: {
+      headers: ["片語類型", "句型結構", "代表例句與中譯 (點擊翻牌揭曉)"],
+      rows: [
+        ["單音節 / 雙音節形容詞", "get / become ＋ 比較級 ＋ and ＋ 比較級", "The sky is getting brighter and brighter.<br><small style=\"color: #64748b;\">（天空變得越來越亮了。）</small>"],
+        ["多音節形容詞", "more and more ＋ 原級", "Ivan becomes more and more handsome.<br><small style=\"color: #64748b;\">（Ivan 變得越來越帥了。）</small>"],
+        ["程度遞減（越來越不……）", "less and less ＋ 原級", "The old man is less and less happy.<br><small style=\"color: #64748b;\">（老先生變得越來越不快樂了。）</small>"]
+      ]
+    },
+    image: "",
+    imageCaption: "",
+    mnemonic: "【比較級特殊片語秒殺口訣】：<br>① 短字疊加：er and er（越來越亮：brighter and brighter）<br>② 長字前置：more and more ＋ 原級（越來越帥：more and more handsome）<br>③ 程度減少：less and less ＋ 原級（越來越不快樂：less and less happy）<br>⚠️ 避坑提醒：more and more 與 less and less 後方**絕對接原級**，千萬別重複變形！",
+    quiz: [
+      {
+        question: "依據句型規則選出最適當的填空：The sky is getting ________ as morning comes.",
+        options: [
+          { prefix: "A", text: "brighter and brighter", correct: true, explanation: "太厲害了！完全正確！bright 為單音節形容詞，比較級為 brighter，搭配「get ＋ 比較級 ＋ and ＋ 比較級」結構，故選 brighter and brighter！" },
+          { prefix: "B", text: "more and more bright", correct: false, explanation: "bright 為單音節形容詞，比較級應加 -er，不適合使用 more and more 句型。" },
+          { prefix: "C", text: "bright and brighter", correct: false, explanation: "必須兩者皆為比較級（brighter and brighter），不可一原級一比較級。" },
+          { prefix: "D", text: "less and less brighter", correct: false, explanation: "less and less 後方必須接「原級形容詞（bright）」，不可接比較級 brighter。" }
+        ]
+      },
+      {
+        question: "依據句型規則選出最適當的填空：Ivan becomes ________ handsome year after year.",
+        options: [
+          { prefix: "A", text: "handsomer and handsomer", correct: false, explanation: "handsome 為多音節形容詞，通常不使用 -er 疊加形式。" },
+          { prefix: "B", text: "more and more handsome", correct: true, explanation: "答對了！handsome 為多音節形容詞，應用「more and more ＋ 原級」表示「越來越英俊」！" },
+          { prefix: "C", text: "more handsome and handsome", correct: false, explanation: "標準句型為固定片語「more and more ＋ 原級」，不可寫成 more handsome and handsome。" },
+          { prefix: "D", text: "more and more handsomer", correct: false, explanation: "重大陷阱！more and more 後方固定接「原級」，千萬不可再加 -er 變成 handsomer！" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "english-3",
+    stage: "review",
+    volume: "第 4 冊",
+    stageName: "複習筆記本",
+    subject: "english",
+    subjectName: "英文",
+    subjectIcon: "fa-language",
+    gradeVersion: "八年級下（南一／翰林／康軒版）",
+    unit: "形容詞與副詞比較級與最高級",
+    title: "最高級與比較級互換句型：用比較級表達最高級（排除自己與跨界比較全攻略）",
+    concept: "同範圍比較排除自己（any other＋單數、all the other＋複數、anyone else）、否定句型（No other）、跨範圍比較（不加 other/else）",
+    coreConcepts: [
+      "**① 最高級標準句型**：S ＋ be 動詞 ＋ the ＋ 最高級形容詞 ＋ in ＋ 地點/範圍（例如：Tom is the tallest in the class.）。",
+      "**② 同範圍比較必「排除自己」**：同一群體比較時自己不能與自己比，必須排除主詞自身：any other ＋ 單數名詞、all the other ＋ 複數名詞、anyone else / everyone else。",
+      "**③ 否定詞 No other 互換句型**：No other ＋ 名詞 ＋ be 動詞 ＋ 比較級 ＋ than ＋ A；或 No other ＋ 名詞 ＋ be 動詞 ＋ as ＋ 原級 ＋ as ＋ A。",
+      "**④ 跨範圍比較必考陷阱**：若與不同範圍物件做比較（主詞不在該範圍內），**絕對不加 other 和 else**！例如：Mt. Jade is taller than any mountain in Japan.（玉山不在日本，不能加 other）。"
+    ],
+    table: {
+      headers: ["句型角度 / 種類", "句型結構", "經典例句與重點解析 (點擊翻牌揭曉)"],
+      rows: [
+        ["① 標準最高級", "S ＋ be 動詞 ＋ the ＋ 最高級 ＋ in ＋ 地點/範圍", "Tom is the tallest in the class.<br><small style=\"color: #64748b;\">（Tom 是班上最高的。）</small>"],
+        ["② 比較級 (any other)", "S ＋ be 動詞 ＋ 比較級 ＋ than any other ＋ 單數名詞 ＋ 範圍", "Tom is taller than any other boy in the class.<br><small style=\"color: #64748b;\">⚠️ any other 後方固定接「單數名詞」（排除自己）</small>"],
+        ["③ 比較級 (all the other)", "S ＋ be 動詞 ＋ 比較級 ＋ than all the other ＋ 複數名詞 ＋ 範圍", "Tom is taller than all the other boys in the class.<br><small style=\"color: #64748b;\">⚠️ all the other 後方固定接「複數名詞」（排除自己）</small>"],
+        ["④ 比較級 (代名詞 else)", "S ＋ be 動詞 ＋ 比較級 ＋ than anyone else / everyone else ＋ 範圍", "Tom is taller than anyone else in the class.<br><small style=\"color: #64748b;\">⚠️ else 放在代名詞後面（排除自己）</small>"],
+        ["⑤ 否定比較級 (No other)", "No other ＋ 名詞 ＋ be 動詞 ＋ 比較級 ＋ than ＋ A", "No other boy is taller than Tom.<br><small style=\"color: #64748b;\">（沒有其他男生比 Tom 更高。）</small>"],
+        ["⑥ 否定原級 (No other)", "No other ＋ 名詞 ＋ be 動詞 ＋ as ＋ 原級 ＋ as ＋ A", "No other boy is as tall as Tom.<br><small style=\"color: #64748b;\">（沒有其他男生像 Tom 一樣高。）</small>"],
+        ["⚡ 跨範圍比較 (會考陷阱)", "S ＋ be 動詞 ＋ 比較級 ＋ than any ＋ 名詞（不加 other / else）", "Mt. Jade is taller than any mountain in Japan.<br><small style=\"color: #64748b;\">⚠️ 玉山不在日本境內，屬於不同範圍比較，絕不可加 other！</small>"]
+      ]
+    },
+    image: "",
+    imageCaption: "",
+    mnemonic: "【最高級與比較級互換黃金口訣】：<br>① any other 配單數；all the other 領複數！<br>② anyone/everyone else，else 站後面排除自己！<br>③ No other 否定立大功，than 用比較、as...as 用原級！<br>④ 跨界避坑金律：同一國的要排除（加 other）；不同國的直接比（不加 other）！",
+    quiz: [
+      {
+        question: "選出文法正確的句子表達「Leo 是班上最高的男生」：",
+        options: [
+          { prefix: "A", text: "Leo is taller than any other boys in his class.", correct: false, explanation: "錯誤！any other 後方必須接「單數名詞 boy」，不可接複數 boys。" },
+          { prefix: "B", text: "Leo is taller than any other boy in his class.", correct: true, explanation: "太厲害了！完全正確！在同班同學範圍內比較，必須排除 Leo 本人，使用「any other ＋ 單數名詞（boy）」，結構完全正確！" },
+          { prefix: "C", text: "Leo is taller than all the other boy in his class.", correct: false, explanation: "錯誤！all the other 後方必須接「複數名詞 boys」。" },
+          { prefix: "D", text: "Leo is taller than any boy in his class.", correct: false, explanation: "嚴重邏輯錯誤！若不加 other 排除自己，會變成「Leo 比班上任何一個男生（包括 Leo 自己）都高」，自己不能比自己高！" }
+        ]
+      },
+      {
+        question: "已知玉山（Mt. Jade）位於台灣，富士山位於日本。選出表達「玉山比日本所有的山都高」完全正確的句子：",
+        options: [
+          { prefix: "A", text: "Mt. Jade is taller than any other mountain in Japan.", correct: false, explanation: "陷阱！玉山根本不在日本境內，屬於跨範圍比較，主詞不在該群體中，絕對不能加 other！" },
+          { prefix: "B", text: "Mt. Jade is taller than any mountain in Japan.", correct: true, explanation: "太強了！完全正確！這正是會考最愛考的「不同範圍物件比較」：玉山不在日本，因此不需要排除自己，直接用「than any ＋ 單數名詞」即可，絕不加 other！" },
+          { prefix: "C", text: "Mt. Jade is taller than anyone else in Japan.", correct: false, explanation: "mountain 是事物不是人，不可使用 anyone else。" },
+          { prefix: "D", text: "No other mountain in Japan is taller than Mt. Jade.", correct: false, explanation: "玉山不是日本的山，不能說「日本境內沒有其他山」包含玉山。" }
+        ]
+      }
+    ]
   }
 ];
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = { NOTES_DATA };
 }
+
