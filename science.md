@@ -327,14 +327,6 @@
 | **原稿代表實例** | 夢幻湖的「面天樹蛙」族群、「臺灣水韭」族群 | 2009 年陽明山夢幻湖的「面天樹蛙 ＋ 山紅頭 ＋ 臺灣水韭 ＝ 夢幻湖群集」 |
 | **常見考試陷阱** | ❌「池塘裡的所有魚」不是族群（包含多種魚類） | ❌「夢幻湖群集 ＋ 湖水土壤」不是群集（加無生物環境是**生態系**） |
 
-<details open>
-<summary>🔍 <b>[核心觀念教學圖解]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
-<input type="checkbox" id="zoom-science-8" class="zoom-toggle">
-<label for="zoom-science-8" class="zoom-label">
-  <img src="images/science/population_and_community.png" alt="族群與群集教學重點" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
-</label>
-</details>
-
 ### 🧠 記憶口訣與破題密碼
 > 💡 **【族群三要素口訣】**
 > - **黃金口訣**：「**同時、同地、同物種，自然棲地非人為！**」
@@ -370,14 +362,6 @@
 | **樣區法** | 難以直接計數、分布於大區域（**固定不動或移動緩慢**） | 劃分等大小樣區，**隨機抽樣**取平均後依比例推估 | 草原蒲公英、岩礁藤壺、樹木 |
 | **捉放法** | 不易直接計數且**會移動的動物** | 初次捕獲標記後釋回，**充分混勻**後二次捕獲，依標記比例回推 | 水庫魚類、森林野兔、鳥類 |
 | **直接計數法** | 分布於較小區域且**不會快速移動**（或極度瀕危） | 逐一清點全部數量，最準確但耗時費力 | 教室學生、夢幻湖殘存的臺灣水韭 |
-
-<details open>
-<summary>🔍 <b>[核心觀念教學圖解]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
-<input type="checkbox" id="zoom-science-9" class="zoom-toggle">
-<label for="zoom-science-9" class="zoom-label">
-  <img src="images/science/population_sampling_methods.png" alt="樣區法、捉放法與直接計數法" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
-</label>
-</details>
 
 ### 🧠 記憶口訣與破題密碼
 > 💡 **【捉放法偏大偏小黃金心法】**
@@ -422,14 +406,6 @@
 | **捕食或掠食** | **$+ \; / \; -$** | 捕食者族群變大、被捕食者族群變小 | 蛇吃青蛙 | 捕食者體型較大，獵物迅速致死 |
 | **寄生** | **$+ \; / \; -$** | 寄附在另一生物上，且利用他體養分生存 | 寄生蟲如蛔蟲、蟯蟲等 | 寄生者體型小，通常不讓宿主立即死亡 |
 | **片害共生** | **$-\; / \; \bigcirc$** | 對其中一方有害，對其他成員沒有影響 | 青黴菌分泌青黴素抑制其他細菌 | 分泌物非特異性抑制周遭菌群 |
-
-<details open>
-<summary>🔍 <b>[核心觀念教學圖解]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
-<input type="checkbox" id="zoom-science-10" class="zoom-toggle">
-<label for="zoom-science-10" class="zoom-label">
-  <img src="images/science/organism_interactions.png" alt="生物間交互作用關係表" style="width: 100%; max-width: 680px; margin-top: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
-</label>
-</details>
 
 ### 🧠 記憶口訣與破題密碼
 > 💡 **【互動關係秒殺心法】**

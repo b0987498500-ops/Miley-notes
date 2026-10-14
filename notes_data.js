@@ -402,8 +402,6 @@ const NOTES_DATA = [
         ["考試陷阱", "❌ 池塘裡的所有魚（包含多種魚，非同物種）", "❌ 夢幻湖群集＋湖水土壤（加上無生物環境是生態系）"]
       ]
     },
-    image: "images/science/population_and_community.png",
-    imageCaption: "族群與群集教學重點投影片（含夢幻湖實例與「韭」字手寫標記）",
     mnemonic: "【族群三要素口訣】：同時、同地、同物種，自然棲地非人為！<br>特別注意：臺灣水「韭」（ㄐㄧㄡˇ），為特有種珍稀水生蕨類！",
     quiz: [
       {
@@ -442,8 +440,6 @@ const NOTES_DATA = [
         ["直接計數法", "分布於較小區域且不會快速移動（或極度瀕危）", "逐一清點全部數量，最準確但最費時", "教室學生、夢幻湖殘存的臺灣水韭"]
       ]
     },
-    image: "images/science/population_sampling_methods.png",
-    imageCaption: "樣區法、捉放法與直接計數法調查原理與適用生物",
     mnemonic: "【捉放法偏大偏小黃金心法】：看二次標記數 m（分母）！m 變少 ⇒ 估計值 N 偏大（標記脫落、被天敵吃）；m 變多 ⇒ 估計值 N 偏小（未混勻原地抓、動物貪吃常被捕）！",
     quiz: [
       {
@@ -488,8 +484,6 @@ const NOTES_DATA = [
         ["片害共生", "- / ○", "對其中一方有害，對其他成員沒有影響", "青黴菌分泌青黴素抑制其他細菌", "分泌化學物非特異性抑制周遭菌群"]
       ]
     },
-    image: "images/science/organism_interactions.png",
-    imageCaption: "生物間的交互作用關係表（符號、敘述與經典實例對照）",
     mnemonic: "【互動關係秒殺心法】：競爭雙負號（爭食爭地兩敗俱傷 -/-）；捕食 vs 寄生同為正負，吃掉立死為捕食，吸血慢性為寄生！",
     quiz: [
       {
