@@ -5,6 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
   <title>麥麥筆記 | 智慧手帳重點精華庫</title>
+
+  <!-- PWA Manifest & Web App Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4338ca">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="麥麥筆記">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
+  <!-- LINE 內嵌防呆、Standalone 檢測與 Service Worker 註冊 -->
+  <script>
+    (function() {
+      try {
+        var ua = (navigator.userAgent || '').toLowerCase();
+        if (ua.indexOf('line') > -1 && window.location.search.indexOf('openExternalBrowser=1') === -1) {
+          var sep = window.location.href.indexOf('?') > -1 ? '&' : '?';
+          window.location.href = window.location.href + sep + 'openExternalBrowser=1';
+        }
+        var isPWA = (window.matchMedia && (
+                        window.matchMedia('(display-mode: standalone)').matches ||
+                        window.matchMedia('(display-mode: fullscreen)').matches ||
+                        window.matchMedia('(display-mode: minimal-ui)').matches
+                    )) ||
+                    window.navigator.standalone === true ||
+                    window.location.search.indexOf('source=pwa') !== -1 ||
+                    localStorage.getItem('miley_notes_pwa_installed') === 'true';
+
+        if (isPWA) {
+          document.documentElement.classList.add('is-pwa-standalone');
+        }
+      } catch (e) {}
+
+      // Service Worker 註冊與主動更新
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('sw.js?v=100').then(function(reg) {
+            if (typeof reg.update === 'function') reg.update();
+          }).catch(function(err) {
+            console.warn('SW register error:', err);
+          });
+        });
+      }
+    })();
+  </script>
   
   <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +65,7 @@
   <!-- Canvas Confetti for Celebration Effects -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Project Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="styles.css?v=2.7.1">
+  <link rel="stylesheet" href="styles.css?v=2.8.0">
 </head>
 <body>
 
@@ -45,13 +90,19 @@
         <i class="fa-solid fa-arrow-up-right-from-square portal-arrow-icon" style="font-size: 0.72rem; opacity: 0.85;"></i>
       </a>
 
+      <!-- PWA Install Button (頂部木牌安裝按鈕，已安裝App時自動隱藏) -->
+      <button id="btn-top-install" class="top-install-btn" title="安裝 麥麥筆記 App 到手機或電腦" onclick="triggerPWAInstall()">
+        <span class="install-wood-sprout" aria-hidden="true">🌱</span>
+        <i class="fa-solid fa-cloud-arrow-down install-icon"></i>
+        <span class="install-text">安裝 App</span>
+      </button>
+
       <!-- Font Size Controller: 超有感字體放大器 (木牌造型) -->
       <div class="font-control-group" title="字體大小調節">
         <button id="btn-font-dec" class="font-btn" aria-label="縮小字體">A-</button>
         <span id="font-scale-label" class="font-scale-display">100%</span>
         <button id="btn-font-inc" class="font-btn" aria-label="放大字體">A+</button>
       </div>
-
 
       <!-- Theme Selector -->
       <div class="theme-selector" title="外觀主題切換">
@@ -273,8 +324,97 @@
     </div>
   </div>
 
+  <!-- App Bottom Install Prompt Bar (手機/平板常駐安裝提示條，Standalone模式自動隱藏) -->
+  <div id="pwa-bottom-bar" class="pwa-bottom-install-banner">
+    <div class="pwa-bottom-content">
+      <img src="assets/icon-192.png" alt="麥麥筆記" class="pwa-banner-icon">
+      <div class="pwa-banner-text">
+        <strong>安裝 麥麥筆記 App</strong>
+        <span>加到手機或平板主畫面，免每次開網址！</span>
+      </div>
+    </div>
+    <div class="pwa-banner-actions">
+      <button class="btn-pwa-install-action" onclick="triggerPWAInstall()">
+        <i class="fa-solid fa-cloud-arrow-down"></i> 立即安裝
+      </button>
+      <button class="btn-pwa-banner-close" onclick="dismissPWABanner()" title="關閉提示" aria-label="關閉提示">&times;</button>
+    </div>
+  </div>
+
+  <!-- iOS Safari 加入主畫面教學彈窗 -->
+  <div id="iosInstallModal" class="modal-backdrop-custom hidden" onclick="closeModalOnBackdrop(event, 'iosInstallModal')">
+    <div class="modal-dialog-custom guide-dialog" onclick="event.stopPropagation()">
+      <button class="modal-close-icon" onclick="document.getElementById('iosInstallModal').classList.add('hidden')" title="關閉">&times;</button>
+      <div class="modal-cute-mascot-header">
+        <div class="modal-mascot-frame">
+          <img src="assets/icon-192.png" alt="麥麥筆記 App" class="modal-mascot-img" style="border-radius: 16px;">
+          <img src="images/illustrations/sticker_star.png" alt="星星獎章" class="modal-mascot-sparkle-star">
+        </div>
+        <div class="modal-cute-wood-badge">
+          <span>🍏 iPhone / iPad 加入桌面教學</span>
+        </div>
+      </div>
+      <h3 class="modal-title">加到主畫面 · 就像原生 App！</h3>
+      <div class="guide-steps-list">
+        <div class="guide-step-item">
+          <div class="step-num">1</div>
+          <div class="step-detail">點擊 Safari 瀏覽器底部的 <strong>「分享」圖示 📤</strong>（方框帶向上箭頭）</div>
+        </div>
+        <div class="guide-step-item">
+          <div class="step-num">2</div>
+          <div class="step-detail">在分享選單中往下滑動，點選 <strong>「加入主畫面」 ➕</strong></div>
+        </div>
+        <div class="guide-step-item">
+          <div class="step-num">3</div>
+          <div class="step-detail">點擊右上角的 <strong>「新增」</strong>，即可隨時在桌面一鍵開啟手帳筆記！</div>
+        </div>
+      </div>
+      <div class="modal-btn-row" style="margin-top: 18px;">
+        <button type="button" class="btn-modal-cancel" style="flex: 1;" onclick="document.getElementById('iosInstallModal').classList.add('hidden')">
+          我知道了 👍
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Android / 桌面通用安裝教學彈窗 (備援) -->
+  <div id="androidInstallGuideModal" class="modal-backdrop-custom hidden" onclick="closeModalOnBackdrop(event, 'androidInstallGuideModal')">
+    <div class="modal-dialog-custom guide-dialog" onclick="event.stopPropagation()">
+      <button class="modal-close-icon" onclick="document.getElementById('androidInstallGuideModal').classList.add('hidden')" title="關閉">&times;</button>
+      <div class="modal-cute-mascot-header">
+        <div class="modal-mascot-frame">
+          <img src="assets/icon-192.png" alt="麥麥筆記 App" class="modal-mascot-img" style="border-radius: 16px;">
+          <img src="images/illustrations/sticker_star.png" alt="星星獎章" class="modal-mascot-sparkle-star">
+        </div>
+        <div class="modal-cute-wood-badge">
+          <span>📲 安裝至主畫面教學</span>
+        </div>
+      </div>
+      <h3 class="modal-title">加到主畫面 · 隨點隨開</h3>
+      <div class="guide-steps-list">
+        <div class="guide-step-item">
+          <div class="step-num">1</div>
+          <div class="step-detail">點擊瀏覽器右上角的 <strong>選單圖示 ⋮</strong></div>
+        </div>
+        <div class="guide-step-item">
+          <div class="step-num">2</div>
+          <div class="step-detail">選擇 <strong>「安裝應用程式」</strong> 或 <strong>「加到主畫面」</strong></div>
+        </div>
+        <div class="guide-step-item">
+          <div class="step-num">3</div>
+          <div class="step-detail">確認新增後，就能直接在桌面開啟麥麥筆記 App 囉！</div>
+        </div>
+      </div>
+      <div class="modal-btn-row" style="margin-top: 18px;">
+        <button type="button" class="btn-modal-cancel" style="flex: 1;" onclick="document.getElementById('androidInstallGuideModal').classList.add('hidden')">
+          我知道了 👍
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts with Cache Buster -->
-  <script src="notes_data.js?v=2.7.1"></script>
-  <script src="app.js?v=2.7.1"></script>
+  <script src="notes_data.js?v=2.8.0"></script>
+  <script src="app.js?v=2.8.0"></script>
 </body>
 </html>

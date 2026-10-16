@@ -406,6 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFontScale();
   initStageSwitcher();
   initEventListeners();
+  initPWA();
   renderNotes();
 
   // 支援 URL 參數與 Hash 滾動跳轉 (例如 ?scroll=800 或 ?scroll=bottom 或 ?test_visible=1)
@@ -613,7 +614,7 @@ function initEventListeners() {
   window.addEventListener("touchend", (e) => {
     if (currentViewMode !== "book") return;
     if (document.getElementById("image-lightbox")?.classList.contains("active")) return;
-    if (touchTarget && touchTarget.closest('.table-responsive, .tabs-scroll-container, .timeline-nav-pills, .book-tabs-bar')) return;
+    if (touchTarget && touchTarget.closest('.table-responsive, .tabs-scroll-container, .timeline-nav-pills, .book-tabs-bar, .quiz-panel, .modal-backdrop-custom, .modal-dialog-custom, button, a, input, select, textarea')) return;
     if (e.changedTouches && e.changedTouches[0]) {
       const diffX = e.changedTouches[0].screenX - touchStartX;
       const diffY = e.changedTouches[0].screenY - touchStartY;
@@ -1763,3 +1764,114 @@ function updateTabCounts() {
   if (reviewCountEl) reviewCountEl.textContent = `${reviewTotal} 則重點`;
   if (progressCountEl) progressCountEl.textContent = `${progressTotal} 則重點`;
 }
+
+// ========================================================
+// 📲 PWA (Progressive Web App) 全功能安裝與多端適配系統
+// ========================================================
+
+window.deferredPrompt = null;
+
+// 捕獲 Android Chrome / Edge 原生安裝事件
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  window.deferredPrompt = e;
+  updatePWAInstallVisibility();
+});
+
+// 監聽成功安裝事件
+window.addEventListener("appinstalled", () => {
+  localStorage.setItem("miley_notes_pwa_installed", "true");
+  document.documentElement.classList.add("is-pwa-standalone");
+  window.deferredPrompt = null;
+  updatePWAInstallVisibility();
+});
+
+// 初始化 PWA 狀態
+function initPWA() {
+  updatePWAInstallVisibility();
+
+  // 若使用者已手動關閉過底端提示，在該 session 中不再彈出
+  if (sessionStorage.getItem("miley_notes_pwa_dismissed") === "true") {
+    const banner = document.getElementById("pwa-bottom-bar");
+    if (banner) banner.style.display = "none";
+  }
+}
+
+// 更新安裝按鈕與提示列能見度（處於 Standalone 獨立 App 模式時全面自動隱藏）
+function updatePWAInstallVisibility() {
+  const isStandalone = (window.matchMedia && (
+                          window.matchMedia('(display-mode: standalone)').matches ||
+                          window.matchMedia('(display-mode: fullscreen)').matches ||
+                          window.matchMedia('(display-mode: minimal-ui)').matches
+                        )) ||
+                        window.navigator.standalone === true ||
+                        window.location.search.indexOf('source=pwa') !== -1 ||
+                        localStorage.getItem('miley_notes_pwa_installed') === 'true';
+
+  if (isStandalone) {
+    document.documentElement.classList.add("is-pwa-standalone");
+    const topBtn = document.getElementById("btn-top-install");
+    if (topBtn) topBtn.style.display = "none";
+    const banner = document.getElementById("pwa-bottom-bar");
+    if (banner) banner.style.display = "none";
+  }
+}
+
+// 核心安裝觸發器
+window.triggerPWAInstall = function() {
+  const ua = (navigator.userAgent || "").toLowerCase();
+  const isIOS = /ipad|iphone|ipod/.test(ua) && !window.MSStream;
+
+  // 1. Android / Chrome / Edge 原生一鍵安裝
+  if (window.deferredPrompt) {
+    window.deferredPrompt.prompt();
+    window.deferredPrompt.userChoice.then((choice) => {
+      if (choice && choice.outcome === "accepted") {
+        localStorage.setItem("miley_notes_pwa_installed", "true");
+        document.documentElement.classList.add("is-pwa-standalone");
+        updatePWAInstallVisibility();
+      }
+      window.deferredPrompt = null;
+    });
+    return;
+  }
+
+  // 2. iOS Safari (iPhone / iPad 加入主畫面圖文導引)
+  if (isIOS) {
+    const iosModal = document.getElementById("iosInstallModal");
+    if (iosModal) {
+      iosModal.classList.remove("hidden");
+    } else {
+      alert("📲 請點擊 Safari 底部「分享」按鈕 📤 ➜ 滑動選擇「加入主畫面 ➕」即可！");
+    }
+    return;
+  }
+
+  // 3. 通用瀏覽器備援引導彈窗
+  const guideModal = document.getElementById("androidInstallGuideModal");
+  if (guideModal) {
+    guideModal.classList.remove("hidden");
+  } else {
+    alert("📲 請點擊瀏覽器右上角選單 ⋮ ➜ 選擇「安裝應用程式」或「加到主畫面」即可安裝！");
+  }
+};
+
+// 關閉底端 PWA 安裝提示列
+window.dismissPWABanner = function() {
+  sessionStorage.setItem("miley_notes_pwa_dismissed", "true");
+  const banner = document.getElementById("pwa-bottom-bar");
+  if (banner) {
+    banner.classList.add("pwa-banner-dismissed");
+    setTimeout(() => {
+      banner.style.display = "none";
+    }, 300);
+  }
+};
+
+// 點擊彈窗遮罩關閉彈窗
+window.closeModalOnBackdrop = function(e, modalId) {
+  if (e && e.target && e.target.id === modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.add("hidden");
+  }
+};

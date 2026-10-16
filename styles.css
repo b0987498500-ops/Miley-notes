@@ -6574,3 +6574,707 @@ body {
   }
 }
 
+/* ========================================================
+   📲 PWA (Progressive Web App) 專屬樣式與多端安裝介面
+   ======================================================== */
+
+/* 🪵 頂部導航木牌安裝按鈕 (與傳送門按鈕手繪風格一致) */
+.top-install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 15px;
+  border-radius: 14px 6px 16px 8px / 8px 16px 6px 14px;
+  border: 3px solid #1e3a8a;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 5px,
+      rgba(30, 58, 138, 0.05) 6px,
+      transparent 7px
+    ),
+    linear-gradient(180deg, #eff6ff 0%, #dbeafe 35%, #bfdbfe 75%, #93c5fd 100%);
+  color: #1e3a8a;
+  font-size: 0.95rem;
+  font-weight: 900;
+  box-shadow: 0 4px 0 #172554, 0 8px 16px rgba(30, 58, 138, 0.22);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  font-family: inherit;
+}
+
+.top-install-btn .install-wood-sprout {
+  font-size: 1.1rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
+}
+
+.top-install-btn .install-icon {
+  font-size: 1rem;
+  color: #2563eb;
+}
+
+.top-install-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 0 #172554, 0 10px 20px rgba(30, 58, 138, 0.28);
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 35%, #dbeafe 75%, #bfdbfe 100%);
+  color: #172554;
+}
+
+.top-install-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #172554, 0 4px 8px rgba(30, 58, 138, 0.18);
+}
+
+[data-theme="dark"] .top-install-btn {
+  background:
+    repeating-linear-gradient(180deg, transparent 0px, transparent 5px, rgba(0, 0, 0, 0.2) 6px, transparent 7px),
+    linear-gradient(180deg, #172554 0%, #1e3a8a 40%, #1e40af 100%);
+  border-color: #93c5fd;
+  color: #eff6ff;
+  box-shadow: 0 4px 0 #0f172a, 0 8px 16px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .top-install-btn .install-icon {
+  color: #93c5fd;
+}
+
+/* 📲 手機/平板底端常駐 PWA 安裝提示列 (Banner) */
+.pwa-bottom-install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 20px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  background: rgba(254, 252, 247, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 3px solid #5a3819;
+  box-shadow: 0 -6px 20px rgba(62, 36, 14, 0.15);
+  animation: pwaSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.pwa-bottom-install-banner.pwa-banner-dismissed {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes pwaSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+[data-theme="dark"] .pwa-bottom-install-banner {
+  background: rgba(26, 21, 16, 0.95);
+  border-top-color: #85582f;
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.4);
+}
+
+.pwa-bottom-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pwa-banner-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 12px;
+  border: 2px solid #5a3819;
+  box-shadow: 0 3px 0 #3e240e;
+  object-fit: cover;
+}
+
+.pwa-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pwa-banner-text strong {
+  font-size: 0.98rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pwa-banner-text span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pwa-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-pwa-install-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 12px 6px 14px 7px / 7px 14px 6px 12px;
+  border: 2.5px solid #1e3a8a;
+  background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 40%, #2563eb 100%);
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #1e3a8a, 0 6px 14px rgba(37, 99, 235, 0.35);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn-pwa-install-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #1e3a8a, 0 8px 18px rgba(37, 99, 235, 0.45);
+}
+
+.btn-pwa-install-action:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1e3a8a;
+}
+
+.btn-pwa-banner-close {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid rgba(90, 56, 25, 0.25);
+  background: rgba(90, 56, 25, 0.08);
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.btn-pwa-banner-close:hover {
+  background: rgba(90, 56, 25, 0.18);
+  color: var(--text-primary);
+}
+
+/* 🍏 iOS / Android 安裝指引彈窗樣式 */
+.guide-dialog {
+  max-width: 480px;
+}
+
+.guide-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0 10px 0;
+  text-align: left;
+}
+
+.guide-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(245, 239, 228, 0.6);
+  border-radius: 12px;
+  border: 1.5px dashed rgba(90, 56, 25, 0.25);
+}
+
+[data-theme="dark"] .guide-step-item {
+  background: rgba(45, 36, 28, 0.6);
+  border-color: rgba(220, 180, 140, 0.25);
+}
+
+.step-num {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.88rem;
+  box-shadow: 0 2px 0 #1d4ed8;
+}
+
+.step-detail {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.step-detail strong {
+  color: #2563eb;
+}
+
+[data-theme="dark"] .step-detail strong {
+  color: #93c5fd;
+}
+
+/* 🚫 當應用處於獨立 App 視窗模式 (Standalone) 時，自動隱藏所有安裝按鈕與提示 */
+html.is-pwa-standalone #btn-top-install,
+html.is-pwa-standalone #pwa-bottom-bar,
+html.is-pwa-standalone .app-bottom-bar {
+  display: none !important;
+}
+
+/* 獨立 App 視窗模式適配頂端劉海 / 動態島 */
+html.is-pwa-standalone .top-nav {
+  padding-top: max(16px, env(safe-area-inset-top));
+}
+
+html.is-pwa-standalone .main-container {
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
+}
+
+/* ========================================================
+   📱 手機端排版深度優化 (Mobile Layout < 768px)
+   ======================================================== */
+@media (max-width: 768px) {
+  /* 導覽列：品牌與控制項雙層流暢自適應 */
+  .top-nav {
+    padding: 10px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .brand-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .brand-text h1 {
+    font-size: 1.25rem;
+  }
+
+  .brand-text p {
+    font-size: 0.78rem;
+  }
+
+  .top-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+
+  .top-controls::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cross-link-portal-btn {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    gap: 5px;
+    border-width: 2px;
+  }
+
+  .top-install-btn {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    gap: 5px;
+    border-width: 2px;
+  }
+
+  .font-control-group {
+    padding: 3px 5px;
+    gap: 2px;
+  }
+
+  .font-btn {
+    padding: 2px 6px;
+    font-size: 0.82rem;
+  }
+
+  .font-scale-display {
+    min-width: 42px;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+  }
+
+  .theme-selector {
+    padding: 2px 4px;
+    gap: 3px;
+  }
+
+  .theme-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 0.8rem;
+  }
+
+  /* 橫幅在手機端比例更緊湊 */
+  .hero-banner {
+    padding: 16px 14px;
+    margin-top: 6px;
+  }
+
+  .hero-content-wrapper {
+    flex-direction: column-reverse;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .hero-text-side {
+    width: 100%;
+  }
+
+  .hero-mascot-frame {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+  }
+
+  .hero-mascot-img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .mascot-float-sticker {
+    width: 32px;
+    height: 32px;
+  }
+
+  .hero-banner h2 {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+  }
+
+  .hero-desc {
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+  }
+
+  .search-wrapper {
+    max-width: 100%;
+  }
+
+  .search-input {
+    font-size: 1rem; /* 防止 iOS Safari 自動放大畫面 */
+    padding: 12px 20px 12px 50px;
+  }
+
+  .search-icon {
+    left: 18px;
+    font-size: 1.1rem;
+  }
+
+  /* 兩本手帳筆記本卡片手機端滿版單欄 */
+  .notebook-shelf-container {
+    padding: 16px 12px;
+    margin: 10px 0 16px 0;
+  }
+
+  .shelf-decor-illustration {
+    display: none !important;
+  }
+
+  .shelf-title {
+    font-size: 1.25rem;
+  }
+
+  .notebook-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .notebook-card {
+    padding: 14px;
+  }
+
+  .nb-card-inner {
+    padding: 14px 12px;
+    gap: 12px;
+  }
+
+  .nb-cover-icon-wrap {
+    width: 46px;
+    height: 46px;
+    font-size: 1.5rem;
+  }
+
+  .nb-book-title {
+    font-size: 1.1rem;
+  }
+
+  .nb-book-desc {
+    font-size: 0.82rem;
+  }
+
+  /* 學科橫向滑動列觸控流暢度 */
+  .tabs-scroll-container {
+    margin: 8px 0 14px 0;
+    padding-bottom: 10px;
+  }
+
+  .subject-tabs {
+    gap: 6px !important;
+  }
+
+  .subject-tab-btn {
+    padding: 6px 12px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .tab-cute-icon {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  /* 筆記本本體在手機端全寬，最大化內頁可讀空間 */
+  .open-book-wrapper {
+    max-width: 100% !important;
+    margin: 10px 0 0 0 !important;
+  }
+
+  .open-book-spread {
+    padding: 0 !important;
+    border-radius: 14px !important;
+    border-width: 2px !important;
+  }
+
+  .book-page-body {
+    padding: 18px 12px 28px 12px !important;
+  }
+
+  .book-running-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .book-running-left {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .note-title {
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+
+  /* 關鍵速查比較大表手機端左右滑動防溢出 */
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    margin: 12px 0;
+    border-radius: 12px;
+  }
+
+  .note-table {
+    min-width: 480px; /* 保證表格文字不擠壓換行，橫向捲動流暢 */
+  }
+
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .mask-mode-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 14px;
+    font-size: 0.88rem;
+  }
+
+  /* 隨堂測驗題目在手機端全寬且易觸控 */
+  .quiz-panel {
+    padding: 16px 14px;
+  }
+
+  .quiz-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .quiz-opt-btn {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.92rem;
+  }
+
+  /* 翻頁大木牌按鈕垂直流暢堆疊 */
+  .flip-btn-group {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .book-flip-btn {
+    width: 100%;
+    padding: 12px 14px;
+  }
+
+  .page-indicator-wood-sign {
+    width: 100%;
+    padding: 8px 12px;
+  }
+
+  /* 手機端懸浮回頂端按鈕位置適度抬高，避開 PWA 底端提示列 */
+  .back-to-top-btn {
+    bottom: 82px;
+    right: 14px;
+  }
+
+  html.is-pwa-standalone .back-to-top-btn {
+    bottom: 24px;
+  }
+}
+
+/* ========================================================
+   📟 平板端排版深度優化 (Tablet Layout 768px ~ 1180px)
+   ======================================================== */
+@media (min-width: 769px) and (max-width: 1180px) {
+  /* 平板直式與橫向導覽列對齊 */
+  .top-nav {
+    padding: 12px 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .brand-text h1 {
+    font-size: 1.4rem;
+  }
+
+  .top-controls {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .main-container {
+    padding: 20px 24px 80px 24px;
+  }
+
+  /* 橫幅適度縮放 */
+  .hero-banner {
+    padding: 26px 24px;
+  }
+
+  .hero-mascot-frame {
+    width: 180px;
+    height: 180px;
+  }
+
+  .hero-mascot-img {
+    width: 160px;
+    height: 160px;
+  }
+
+  /* 兩本手帳筆記本平板雙欄排版 (並排展示，觸控面積大) */
+  .notebook-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 18px !important;
+  }
+
+  .nb-card-inner {
+    padding: 18px 16px;
+  }
+
+  /* 學科標籤置中展示 */
+  .subject-tabs {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .subject-tab-btn {
+    padding: 8px 16px;
+    font-size: 0.95rem;
+  }
+
+  /* 精裝手帳書本寬度與邊距適配 iPad 閱讀視野 */
+  .open-book-wrapper {
+    max-width: 96% !important;
+    margin: 20px auto 0 !important;
+  }
+
+  .book-page-body {
+    padding: 32px 32px 42px 32px !important;
+  }
+
+  .note-title {
+    font-size: 1.6rem;
+  }
+
+  /* 表格寬度與翻牌背誦在平板上兩欄/三欄流暢閱讀 */
+  .table-responsive {
+    margin: 16px 0;
+  }
+
+  /* 翻頁控制大木牌按鈕橫向並排，方便雙手握持 iPad 時大拇指點擊 */
+  .flip-btn-group {
+    flex-direction: row !important;
+    gap: 14px !important;
+    width: 100%;
+  }
+
+  .book-flip-btn {
+    flex: 1;
+    padding: 14px 16px;
+  }
+
+  .page-indicator-wood-sign {
+    flex: 1.2;
+    padding: 10px 14px;
+  }
+
+  /* 平板兩側懸浮翻頁翅膀適度顯示 */
+  .book-side-nav {
+    display: flex !important;
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+
+  .book-side-nav.prev-side {
+    left: -22px;
+  }
+
+  .book-side-nav.next-side {
+    right: -22px;
+  }
+}
+
+
