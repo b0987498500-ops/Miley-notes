@@ -81,54 +81,60 @@
 
 ---
 
-## 📌 重點 3：銳角三角比定義（$\sin D$、$\cos D$、$\tan D$ 與邊長比值速記）
+## 📌 重點 3：求扇形弧長（圓心角 $1^\circ$ 與 $n^\circ$ 推導公式）
 
 ### 🏷️ 分類資訊
 * **筆記本分類**：進度手帳（第 5～6 冊）
-* **冊數進度**：第 6 冊（九年級下學期）
+* **冊數進度**：第 5 冊（九年級上學期）
 * **科目**：數學（翰林版）
-* **單元章節**：第 3 章 銳角三角比與立體幾何
-* **核心知識點**：以直角三角形邊長比值定義銳角三角比（正弦 $\sin$、餘弦 $\cos$、正切 $\tan$），正弦為「對/斜」、餘弦為「鄰/斜」、正切為「對/鄰」
+* **單元章節**：第 2 章 圓形
+* **核心知識點**：求扇形弧長、圓心角 $1^\circ$ 弧長推導、圓心角 $n^\circ$ 弧長公式 $\frac{r \times \pi \times n}{180}$
 
 ### 💡 核心觀念精華
-1. **直角三角形銳角三角比定義**：以直角三角形中指定銳角 $\angle D$ 為基準：
-   - **正弦（$\sin D$）**：$\frac{\text{對邊}}{\text{斜邊}}$（口訣：對／斜）
-   - **餘弦（$\cos D$）**：$\frac{\text{鄰邊}}{\text{斜邊}}$（口訣：鄰／斜）
-   - **正切（$\tan D$）**：$\frac{\text{對邊}}{\text{鄰邊}}$（口訣：對／鄰）
-2. **邊長 3-4-5 直角三角形比值對應（以銳角 $\angle D$ 為例）**：
-   - 設 $\angle D$ 的對邊 $= 4$、鄰邊 $= 3$、斜邊 $= 5$：
-     (1) $\frac{4}{3} = \frac{\text{對}}{\text{鄰}} = \tan D$
-     (2) $\frac{3}{5} = \frac{\text{鄰}}{\text{斜}} = \cos D$
-     (3) $\frac{4}{5} = \frac{\text{對}}{\text{斜}} = \sin D$
+1. **$1^\circ$ 圓心角所對的弧長**：
+   - 整個圓的圓周長為 $2r \times \pi = 2\pi r$。
+   - 整個圓的圓心角為 $360^\circ$，$1^\circ$ 圓心角佔全圓的 $\frac{1^\circ}{360^\circ}$。
+   - 故 $1^\circ$ 的圓心角所對的弧長即為：
+     $$\frac{2r \times \pi \times 1^\circ}{360^\circ} = \frac{r \times \pi}{180}$$
+2. **$n^\circ$ 圓心角所對的扇形弧長**：
+   - 於是可推算出，$n^\circ$ 的圓心角是 $1^\circ$ 的 $n$ 倍。
+   - 故 $n^\circ$ 圓心角所對的弧長為：
+     $$\frac{r \times \pi \times n}{180}$$
+   - （本質為圓周長按比例分配：$2r \times \pi \times \frac{n^\circ}{360^\circ}$，分子分母與 2 約分後即得 $\frac{r \times \pi \times n}{180}$）。
 
 ### 📐 關鍵公式與速查比較表
 
-| 邊長比值 | 對應邊長（中文字） | 三角比表示 | 幾何位置說明 | 速記口訣 |
+| 項目 | 圓心角度數 | 佔全圓比例 | 弧長計算式 | 約分後精簡公式 |
 |---|---|---|---|---|
-| **(1) $\frac{4}{3}$** | **$\frac{\text{對}}{\text{鄰}}$**（對邊 / 鄰邊） | $\tan D$（正切） | $\angle D$ 的對邊長度 $\div$ $\angle D$ 的鄰邊長度 | 正切對鄰（斜率） |
-| **(2) $\frac{3}{5}$** | **$\frac{\text{鄰}}{\text{斜}}$**（鄰邊 / 斜邊） | $\cos D$（餘弦） | $\angle D$ 的鄰邊長度 $\div$ 直角所對的斜邊長度 | 餘弦鄰斜（夾角） |
-| **(3) $\frac{4}{5}$** | **$\frac{\text{對}}{\text{斜}}$**（對邊 / 斜邊） | $\sin D$（正弦） | $\angle D$ 的對邊長度 $\div$ 直角所對的斜邊長度 | 正弦對斜（高度比） |
+| **全圓圓周長** | $360^\circ$ | $\frac{360^\circ}{360^\circ} = 1$ | $2 \times r \times \pi$ | $2\pi r$ |
+| **$1^\circ$ 圓心角弧長** | $1^\circ$ | $\frac{1^\circ}{360^\circ}$ | $\frac{2r \times \pi \times 1^\circ}{360^\circ}$ | $\frac{r \times \pi}{180}$ |
+| **$n^\circ$ 圓心角扇形弧長** | $n^\circ$ | $\frac{n^\circ}{360^\circ}$ | $2r \times \pi \times \frac{n^\circ}{360^\circ}$ | $\frac{r \times \pi \times n}{180}$ |
+
+<details open>
+<summary>🔍 <b>[教學重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
+<input type="checkbox" id="zoom-math-3" class="zoom-toggle">
+<label for="zoom-math-3" class="zoom-label">
+  <img src="images/math/sector_arc_length_formula.png" alt="求扇形弧長圓心角 1° 與 n° 推導圖解" style="width: 100%; max-width: 550px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
+</label>
+</details>
 
 ### 🧠 記憶口訣與破題訣竅
-> 💡 **【銳角三角比秒殺口訣】**
-> - **四字秒殺訣**：「正弦對斜、餘弦鄰斜、正切對鄰！」
-> - **英文字母草寫筆順訣**：
->   - $\sin$（筆順 $s$）：從斜邊起筆畫弧向上到對邊 $\implies \frac{\text{對}}{\text{斜}}$
->   - $\cos$（筆順 $c$）：從斜邊環抱角 $D$ 繞至鄰邊 $\implies \frac{\text{鄰}}{\text{斜}}$
->   - $\tan$（筆順 $t$）：從鄰邊橫跨直上到對邊 $\implies \frac{\text{對}}{\text{鄰}}$
-> - **直角三角形判斷 SOP**：
->   1. 先找「斜邊」：直角（$90^\circ$）所對的邊永遠是斜邊（分母）。
->   2. 再定「指定角 $\angle D$」：角對面的邊為「對邊」，角旁邊的股為「鄰邊」。
+> 💡 **【求扇形弧長秒殺口訣】**
+> - **公式口訣**：「周長比例算弧長，約分一百八分之 $r \times \pi \times n$！」
+> - **推導核心**：弧長就是圓周長的比例部分，看到 $n^\circ$ 圓心角，直接乘 $\frac{n}{360}$，2 與 360 約分後分母為 180。
+> - **常見陷阱提醒**：
+>   - 題目問**「扇形弧長」**：只需計算外圍彎曲圓弧（$\frac{r\pi n}{180}$）。
+>   - 題目問**「扇形周長」**：務必再加上兩條直半徑（周長 ＝ 弧長 ＋ $2r$）！
 
 ### 🎯 隨堂觀念自我檢測
-* **題目 1**：在一個直角三角形中，已知銳角 $\angle D$ 的對邊長為 4、鄰邊長為 3、斜邊長為 5。請問比值 $\frac{4}{5}$（對／斜）應以哪一個三角比符號表示？
-  * (A) $\sin D$ ★（正解：正弦 $\sin D = \frac{\text{對邊}}{\text{斜邊}} = \frac{4}{5}$）
-  * (B) $\cos D$（餘弦 $\cos D = \frac{\text{鄰邊}}{\text{斜邊}} = \frac{3}{5}$）
-  * (C) $\tan D$（正切 $\tan D = \frac{\text{對邊}}{\text{鄰邊}} = \frac{4}{3}$）
-  * (D) $\angle D$
-* **題目 2**：已知 $\angle D$ 為直角三角形的銳角，若其邊長比值為 $\frac{4}{3}$，對應邊長為「對邊 / 鄰邊」，則此比值以三角比表示為何？
-  * (A) $\tan D$ ★（正解：正切 $\tan D = \frac{\text{對邊}}{\text{鄰邊}} = \frac{4}{3}$）
-  * (B) $\sin D$（$\sin D = \frac{\text{對邊}}{\text{斜邊}} = \frac{4}{5}$）
-  * (C) $\cos D$（$\cos D = \frac{\text{鄰邊}}{\text{斜邊}} = \frac{3}{5}$）
-  * (D) $\frac{1}{\cos D}$
+* **題目 1**：在半徑為 $r$ 的圓中，圓心角 $1^\circ$ 所對的弧長為下列何者？
+  * (A) $\frac{r \times \pi}{180}$ ★（正解：$\frac{2r \times \pi \times 1^\circ}{360^\circ}$ 約分後即為 $\frac{r \times \pi}{180}$）
+  * (B) $\frac{r \times \pi}{360}$
+  * (C) $2r \times \pi$
+  * (D) $\frac{r^2 \times \pi}{180}$
+* **題目 2**：已知一圓半徑為 6 公分，圓心角為 $60^\circ$ 的扇形，其弧長為多少公分？
+  * (A) $2\pi$ 公分 ★（正解：代入弧長公式 $\frac{r \times \pi \times n}{180} = \frac{6 \times \pi \times 60}{180} = 2\pi$ 公分）
+  * (B) $4\pi$ 公分
+  * (C) $6\pi$ 公分
+  * (D) $12\pi$ 公分
 

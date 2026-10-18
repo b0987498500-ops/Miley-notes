@@ -85,47 +85,47 @@ const NOTES_DATA = [
   {
     id: "math-3",
     stage: "progress",
-    volume: "第 6 冊",
+    volume: "第 5 冊",
     stageName: "進度筆記本",
     subject: "math",
     subjectName: "數學",
-    subjectIcon: "fa-shapes",
-    gradeVersion: "九年級下（翰林版）",
-    unit: "第 3 章 銳角三角比與立體幾何",
-    title: "銳角三角比定義（sin D、cos D、tan D 與邊長比值速記）",
-    concept: "直角三角形銳角三角比定義：sin D = 對/斜、cos D = 鄰/斜、tan D = 對/鄰",
+    subjectIcon: "fa-chart-pie",
+    gradeVersion: "九年級上（翰林版）",
+    unit: "第 2 章 圓形",
+    title: "求扇形弧長（圓心角 1° 與 n° 推導公式）",
+    concept: "扇形弧長推導：1° 圓心角弧長為 (r×π)/180，n° 圓心角弧長為 (r×π×n)/180",
     coreConcepts: [
-      "**直角三角形銳角三角比三大核心定義**：以直角三角形中指定銳角 $\\angle D$ 為基準：<br>• **正弦（$\\sin D$）**：$\\frac{\\text{對邊}}{\\text{斜邊}}$（口訣：對／斜）<br>• **餘弦（$\\cos D$）**：$\\frac{\\text{鄰邊}}{\\text{斜邊}}$（口訣：鄰／斜）<br>• **正切（$\\tan D$）**：$\\frac{\\text{對邊}}{\\text{鄰邊}}$（口訣：對／鄰）",
-      "**邊長 3-4-5 直角三角形比值對應（以銳角 $\\angle D$ 為例）**：<br>設 $\\angle D$ 的對邊 $= 4$、鄰邊 $= 3$、斜邊 $= 5$：<br>(1) $\\frac{4}{3} = \\frac{\\text{對}}{\\text{鄰}} = \\tan D$<br>(2) $\\frac{3}{5} = \\frac{\\text{鄰}}{\\text{斜}} = \\cos D$<br>(3) $\\frac{4}{5} = \\frac{\\text{對}}{\\text{斜}} = \\sin D$"
+      "**1° 圓心角所對弧長**：全圓圓周長為 $2r \\times \\pi$，全圓圓心角為 $360^\\circ$。故 $1^\\circ$ 圓心角所對弧長為 $\\frac{2r \\times \\pi \\times 1^\\circ}{360^\\circ}$，約分後即為 $\\frac{r \\times \\pi}{180}$。",
+      "**n° 圓心角所對扇形弧長**：$n^\\circ$ 的圓心角是 $1^\\circ$ 的 $n$ 倍，於是推算出 $n^\\circ$ 圓心角所對弧長為 $\\frac{r \\times \\pi \\times n}{180}$（本質為圓周長按比例分配：$2r \\times \\pi \\times \\frac{n^\\circ}{360^\\circ}$）。"
     ],
     table: {
-      headers: ["邊長比值", "對應邊長 (中文字)", "三角比表示 (點擊翻牌)", "速記口訣與幾何位置"],
+      headers: ["項目", "圓心角度數", "佔全圓比例", "弧長計算式", "約分精簡公式 (點擊翻牌)"],
       rows: [
-        ["(1) 4 / 3", "對 / 鄰", "tan D", "正切：對邊 / 鄰邊（斜率概念）"],
-        ["(2) 3 / 5", "鄰 / 斜", "cos D", "餘弦：鄰邊 / 斜邊（夾角環抱）"],
-        ["(3) 4 / 5", "對 / 斜", "sin D", "正弦：對邊 / 斜邊（對面高度比）"]
+        ["全圓圓周長", "360°", "1 (全圓)", "2r × π", "2πr"],
+        ["1° 圓心角弧長", "1°", "1 / 360", "(2r × π × 1°) / 360°", "(r × π) / 180"],
+        ["n° 圓心角扇形弧長", "n°", "n / 360", "(2r × π × n°) / 360°", "(r × π × n) / 180"]
       ]
     },
-    image: "",
-    imageCaption: "",
-    mnemonic: "【銳角三角比秒殺口訣】：<br>① 四字秒殺訣：**「正弦對斜、餘弦鄰斜、正切對鄰！」**<br>② 英文筆順訣：<br>• $\\sin$（筆順 $s$）：斜邊起筆畫弧向上到對邊 $\\implies$ 對 / 斜<br>• $\\cos$（筆順 $c$）：斜邊環抱角 $D$ 繞至鄰邊 $\\implies$ 鄰 / 斜<br>• $\\tan$（筆順 $t$）：鄰邊橫跨直上到對邊 $\\implies$ 對 / 鄰<br>⚠️ 避坑提醒：直角所對永遠是「斜邊」（分母），先確認指定角再找「對邊」與「鄰邊」！",
+    image: "images/math/sector_arc_length_formula.png",
+    imageCaption: "求扇形弧長：圓心角 1° 與 n° 的幾何推導圖解",
+    mnemonic: "【求扇形弧長秒殺口訣】：<br>① 公式訣：**「周長比例算弧長，約分一百八分之 r × π × n！」**<br>② 觀念核心：弧長就是圓周長乘以 $\\frac{n}{360}$，2 與 360 約分後分母剩 180！<br>⚠️ 避坑提醒：<br>• 問**「扇形弧長」**：只算外圍彎曲圓弧（$\\frac{r \\pi n}{180}$）！<br>• 問**「扇形周長」**：千萬要加上兩條半徑（弧長 ＋ $2r$）！",
     quiz: [
       {
-        question: "在直角三角形中，已知銳角 ∠D 的對邊長為 4、鄰邊長為 3、斜邊長為 5。請問比值 4/5（對／斜）應以哪一個三角比符號表示？",
+        question: "在半徑為 r 的圓中，圓心角 1° 所對的弧長為下列何者？",
         options: [
-          { prefix: "A", text: "sin D", correct: true, explanation: "答對了！正弦 sin D 的定義即為「對邊 / 斜邊」，比值 4/5 即為 sin D！" },
-          { prefix: "B", text: "cos D", correct: false, explanation: "小心！cos D 的定義是「鄰邊 / 斜邊」，比值應為 3/5 喔！" },
-          { prefix: "C", text: "tan D", correct: false, explanation: "小心！tan D 的定義是「對邊 / 鄰邊」，比值應為 4/3 喔！" },
-          { prefix: "D", text: "∠D", correct: false, explanation: "∠D 表示角度度數，三角比是邊長比值，兩者不同！" }
+          { prefix: "A", text: "(r × π) / 180", correct: true, explanation: "太棒了！全圓周長為 2r × π，1° 佔全圓的 1/360，(2r × π × 1°) / 360° 約分後即為 (r × π) / 180！" },
+          { prefix: "B", text: "(r × π) / 360", correct: false, explanation: "注意：分子有 2r，2 與 360 約分後分母是 180 喔！" },
+          { prefix: "C", text: "2r × π", correct: false, explanation: "這是 360° 整個圓的周長，不是 1° 的弧長喔！" },
+          { prefix: "D", text: "(r² × π) / 180", correct: false, explanation: "r² × π 是面積公式，計算弧長是用半徑 r 而非 r² 喔！" }
         ]
       },
       {
-        question: "已知 ∠D 為直角三角形的銳角，若其邊長比值為 4/3，對應邊長為「對邊 / 鄰邊」，則此比值以三角比表示為何？",
+        question: "已知一圓半徑為 6 公分，圓心角為 60° 的扇形，其弧長為多少公分？",
         options: [
-          { prefix: "A", text: "tan D", correct: true, explanation: "太厲害了！完全正確！正切 tan D = 對邊 / 鄰邊 = 4/3！" },
-          { prefix: "B", text: "sin D", correct: false, explanation: "sin D 是「對邊 / 斜邊」= 4/5！" },
-          { prefix: "C", text: "cos D", correct: false, explanation: "cos D 是「鄰邊 / 斜邊」= 3/5！" },
-          { prefix: "D", text: "1 / cos D", correct: false, explanation: "對邊 / 鄰邊是標準正切函數 tan D！" }
+          { prefix: "A", text: "2π 公分", correct: true, explanation: "答對了！代入公式：(r × π × n) / 180 = (6 × π × 60) / 180 = 2π 公分！" },
+          { prefix: "B", text: "4π 公分", correct: false, explanation: "小心計算！(6 × 60) / 180 = 360 / 180 = 2，答案為 2π 公分！" },
+          { prefix: "C", text: "6π 公分", correct: false, explanation: "這是圓心角 180°（半圓）的弧長喔！" },
+          { prefix: "D", text: "12π 公分", correct: false, explanation: "這是整個圓的圓周長 (2 × 6 × π = 12π)，扇形只佔 60°/360° = 1/6！" }
         ]
       }
     ]
