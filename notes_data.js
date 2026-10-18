@@ -82,6 +82,54 @@ const NOTES_DATA = [
       }
     ]
   },
+  {
+    id: "math-3",
+    stage: "progress",
+    volume: "第 6 冊",
+    stageName: "進度筆記本",
+    subject: "math",
+    subjectName: "數學",
+    subjectIcon: "fa-shapes",
+    gradeVersion: "九年級下（翰林版）",
+    unit: "第 3 章 銳角三角比與立體幾何",
+    title: "銳角三角比定義（sin D、cos D、tan D 與邊長比值速記）",
+    concept: "直角三角形銳角三角比定義：sin D = 對/斜、cos D = 鄰/斜、tan D = 對/鄰",
+    coreConcepts: [
+      "**直角三角形銳角三角比三大核心定義**：以直角三角形中指定銳角 $\\angle D$ 為基準：<br>• **正弦（$\\sin D$）**：$\\frac{\\text{對邊}}{\\text{斜邊}}$（口訣：對／斜）<br>• **餘弦（$\\cos D$）**：$\\frac{\\text{鄰邊}}{\\text{斜邊}}$（口訣：鄰／斜）<br>• **正切（$\\tan D$）**：$\\frac{\\text{對邊}}{\\text{鄰邊}}$（口訣：對／鄰）",
+      "**邊長 3-4-5 直角三角形比值對應（以銳角 $\\angle D$ 為例）**：<br>設 $\\angle D$ 的對邊 $= 4$、鄰邊 $= 3$、斜邊 $= 5$：<br>(1) $\\frac{4}{3} = \\frac{\\text{對}}{\\text{鄰}} = \\tan D$<br>(2) $\\frac{3}{5} = \\frac{\\text{鄰}}{\\text{斜}} = \\cos D$<br>(3) $\\frac{4}{5} = \\frac{\\text{對}}{\\text{斜}} = \\sin D$"
+    ],
+    table: {
+      headers: ["邊長比值", "對應邊長 (中文字)", "三角比表示 (點擊翻牌)", "速記口訣與幾何位置"],
+      rows: [
+        ["(1) 4 / 3", "對 / 鄰", "tan D", "正切：對邊 / 鄰邊（斜率概念）"],
+        ["(2) 3 / 5", "鄰 / 斜", "cos D", "餘弦：鄰邊 / 斜邊（夾角環抱）"],
+        ["(3) 4 / 5", "對 / 斜", "sin D", "正弦：對邊 / 斜邊（對面高度比）"]
+      ]
+    },
+    image: "",
+    imageCaption: "",
+    mnemonic: "【銳角三角比秒殺口訣】：<br>① 四字秒殺訣：**「正弦對斜、餘弦鄰斜、正切對鄰！」**<br>② 英文筆順訣：<br>• $\\sin$（筆順 $s$）：斜邊起筆畫弧向上到對邊 $\\implies$ 對 / 斜<br>• $\\cos$（筆順 $c$）：斜邊環抱角 $D$ 繞至鄰邊 $\\implies$ 鄰 / 斜<br>• $\\tan$（筆順 $t$）：鄰邊橫跨直上到對邊 $\\implies$ 對 / 鄰<br>⚠️ 避坑提醒：直角所對永遠是「斜邊」（分母），先確認指定角再找「對邊」與「鄰邊」！",
+    quiz: [
+      {
+        question: "在直角三角形中，已知銳角 ∠D 的對邊長為 4、鄰邊長為 3、斜邊長為 5。請問比值 4/5（對／斜）應以哪一個三角比符號表示？",
+        options: [
+          { prefix: "A", text: "sin D", correct: true, explanation: "答對了！正弦 sin D 的定義即為「對邊 / 斜邊」，比值 4/5 即為 sin D！" },
+          { prefix: "B", text: "cos D", correct: false, explanation: "小心！cos D 的定義是「鄰邊 / 斜邊」，比值應為 3/5 喔！" },
+          { prefix: "C", text: "tan D", correct: false, explanation: "小心！tan D 的定義是「對邊 / 鄰邊」，比值應為 4/3 喔！" },
+          { prefix: "D", text: "∠D", correct: false, explanation: "∠D 表示角度度數，三角比是邊長比值，兩者不同！" }
+        ]
+      },
+      {
+        question: "已知 ∠D 為直角三角形的銳角，若其邊長比值為 4/3，對應邊長為「對邊 / 鄰邊」，則此比值以三角比表示為何？",
+        options: [
+          { prefix: "A", text: "tan D", correct: true, explanation: "太厲害了！完全正確！正切 tan D = 對邊 / 鄰邊 = 4/3！" },
+          { prefix: "B", text: "sin D", correct: false, explanation: "sin D 是「對邊 / 斜邊」= 4/5！" },
+          { prefix: "C", text: "cos D", correct: false, explanation: "cos D 是「鄰邊 / 斜邊」= 3/5！" },
+          { prefix: "D", text: "1 / cos D", correct: false, explanation: "對邊 / 鄰邊是標準正切函數 tan D！" }
+        ]
+      }
+    ]
+  },
 
   // ==========================================
   // 🔬 自然科 (Science) - 複習手帳 (第 1～4 冊)
