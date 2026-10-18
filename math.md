@@ -138,3 +138,63 @@
   * (C) $6\pi$ 公分
   * (D) $12\pi$ 公分
 
+---
+
+## 📌 重點 4：求扇形面積的公式（圓心角 $1^\circ$ 與 $n^\circ$ 推導）
+
+### 🏷️ 分類資訊
+* **筆記本分類**：進度手帳（第 5～6 冊）
+* **冊數進度**：第 5 冊（九年級上學期）
+* **科目**：數學（翰林版）
+* **單元章節**：第 2 章 圓形
+* **核心知識點**：求扇形面積公式、圓心角 $1^\circ$ 扇形面積推導、圓心角 $n^\circ$ 扇形面積公式 $r^2 \times \pi \times \frac{n}{360}$
+
+### 💡 核心觀念精華
+1. **全圓面積基礎**：
+   - 全圓面積公式：$A_{\text{圓}} = r^2 \times \pi$（亦可視為圓心角 $360^\circ$ 所對面積：$r^2 \times \pi \times \frac{360^\circ}{360^\circ}$）。
+2. **$1^\circ$ 圓心角所對的扇形面積**：
+   - 整個圓圓心角為 $360^\circ$，$1^\circ$ 圓心角佔全圓面積的 $\frac{1^\circ}{360^\circ}$。
+   - 故 $1^\circ$ 的圓心角所對的扇形面積即為：
+     $$r^2 \times \pi \times \frac{1^\circ}{360^\circ}$$
+3. **$n^\circ$ 圓心角所對的扇形面積**：
+   - $n^\circ$ 的圓心角是 $1^\circ$ 的 $n$ 倍。
+   - 故 $n^\circ$ 圓心角所對的扇形面積為：
+     $$r^2 \times \pi \times \frac{n}{360} = \frac{n}{360} \pi r^2$$
+
+### 📐 關鍵公式與速查比較表
+
+| 項目 | 圓心角度數 | 佔全圓比例 | 計算公式 | 幾何意義 |
+|---|---|---|---|---|
+| **全圓面積** | $360^\circ$ | $\frac{360^\circ}{360^\circ} = 1$ | $r^2 \times \pi \times \frac{360^\circ}{360^\circ} = \pi r^2$ | 半徑平方乘以圓周率（整個圓盤） |
+| **$1^\circ$ 圓心角扇形面積** | $1^\circ$ | $\frac{1^\circ}{360^\circ}$ | $r^2 \times \pi \times \frac{1^\circ}{360^\circ}$ | 全圓切成 360 等份中的其中 1 份 |
+| **$n^\circ$ 圓心角扇形面積** | $n^\circ$ | $\frac{n^\circ}{360^\circ}$ | $r^2 \times \pi \times \frac{n}{360}$ | 全圓面積依圓心角比例 $\frac{n}{360}$ 切割 |
+
+<details open>
+<summary>🔍 <b>[教學重點截圖]（點擊可展開/收合，點擊下方圖片可原地放大）</b></summary>
+<input type="checkbox" id="zoom-math-4" class="zoom-toggle">
+<label for="zoom-math-4" class="zoom-label">
+  <img src="images/math/sector_area_formula.png" alt="求扇形面積的公式圓心角 1° 與 n° 推導圖解" style="width: 100%; max-width: 550px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
+</label>
+</details>
+
+### 🧠 記憶口訣與破題訣竅
+> 💡 **【求扇形面積秒殺口訣】**
+> - **公式口訣**：「圓面積乘比例，三百六分之 $n$ 乘 $\pi r^2$！」
+> - **弧長與面積雙胞胎辨析**：
+>   - **求弧長（長度）**：用圓周長算 $\implies 2\pi r \times \frac{n}{360} = \frac{r\pi n}{180}$（一次方半徑 $r$）
+>   - **求面積（面）**：用圓面積算 $\implies \pi r^2 \times \frac{n}{360}$（平方半徑 $r^2$）
+> - **常見陷阱提醒**：計算扇形面積時，一定要先把「半徑 $r$ 平方」，千萬別把半徑平方誤算成乘以 2！
+
+### 🎯 隨堂觀念自我檢測
+* **題目 1**：在半徑為 $r$ 的圓中，圓心角為 $1^\circ$ 的扇形面積應表示為下列何者？
+  * (A) $r^2 \times \pi \times \frac{1^\circ}{360^\circ}$ ★（正解：全圓面積 $r^2\pi$ 乘以佔比 $\frac{1^\circ}{360^\circ}$）
+  * (B) $2r \times \pi \times \frac{1^\circ}{360^\circ}$
+  * (C) $\frac{r \times \pi}{180}$
+  * (D) $r^2 \times \pi \times 360^\circ$
+* **題目 2**：已知一圓半徑為 6 公分，圓心角為 $60^\circ$ 的扇形，其面積為多少平方公分？
+  * (A) $6\pi$ 平方公分 ★（正解：面積公式為 $r^2 \times \pi \times \frac{n}{360} = 6^2 \times \pi \times \frac{60}{360} = 36\pi \times \frac{1}{6} = 6\pi$ 平方公分）
+  * (B) $2\pi$ 平方公分（這是弧長，非面積）
+  * (C) $12\pi$ 平方公分
+  * (D) $36\pi$ 平方公分（這是全圓面積）
+
+

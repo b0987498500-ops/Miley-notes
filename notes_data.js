@@ -130,6 +130,55 @@ const NOTES_DATA = [
       }
     ]
   },
+  {
+    id: "math-4",
+    stage: "progress",
+    volume: "第 5 冊",
+    stageName: "進度筆記本",
+    subject: "math",
+    subjectName: "數學",
+    subjectIcon: "fa-pizza-slice",
+    gradeVersion: "九年級上（翰林版）",
+    unit: "第 2 章 圓形",
+    title: "求扇形面積的公式（圓心角 1° 與 n° 推導）",
+    concept: "扇形面積推導：1° 圓心角面積為 r²×π×(1°/360°)，n° 圓心角面積為 r²×π×(n/360)",
+    coreConcepts: [
+      "**全圓面積基礎**：全圓圓心角為 $360^\\circ$，圓面積公式即為 $r^2 \\times \\pi$（亦即 $r^2 \\times \\pi \\times \\frac{360^\\circ}{360^\\circ}$）。",
+      "**1° 圓心角所對扇形面積**：全圓圓心角為 $360^\\circ$，$1^\\circ$ 佔全圓面積的 $\\frac{1^\\circ}{360^\\circ}$，故面積為 $r^2 \\times \\pi \\times \\frac{1^\\circ}{360^\\circ}$。",
+      "**n° 圓心角所對扇形面積**：$n^\\circ$ 的圓心角是 $1^\\circ$ 的 $n$ 倍，故推算出 $n^\\circ$ 圓心角所對扇形面積為 $r^2 \\times \\pi \\times \\frac{n}{360}$（即 $\\frac{n}{360}\\pi r^2$）。"
+    ],
+    table: {
+      headers: ["項目", "圓心角度數", "佔全圓比例", "面積計算公式 (點擊翻牌)", "幾何意義說明"],
+      rows: [
+        ["全圓面積", "360°", "1 (全圓)", "r² × π × (360°/360°) = πr²", "半徑平方乘圓周率（整面圓盤）"],
+        ["1° 圓心角扇形面積", "1°", "1 / 360", "r² × π × (1° / 360°)", "全圓面積切成 360 等份中之 1 份"],
+        ["n° 圓心角扇形面積", "n°", "n / 360", "r² × π × (n / 360)", "全圓面積依圓心角比例 (n/360) 縮放"]
+      ]
+    },
+    image: "images/math/sector_area_formula.png",
+    imageCaption: "求扇形面積的公式：圓心角 1° 與 n° 的幾何推導圖解",
+    mnemonic: "【求扇形面積秒殺口訣】：<br>① 公式訣：**「圓面積乘比例，三百六分之 n 乘 πr²！」**<br>② 弧長 vs 面積雙胞胎辨析：<br>• 求**「弧長（長度）」**：用圓周長算 $\\implies 2\\pi r \\times \\frac{n}{360} = \\frac{r\\pi n}{180}$（一次方半徑 $r$）<br>• 求**「面積（面）」**：用圓面積算 $\\implies \\pi r^2 \\times \\frac{n}{360}$（平方半徑 $r^2$）<br>⚠️ 避坑提醒：求面積時務必先將**半徑平方（$r^2$）**，千萬別算成 $2r$！",
+    quiz: [
+      {
+        question: "在半徑為 r 的圓中，圓心角為 1° 的扇形面積應表示為下列何者？",
+        options: [
+          { prefix: "A", text: "r² × π × (1° / 360°)", correct: true, explanation: "太棒了！全圓面積為 r² × π，1° 佔全圓面積的 1/360，故為 r² × π × (1°/360°)！" },
+          { prefix: "B", text: "2r × π × (1° / 360°)", correct: false, explanation: "這是 1° 圓心角所對的弧長公式，求面積需使用半徑平方 r² 喔！" },
+          { prefix: "C", text: "(r × π) / 180", correct: false, explanation: "這是 1° 的弧長約分公式，不是面積公式！" },
+          { prefix: "D", text: "r² × π × 360°", correct: false, explanation: "佔比是 1°/360°（除以 360），不是乘以 360°！" }
+        ]
+      },
+      {
+        question: "已知一圓半徑為 6 公分，圓心角為 60° 的扇形，其面積為多少平方公分？",
+        options: [
+          { prefix: "A", text: "6π 平方公分", correct: true, explanation: "答對了！扇形面積公式為 r² × π × (n / 360)。代入 r = 6, n = 60 得：6² × π × (60 / 360) = 36π × (1/6) = 6π 平方公分！" },
+          { prefix: "B", text: "2π 平方公分", correct: false, explanation: "小心！2π 是弧長（2 × 6 × π × 60/360 = 2π），題目問的是面積喔！" },
+          { prefix: "C", text: "12π 平方公分", correct: false, explanation: "半徑平方是 6² = 36，不是 6 × 2 = 12 喔！" },
+          { prefix: "D", text: "36π 平方公分", correct: false, explanation: "這是 360° 整個圓的面積，扇形只佔 1/6 喔！" }
+        ]
+      }
+    ]
+  },
 
   // ==========================================
   // 🔬 自然科 (Science) - 複習手帳 (第 1～4 冊)
