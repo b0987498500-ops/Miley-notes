@@ -6978,6 +6978,55 @@ html.is-pwa-standalone .main-container {
     display: none !important;
   }
 
+  /* 📱 手機直立閱讀防重疊專屬修正：隱藏或調整容易遮擋標題與文字的懸浮裝飾 */
+  .notebook-sticker-badge {
+    display: none !important; /* 避免在直向窄螢幕右上方遮擋筆記標題與頂部翻頁按鈕 */
+  }
+
+  .book-ribbon {
+    display: none !important; /* 避免垂掛在書頁上方壓住文字內容 */
+  }
+
+  .book-corner {
+    display: none !important; /* 消除內頁角落干擾 */
+  }
+
+  /* 插圖區塊手機直立防重疊保證 */
+  .book-illustration-block {
+    margin: 18px 0 !important;
+    padding: 12px 10px !important;
+    clear: both !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .illustration-header {
+    margin-bottom: 10px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .illustration-frame {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .illustration-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 420px !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto !important;
+  }
+
   /* 手機懸浮回頂端按鈕位置 */
   .back-to-top-btn {
     bottom: 84px !important;
