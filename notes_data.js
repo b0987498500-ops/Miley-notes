@@ -674,6 +674,61 @@ const NOTES_DATA = [
       }
     ]
   },
+  {
+    id: "science-13",
+    stage: "review",
+    volume: "第 2 冊",
+    stageName: "複習筆記本",
+    subject: "science",
+    subjectName: "自然",
+    subjectIcon: "fa-earth-americas",
+    gradeVersion: "七年級下（翰林版）",
+    unit: "第 6 章 生物多樣性與環境保育",
+    title: "有關保育的國際規約（生物多樣性、華盛頓、蒙特婁、拉姆薩、京都議定書）",
+    concept: "針對珍貴動植物與生態環境立法保護：生物多樣性公約、華盛頓公約、蒙特婁公約、拉姆薩公約、京都議定書",
+    coreConcepts: [
+      "**立法核心主旨**：主要目的為針對各種珍貴的動植物立法加以保護，維護全球生態平衡與地球環境。",
+      "**五大國際規約規範重點**：",
+      "• **生物多樣性公約**（西元 1992 年簽署）：生物多樣性的維護。",
+      "• **華盛頓公約**（西元 1973 年簽署）：限制野生動植物的不當交易。",
+      "• **蒙特婁公約**：規範氟氯碳化物的使用（保護大氣臭氧層）。",
+      "• **拉姆薩公約**（西元 1971 年簽署）：溼地的保育（保護水禽棲地）。",
+      "• **京都議定書**：規範二氧化碳的排放量（因應全球暖化）。"
+    ],
+    table: {
+      headers: ["公約名稱", "制訂目的"],
+      rows: [
+        ["生物多樣性公約<br><small style=\"color: #64748b;\">(西元 1992 年簽署)</small>", "生物多樣性的維護"],
+        ["華盛頓公約<br><small style=\"color: #64748b;\">(西元 1973 年簽署)</small>", "限制野生動植物的不當交易"],
+        ["蒙特婁公約", "規範氟氯碳化物的使用"],
+        ["拉姆薩公約<br><small style=\"color: #64748b;\">(西元 1971 年簽署)</small>", "溼地的保育"],
+        ["京都議定書", "規範二氧化碳的排放量"]
+      ]
+    },
+    image: "",
+    imageCaption: "",
+    mnemonic: "【五大公約秒殺口訣】：多樣性護多樣，華盛頓防交易；蒙特婁禁氟氯，拉姆薩保溼地，京都議定碳排量！",
+    quiz: [
+      {
+        question: "下列哪一項國際規約的主要目的為「限制野生動植物的不當交易」，以立法保護珍貴物種？",
+        options: [
+          { prefix: "A", text: "華盛頓公約", correct: true, explanation: "太棒了！華盛頓公約（西元 1973 年簽署）的核心目的即為限制野生動植物的不當交易！" },
+          { prefix: "B", text: "蒙特婁公約", correct: false, explanation: "蒙特婁公約的主要目的為規範氟氯碳化物的使用！" },
+          { prefix: "C", text: "拉姆薩公約", correct: false, explanation: "拉姆薩公約（西元 1971 年簽署）的主要目的為溼地的保育！" },
+          { prefix: "D", text: "京都議定書", correct: false, explanation: "京都議定書的主要目的為規範二氧化碳的排放量！" }
+        ]
+      },
+      {
+        question: "國際間簽署「拉姆薩公約」主要是為了針對下列何者進行立法保護？",
+        options: [
+          { prefix: "A", text: "溼地的保育", correct: true, explanation: "答對了！拉姆薩公約（西元 1971 年簽署）的主要制訂目的為「溼地的保育」！" },
+          { prefix: "B", text: "規範二氧化碳的排放量", correct: false, explanation: "規範二氧化碳排放量的是「京都議定書」！" },
+          { prefix: "C", text: "規範氟氯碳化物的使用", correct: false, explanation: "規範氟氯碳化物使用的是「蒙特婁公約」！" },
+          { prefix: "D", text: "生物多樣性的維護", correct: false, explanation: "維護生物多樣性的是「生物多樣性公約」！" }
+        ]
+      }
+    ]
+  },
 
   // ==========================================
   // 🏛️ 社會科 (Social Studies) - 複習與進度手帳
