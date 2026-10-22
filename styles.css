@@ -2402,33 +2402,6 @@ body {
   50% { transform: scale(1.18) rotate(12deg); }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .top-nav {
-    padding: 16px 20px;
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
-  .top-controls {
-    width: 100%;
-    justify-content: space-between;
-  }
-  .main-container {
-    padding: 20px 14px 80px 14px;
-  }
-  .note-card {
-    padding: 26px 22px;
-  }
-  .note-title {
-    font-size: 1.55rem;
-  }
-  .table-toolbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
 /* ========================================================
    📖 精裝翻書模式 (Open Book Spread Layout & Pagination)
    ======================================================== */
@@ -4134,107 +4107,6 @@ body {
 }
 
 /* ========================================================
-   📱 手機與平板適應性優化 (Responsive Adjustments)
-   ======================================================== */
-
-@media (max-width: 1080px) {
-  .book-side-nav {
-    display: none;
-  }
-  .open-book-spread {
-    border-width: 3px;
-    box-shadow:
-      0 4px 12px var(--book-edge-shadow),
-      0 12px 30px var(--book-edge-shadow),
-      0 0 0 6px rgba(255, 255, 255, 0.15),
-      0 0 0 10px var(--book-leather);
-  }
-  .book-page-body {
-    padding: 38px 32px 48px 32px;
-  }
-}
-
-@media (max-width: 768px) {
-  .open-book-spread {
-    border-radius: 18px;
-    box-shadow:
-      0 4px 12px var(--book-edge-shadow),
-      0 0 0 4px rgba(255, 255, 255, 0.1),
-      0 0 0 8px var(--book-leather);
-  }
-  .book-spine-crease {
-    display: none;
-  }
-  .book-ribbon {
-    right: 24px;
-    width: 28px;
-    height: 60px;
-  }
-  .book-page-body {
-    padding: 28px 18px 36px 18px;
-  }
-  .book-tab-item {
-    padding: 10px 14px 12px 14px;
-    font-size: 0.95rem;
-  }
-  .flip-btn-group {
-    flex-direction: column;
-    width: 100%;
-  }
-  .book-flip-btn {
-    width: 100%;
-  }
-  .page-indicator-center {
-    order: -1;
-  }
-  .lightbox-close-btn {
-    top: -12px;
-    right: -12px;
-    width: 40px;
-    height: 40px;
-  }
-  .hero-content-wrapper {
-    flex-direction: column-reverse;
-    text-align: center;
-    gap: 20px;
-  }
-  .hero-text-side {
-    text-align: center;
-  }
-  .hero-banner h2 {
-    font-size: 1.85rem;
-  }
-  .hero-banner p {
-    margin: 0 auto 20px auto;
-  }
-  .search-wrapper {
-    margin: 0 auto;
-  }
-  .hero-mascot-frame {
-    width: 200px;
-    height: 200px;
-  }
-  .hero-mascot-frame::before {
-    width: 180px;
-    height: 180px;
-  }
-  .hero-mascot-img {
-    width: 190px;
-    height: 190px;
-  }
-  .sticker-float-book {
-    width: 46px;
-    height: 46px;
-    left: -4px;
-  }
-  .sticker-float-star {
-    width: 42px;
-    height: 42px;
-    right: -4px;
-  }
-}
-
-/* ========================================================
    🌿 網站空白處手帳裝飾插圖系統 (Decor Illustrations & Side Flanks)
    針對網站左右空白區與手帳筆記兩側空白處，注入自然植物樹枝與精美學習插畫
    ======================================================== */
@@ -5378,333 +5250,6 @@ body {
 [data-theme="dark"] .sticky-text {
   color: #fef08a;
 }
-
-/* ========================================================
-   📱 多裝置平板與手機深度響應式排版 (Multi-Device Responsive)
-   ======================================================== */
-
-/* 🎯 平板端最佳化 (iPad 768px ~ 1024px) */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .top-nav {
-    padding: 14px 24px;
-  }
-  .main-container {
-    padding: 24px 20px 80px 20px;
-  }
-  .open-book-wrapper {
-    max-width: 96%;
-    margin: 24px auto 0;
-  }
-  .book-page-body {
-    padding: 36px 32px 46px 32px;
-  }
-  .hero-banner {
-    padding: 32px 28px;
-  }
-  .hero-mascot-frame {
-    width: 220px;
-    height: 220px;
-  }
-  .hero-mascot-img {
-    width: 200px;
-    height: 200px;
-  }
-  .book-flank-decor {
-    display: none !important;
-  }
-  .flip-btn-group {
-    gap: 12px;
-  }
-  .book-flip-btn {
-    padding: 12px 18px;
-  }
-}
-
-/* 🎯 手機端最佳化 (< 768px) */
-@media (max-width: 768px) {
-  /* 導航列緊湊對稱與字體主題按鈕手機微調 */
-  .top-nav {
-    padding: 10px 12px;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  .brand-section {
-    justify-content: center;
-    text-align: center;
-  }
-  .brand-text h1 {
-    font-size: 1.35rem;
-  }
-  .brand-text p {
-    font-size: 0.8rem;
-  }
-  .top-controls {
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    flex-wrap: wrap;
-  }
-  .font-control-group {
-    padding: 4px 6px;
-    gap: 3px;
-    border-width: 2px;
-  }
-  .font-control-group::before {
-    top: -11px;
-    font-size: 0.95rem;
-  }
-  .font-btn {
-    padding: 3px 8px;
-    font-size: 0.9rem;
-  }
-  .font-scale-display {
-    min-width: 48px;
-    padding: 3px 6px;
-    font-size: 0.86rem;
-  }
-  .theme-selector {
-    padding: 3px 5px;
-    gap: 4px;
-    border-width: 2px;
-  }
-  .theme-btn {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    padding: 0;
-    font-size: 0.9rem;
-  }
-
-  /* 手機端角落樹枝優雅隱藏，釋放珍貴螢幕空間 */
-  .ambient-branches-frame {
-    display: none !important;
-  }
-
-  /* 橫幅內容比例優化 */
-  .hero-banner {
-    margin-top: 6px;
-    padding: 18px 12px;
-  }
-  .hero-content-wrapper {
-    gap: 12px;
-  }
-  .hero-mascot-frame {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto;
-  }
-  .hero-mascot-img {
-    width: 130px;
-    height: 130px;
-  }
-  .hero-banner h2 {
-    font-size: 1.55rem;
-  }
-  .hero-banner p {
-    font-size: 0.95rem;
-  }
-
-  /* 學科木牌橫向滑動 (Smooth horizontal swipe) */
-  .tabs-scroll-container {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 4px 2px 14px 2px;
-    margin: 10px 0 16px 0;
-  }
-  .tabs-scroll-container::-webkit-scrollbar {
-    display: none;
-  }
-  .subject-tabs {
-    flex-wrap: nowrap !important;
-    justify-content: flex-start !important;
-    gap: 8px !important;
-    width: max-content;
-    padding: 0 4px;
-  }
-  .subject-tab-btn {
-    flex-shrink: 0 !important;
-    padding: 7px 14px 8px 14px !important;
-    font-size: 0.92rem !important;
-  }
-  .tab-cute-icon {
-    width: 24px !important;
-    height: 24px !important;
-  }
-
-  /* 移除負邊距外露紙張，杜絕手機版左右穿幫與溢出橫向捲動 */
-  .notebook-left-sheets,
-  .notebook-right-sheets {
-    display: none !important;
-  }
-  .washi-tape-sticker {
-    display: none !important;
-  }
-  .notebook-top-tabs {
-    right: 20px;
-    gap: 8px;
-  }
-  .notebook-tab-flag {
-    width: 32px;
-    height: 20px;
-  }
-  
-  /* 筆記本本體手機全寬展開 */
-  .open-book-wrapper {
-    margin: 12px 0 0 0;
-    max-width: 100%;
-  }
-  .open-book-spread {
-    margin: 0;
-    border-radius: 16px;
-    border-width: 2.5px;
-  }
-  .book-page-body {
-    padding: 22px 14px 34px 14px;
-  }
-
-  /* 書本頂部 Running Header */
-  .book-running-head {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    padding-bottom: 16px;
-    margin-bottom: 20px;
-  }
-  .book-running-left {
-    justify-content: center;
-    gap: 8px;
-  }
-  .book-top-flip-bar {
-    justify-content: space-between;
-    width: 100%;
-  }
-  .book-top-btn {
-    padding: 7px 12px;
-    font-size: 0.9rem;
-  }
-  .book-page-stamp {
-    padding: 6px 14px;
-    font-size: 0.95rem;
-  }
-
-  /* 筆記標題 */
-  .note-title {
-    font-size: 1.35rem;
-    line-height: 1.4;
-    text-align: center;
-    margin-bottom: 18px;
-  }
-
-  /* 時間線手機端緊緻佈局 */
-  .timeline-nav-pills {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 8px;
-  }
-  .timeline-nav-pills::-webkit-scrollbar {
-    display: none;
-  }
-  .timeline-nav-pill {
-    white-space: nowrap;
-    flex-shrink: 0;
-    padding: 6px 12px;
-    font-size: calc(0.82rem * var(--font-scale, 1));
-  }
-  .timeline-era-header {
-    padding: 12px 14px;
-    gap: 12px;
-  }
-  .timeline-era-icon-box {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    font-size: 1.15rem;
-  }
-  .timeline-era-title {
-    font-size: calc(1.15rem * var(--font-scale, 1));
-  }
-  .timeline-events-track::before {
-    left: 17px;
-  }
-  .timeline-node-stem {
-    width: 36px;
-    top: 14px;
-  }
-  .timeline-node-dot {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    font-size: 0.88rem;
-    border-width: 2.5px;
-  }
-  .timeline-event-card {
-    margin-left: 36px;
-    padding: 14px 12px;
-  }
-  .timeline-event-heading {
-    font-size: calc(1.05rem * var(--font-scale, 1));
-  }
-  .timeline-event-summary {
-    font-size: calc(0.92rem * var(--font-scale, 1));
-  }
-  .timeline-hl-list li {
-    font-size: calc(0.88rem * var(--font-scale, 1));
-  }
-
-  /* 翻頁大木牌按鈕垂直流暢堆疊 */
-  .flip-btn-group {
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
-  .book-flip-btn {
-    width: 100%;
-    padding: 14px 16px;
-  }
-  .page-indicator-wood-sign {
-    width: 100%;
-    padding: 10px 14px;
-  }
-
-  /* 📚 手機端學習手帳卡片自適應排版 */
-  .notebook-shelf-container {
-    padding: 18px 14px;
-    margin: 10px auto 20px auto;
-  }
-  .shelf-title {
-    font-size: 1.35rem;
-  }
-  .notebook-cards-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-  .nb-card-inner {
-    padding: 16px 14px;
-    gap: 12px;
-  }
-  .nb-cover-icon-wrap {
-    width: 52px;
-    height: 52px;
-    font-size: 1.7rem;
-  }
-  .nb-book-title {
-    font-size: 1.15rem;
-  }
-  .nb-active-stamp {
-    font-size: 0.76rem;
-    padding: 4px 10px;
-  }
-  .subject-step-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-}
-
 
 
 /* ========================================================
@@ -6857,202 +6402,305 @@ html.is-pwa-standalone .main-container {
 
 /* ========================================================
    📱 手機端排版深度優化 (Mobile Layout < 768px)
+   專屬直立單手持握體驗：去外露裝飾、精巧頂欄、滿版無擠壓筆記
    ======================================================== */
 @media (max-width: 768px) {
-  /* 導覽列：品牌與控制項雙層流暢自適應 */
+  /* 根邊距與容器空間最大化 */
+  .main-container {
+    padding: 12px 10px 80px 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* 頂部導覽列：品牌與控制項雙層清爽緊湊排列 */
   .top-nav {
-    padding: 10px 14px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    padding: 10px 12px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
   }
 
   .brand-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .logo-badge {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  .brand-logo-img {
+    width: 42px !important;
+    height: 42px !important;
   }
 
   .brand-text h1 {
-    font-size: 1.25rem;
+    font-size: 1.25rem !important;
+    gap: 6px !important;
+  }
+
+  .brand-text h1 span {
+    font-size: 0.78rem !important;
   }
 
   .brand-text p {
-    font-size: 0.78rem;
+    font-size: 0.75rem !important;
+    line-height: 1.3 !important;
   }
 
+  /* 控制木牌橫向滑動或靈活折行，永不擠爆或破版 */
   .top-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+    width: 100% !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 2px !important;
   }
 
   .top-controls::-webkit-scrollbar {
-    display: none;
+    display: none !important;
   }
 
   .cross-link-portal-btn {
-    padding: 6px 10px;
-    font-size: 0.85rem;
-    gap: 5px;
-    border-width: 2px;
+    padding: 6px 10px !important;
+    font-size: 0.82rem !important;
+    gap: 4px !important;
+    border-width: 2px !important;
+    flex-shrink: 0 !important;
   }
 
   .top-install-btn {
-    padding: 6px 10px;
-    font-size: 0.85rem;
-    gap: 5px;
-    border-width: 2px;
+    padding: 6px 10px !important;
+    font-size: 0.82rem !important;
+    gap: 4px !important;
+    border-width: 2px !important;
+    flex-shrink: 0 !important;
   }
 
   .font-control-group {
-    padding: 3px 5px;
-    gap: 2px;
+    padding: 3px 6px !important;
+    gap: 2px !important;
+    border-width: 2px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .font-control-group::before {
+    top: -10px !important;
+    font-size: 0.9rem !important;
   }
 
   .font-btn {
-    padding: 2px 6px;
-    font-size: 0.82rem;
+    padding: 2px 7px !important;
+    font-size: 0.82rem !important;
   }
 
   .font-scale-display {
-    min-width: 42px;
-    font-size: 0.8rem;
-    padding: 2px 4px;
+    min-width: 40px !important;
+    font-size: 0.78rem !important;
+    padding: 2px 4px !important;
   }
 
   .theme-selector {
-    padding: 2px 4px;
-    gap: 3px;
+    padding: 2px 5px !important;
+    gap: 3px !important;
+    border-width: 2px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .theme-selector::before {
+    top: -10px !important;
+    font-size: 0.9rem !important;
   }
 
   .theme-btn {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    font-size: 0.8rem;
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    font-size: 0.78rem !important;
   }
 
-  /* 橫幅在手機端比例更緊湊 */
+  /* 橫幅在手機端精巧美觀，不佔據大半個螢幕 */
   .hero-banner {
-    padding: 16px 14px;
-    margin-top: 6px;
+    padding: 14px 12px !important;
+    margin-top: 4px !important;
+    margin-bottom: 10px !important;
   }
 
   .hero-content-wrapper {
-    flex-direction: column-reverse;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
+    flex-direction: column-reverse !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 10px !important;
   }
 
   .hero-text-side {
-    width: 100%;
+    width: 100% !important;
+  }
+
+  .hero-cute-badge {
+    padding: 5px 14px !important;
+    font-size: 0.84rem !important;
+    margin-bottom: 8px !important;
   }
 
   .hero-mascot-frame {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
+    width: 96px !important;
+    height: 96px !important;
+    margin: 0 auto !important;
   }
 
   .hero-mascot-img {
-    width: 90px;
-    height: 90px;
+    width: 86px !important;
+    height: 86px !important;
   }
 
   .mascot-float-sticker {
-    width: 32px;
-    height: 32px;
+    width: 28px !important;
+    height: 28px !important;
   }
 
   .hero-banner h2 {
-    font-size: 1.4rem;
-    margin-bottom: 6px;
+    font-size: 1.35rem !important;
+    margin-bottom: 6px !important;
+    line-height: 1.3 !important;
   }
 
   .hero-desc {
-    font-size: 0.88rem;
-    margin-bottom: 14px;
+    font-size: 0.85rem !important;
+    margin-bottom: 12px !important;
+    line-height: 1.5 !important;
   }
 
   .search-wrapper {
-    max-width: 100%;
+    max-width: 100% !important;
   }
 
   .search-input {
-    font-size: 1rem; /* 防止 iOS Safari 自動放大畫面 */
-    padding: 12px 20px 12px 50px;
+    font-size: 1rem !important; /* 防止 iOS Safari 自動觸發放大畫面 */
+    padding: 10px 18px 10px 44px !important;
+    border-radius: 14px !important;
   }
 
   .search-icon {
-    left: 18px;
-    font-size: 1.1rem;
+    left: 16px !important;
+    font-size: 1rem !important;
   }
 
-  /* 兩本手帳筆記本卡片手機端滿版單欄 */
+  /* 兩本手帳筆記本切換卡片：手機滿版直立單欄 */
   .notebook-shelf-container {
-    padding: 16px 12px;
-    margin: 10px 0 16px 0;
+    padding: 14px 12px !important;
+    margin: 8px 0 14px 0 !important;
+    border-radius: 16px !important;
   }
 
   .shelf-decor-illustration {
     display: none !important;
   }
 
+  .shelf-pill-tag {
+    padding: 4px 14px !important;
+    font-size: 0.82rem !important;
+    margin-bottom: 6px !important;
+  }
+
   .shelf-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .shelf-subtitle {
+    font-size: 0.82rem !important;
   }
 
   .notebook-cards-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
   }
 
   .notebook-card {
-    padding: 14px;
+    padding: 12px !important;
+    border-radius: 14px !important;
   }
 
   .nb-card-inner {
-    padding: 14px 12px;
-    gap: 12px;
+    padding: 12px 10px !important;
+    gap: 10px !important;
   }
 
   .nb-cover-icon-wrap {
-    width: 46px;
-    height: 46px;
-    font-size: 1.5rem;
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.45rem !important;
+    border-radius: 12px !important;
   }
 
   .nb-book-title {
-    font-size: 1.1rem;
+    font-size: 1.05rem !important;
   }
 
   .nb-book-desc {
-    font-size: 0.82rem;
+    font-size: 0.78rem !important;
   }
 
-  /* 學科橫向滑動列觸控流暢度 */
+  .nb-type-pill,
+  .nb-count-pill {
+    font-size: 0.74rem !important;
+    padding: 2px 7px !important;
+  }
+
+  .nb-floating-sticker {
+    width: 32px !important;
+    height: 32px !important;
+    top: 6px !important;
+    right: 8px !important;
+  }
+
+  /* 學科橫向滑動標籤列：流暢左右滑動，按鈕比例完美 */
+  .subject-step-bar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+    padding: 0 4px !important;
+  }
+
+  .subject-step-tag {
+    font-size: 0.82rem !important;
+    padding: 3px 10px !important;
+  }
+
+  .current-stage-indicator {
+    font-size: 0.82rem !important;
+  }
+
   .tabs-scroll-container {
-    margin: 8px 0 14px 0;
-    padding-bottom: 10px;
+    margin: 6px 0 12px 0 !important;
+    padding: 4px 2px 10px 2px !important;
   }
 
   .subject-tabs {
     gap: 6px !important;
+    padding: 0 2px !important;
   }
 
   .subject-tab-btn {
     padding: 6px 12px !important;
     font-size: 0.88rem !important;
+    border-radius: 10px 5px 12px 6px / 6px 12px 5px 10px !important;
+  }
+
+  .subject-tab-btn::before {
+    top: -12px !important;
+    font-size: 0.95rem !important;
   }
 
   .tab-cute-icon {
@@ -7060,171 +6708,359 @@ html.is-pwa-standalone .main-container {
     height: 22px !important;
   }
 
-  /* 筆記本本體在手機端全寬，最大化內頁可讀空間 */
+  /* 筆記本本體在手機端：消除多層外露裝飾，滿版大空間展開 */
+  .open-book-container {
+    margin: 0 auto 40px auto !important;
+  }
+
   .open-book-wrapper {
     max-width: 100% !important;
-    margin: 10px 0 0 0 !important;
+    margin: 6px 0 0 0 !important;
+  }
+
+  .notebook-left-sheets,
+  .notebook-right-sheets,
+  .washi-tape-sticker,
+  .book-deck-pages,
+  .book-side-flourish,
+  .ambient-branches-frame,
+  .book-flank-decor {
+    display: none !important;
+  }
+
+  .notebook-top-tabs {
+    right: 14px !important;
+    gap: 6px !important;
+    top: -16px !important;
+  }
+
+  .notebook-tab-flag {
+    width: 26px !important;
+    height: 18px !important;
+  }
+
+  /* 書頂頁數標籤條在手機端支援平滑橫滑，多頁數永不擠爆 */
+  .book-tabs-bar {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 4px 6px 0 6px !important;
+    gap: 6px !important;
+  }
+
+  .book-tabs-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .book-tab-item {
+    padding: 6px 12px 8px 12px !important;
+    font-size: 0.85rem !important;
+    border-width: 2px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .book-tab-item .tab-page-num {
+    font-size: 0.82rem !important;
+    gap: 4px !important;
   }
 
   .open-book-spread {
     padding: 0 !important;
-    border-radius: 14px !important;
-    border-width: 2px !important;
+    border-radius: 16px !important;
+    border-width: 2.5px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
   }
 
   .book-page-body {
-    padding: 18px 12px 28px 12px !important;
+    padding: 16px 12px 24px 12px !important;
   }
 
+  /* 書本頁首資訊列 */
   .book-running-head {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    margin-bottom: 16px;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    margin-bottom: 14px !important;
+    padding-bottom: 12px !important;
   }
 
   .book-running-left {
-    flex-wrap: wrap;
-    gap: 6px;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important;
   }
 
+  .stage-badge,
+  .subject-badge,
+  .unit-tag,
+  .concept-tag {
+    font-size: 0.76rem !important;
+    padding: 3px 8px !important;
+  }
+
+  .book-top-flip-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 6px !important;
+  }
+
+  .book-top-btn {
+    padding: 6px 10px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .book-page-stamp {
+    padding: 5px 10px !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* 筆記大標題 */
   .note-title {
-    font-size: 1.3rem;
-    line-height: 1.4;
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 14px !important;
   }
 
-  /* 關鍵速查比較大表手機端左右滑動防溢出 */
+  /* 核心觀念要點 */
+  .section-label {
+    font-size: 1rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .section-label-sticker {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .concepts-list li {
+    font-size: calc(0.92rem * var(--font-scale, 1)) !important;
+    line-height: 1.65 !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* 關鍵速查比較大表手機端：卡片式邊框、平滑橫滑防破版 */
   .table-responsive {
     overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-    margin: 12px 0;
-    border-radius: 12px;
+    -webkit-overflow-scrolling: touch !important;
+    margin: 10px 0 !important;
+    border-radius: 12px !important;
+    border: 2px solid var(--border-color) !important;
   }
 
   .note-table {
-    min-width: 480px; /* 保證表格文字不擠壓換行，橫向捲動流暢 */
+    min-width: 440px !important; /* 保證表格內容字級舒適不擠壓 */
+  }
+
+  .note-table th {
+    padding: 9px 10px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .note-table td {
+    padding: 8px 10px !important;
+    font-size: calc(0.88rem * var(--font-scale, 1)) !important;
   }
 
   .table-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
   }
 
   .mask-mode-btn {
-    width: 100%;
-    justify-content: center;
-    padding: 8px 14px;
-    font-size: 0.88rem;
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
   }
 
-  /* 隨堂測驗題目在手機端全寬且易觸控 */
+  /* 記憶口訣與秒殺密碼 */
+  .mnemonic-box {
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    margin: 12px 0 !important;
+    font-size: calc(0.92rem * var(--font-scale, 1)) !important;
+  }
+
+  /* 隨堂測驗題目：手機全寬、選項大觸控按鈕 */
   .quiz-panel {
-    padding: 16px 14px;
+    padding: 14px 12px !important;
+    border-radius: 14px !important;
+    margin-top: 14px !important;
+  }
+
+  .quiz-header-title {
+    font-size: 0.95rem !important;
+  }
+
+  .quiz-question-text {
+    font-size: calc(0.94rem * var(--font-scale, 1)) !important;
+    line-height: 1.6 !important;
+    margin-bottom: 12px !important;
   }
 
   .quiz-options-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
   }
 
   .quiz-opt-btn {
-    width: 100%;
-    padding: 10px 12px;
-    font-size: 0.92rem;
+    width: 100% !important;
+    padding: 9px 12px !important;
+    font-size: calc(0.9rem * var(--font-scale, 1)) !important;
+    border-radius: 10px !important;
   }
 
-  /* 翻頁大木牌按鈕垂直流暢堆疊 */
+  .quiz-opt-prefix {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* 底部操作列與主翻頁木牌按鈕 */
+  .note-page-action-footer {
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin-top: 24px !important;
+    padding: 14px 10px 8px !important;
+  }
+
+  .book-bottom-nav {
+    margin-top: 20px !important;
+    gap: 12px !important;
+  }
+
   .flip-btn-group {
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
   }
 
   .book-flip-btn {
-    width: 100%;
-    padding: 12px 14px;
+    width: 100% !important;
+    min-width: unset !important;
+    padding: 12px 14px !important;
+    font-size: 1.05rem !important;
+    border-radius: 14px 7px 16px 8px / 8px 16px 7px 14px !important;
+  }
+
+  .book-flip-btn .wood-sprout-accent {
+    top: -11px !important;
+    font-size: 1.05rem !important;
+  }
+
+  .book-flip-btn .btn-sub-label {
+    font-size: 0.76rem !important;
   }
 
   .page-indicator-wood-sign {
-    width: 100%;
-    padding: 8px 12px;
+    width: 100% !important;
+    padding: 8px 10px !important;
   }
 
-  /* 手機端懸浮回頂端按鈕位置適度抬高，避開 PWA 底端提示列 */
+  .page-indicator-text {
+    font-size: 0.88rem !important;
+  }
+
+  .flip-shortcut-hint {
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    text-align: center !important;
+  }
+
+  /* 書本左右懸浮翅膀在手機端隱藏，避免遮擋文字 */
+  .book-side-nav {
+    display: none !important;
+  }
+
+  /* 手機懸浮回頂端按鈕位置 */
   .back-to-top-btn {
-    bottom: 82px;
-    right: 14px;
+    bottom: 84px !important;
+    right: 12px !important;
   }
 
   html.is-pwa-standalone .back-to-top-btn {
-    bottom: 24px;
+    bottom: 24px !important;
   }
 }
 
 /* ========================================================
-   📟 平板端排版深度優化 (Tablet Layout 768px ~ 1180px)
+   📟 平板端排版深度優化 (Tablet Layout 769px ~ 1180px)
+   專屬 iPad / 平板雙手橫向或直式閱讀：雙欄自適應、寬裕手帳書本
    ======================================================== */
 @media (min-width: 769px) and (max-width: 1180px) {
   /* 平板直式與橫向導覽列對齊 */
   .top-nav {
-    padding: 12px 24px;
-    flex-wrap: wrap;
-    gap: 12px;
+    padding: 12px 24px !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
   }
 
   .brand-text h1 {
-    font-size: 1.4rem;
+    font-size: 1.45rem !important;
   }
 
   .top-controls {
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
   }
 
   .main-container {
-    padding: 20px 24px 80px 24px;
+    padding: 20px 24px 80px 24px !important;
+    width: 96% !important;
   }
 
-  /* 橫幅適度縮放 */
+  /* 橫幅在平板端適度縮放，左右兩欄和諧共存 */
   .hero-banner {
-    padding: 26px 24px;
+    padding: 24px 22px !important;
   }
 
-  .hero-mascot-frame {
-    width: 180px;
-    height: 180px;
-  }
-
-  .hero-mascot-img {
-    width: 160px;
-    height: 160px;
-  }
-
-  /* 兩本手帳筆記本平板雙欄排版 (並排展示，觸控面積大) */
-  .notebook-cards-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+  .hero-content-wrapper {
     gap: 18px !important;
   }
 
-  .nb-card-inner {
-    padding: 18px 16px;
+  .hero-mascot-frame {
+    width: 180px !important;
+    height: 180px !important;
   }
 
-  /* 學科標籤置中展示 */
+  .hero-mascot-img {
+    width: 160px !important;
+    height: 160px !important;
+  }
+
+  .hero-banner h2 {
+    font-size: 1.85rem !important;
+  }
+
+  /* 兩本手帳筆記本在平板端雙欄並排展示，觸控極其流暢 */
+  .notebook-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .nb-card-inner {
+    padding: 16px 14px !important;
+  }
+
+  /* 學科木牌標籤置中展示，兩排均勻排列 */
   .subject-tabs {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
   }
 
   .subject-tab-btn {
-    padding: 8px 16px;
-    font-size: 0.95rem;
+    padding: 8px 18px !important;
+    font-size: 1rem !important;
   }
 
-  /* 精裝手帳書本寬度與邊距適配 iPad 閱讀視野 */
+  /* 精裝手帳書本寬度與邊距適配 iPad 寬螢幕視野 */
   .open-book-wrapper {
     max-width: 96% !important;
     margin: 20px auto 0 !important;
@@ -7235,45 +7071,55 @@ html.is-pwa-standalone .main-container {
   }
 
   .note-title {
-    font-size: 1.6rem;
+    font-size: 1.6rem !important;
   }
 
-  /* 表格寬度與翻牌背誦在平板上兩欄/三欄流暢閱讀 */
+  /* 表格寬度在平板上寬裕閱讀，不需橫滑 */
   .table-responsive {
-    margin: 16px 0;
+    margin: 16px 0 !important;
   }
 
-  /* 翻頁控制大木牌按鈕橫向並排，方便雙手握持 iPad 時大拇指點擊 */
+  .note-table {
+    min-width: 100% !important;
+  }
+
+  /* 翻頁大木牌按鈕橫向並排，方便雙手握持平板時大拇指點擊 */
   .flip-btn-group {
     flex-direction: row !important;
     gap: 14px !important;
-    width: 100%;
+    width: 100% !important;
   }
 
   .book-flip-btn {
-    flex: 1;
-    padding: 14px 16px;
+    flex: 1 !important;
+    padding: 14px 18px !important;
+    min-width: 170px !important;
   }
 
   .page-indicator-wood-sign {
-    flex: 1.2;
-    padding: 10px 14px;
+    flex: 1.2 !important;
+    padding: 10px 14px !important;
   }
 
   /* 平板兩側懸浮翻頁翅膀適度顯示 */
   .book-side-nav {
     display: flex !important;
-    width: 44px;
-    height: 44px;
-    font-size: 1.1rem;
+    width: 44px !important;
+    height: 68px !important;
+    font-size: 1.2rem !important;
   }
 
   .book-side-nav.prev-side {
-    left: -22px;
+    left: -22px !important;
   }
 
   .book-side-nav.next-side {
-    right: -22px;
+    right: -22px !important;
+  }
+
+  /* 平板端隱藏側翼超寬插圖，留給筆記主體最大視野 */
+  .book-flank-decor {
+    display: none !important;
   }
 }
 
