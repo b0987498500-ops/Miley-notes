@@ -7173,3 +7173,115 @@ html.is-pwa-standalone .main-container {
 }
 
 
+
+
+/* 📱 手機端橫幅與吉祥物防重疊精準修正 (Mobile Hero Banner Anti-Overlap Guarantee) */
+@media (max-width: 768px) {
+  .hero-banner {
+    padding: 12px 10px 14px 10px !important;
+    margin-top: 6px !important;
+    margin-bottom: 12px !important;
+    overflow: hidden !important;
+    clear: both !important;
+  }
+
+  .hero-content-wrapper {
+    display: flex !important;
+    flex-direction: column !important; /* 吉祥物置頂，文字與徽章在下方，依序自然流動排列 */
+    align-items: center !important;
+    text-align: center !important;
+    gap: 12px !important;
+  }
+
+  .hero-mascot-side {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 4px !important;
+  }
+
+  .hero-mascot-frame {
+    width: 90px !important;
+    height: 90px !important;
+    margin: 0 auto !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .hero-mascot-frame::before {
+    width: 84px !important;
+    height: 84px !important;
+  }
+
+  .hero-mascot-img {
+    width: 80px !important;
+    height: 80px !important;
+    max-width: 80px !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto !important;
+  }
+
+  /* 消除貼紙在直式小螢幕飄出框外遮擋文字的風險 */
+  .mascot-float-sticker {
+    display: none !important;
+  }
+
+  .hero-text-side {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  /* 徽章在手機直立時自適應寬度，圖文清晰不折行疊加 */
+  .hero-cute-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    max-width: 96% !important;
+    padding: 6px 14px !important;
+    font-size: 0.82rem !important;
+    margin: 0 auto 10px auto !important;
+    gap: 6px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.35 !important;
+    clear: both !important;
+  }
+
+  .hero-badge-sticker {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .hero-banner h2 {
+    font-size: 1.35rem !important;
+    line-height: 1.35 !important;
+    margin: 0 0 6px 0 !important;
+    clear: both !important;
+  }
+
+  .hero-desc {
+    font-size: 0.86rem !important;
+    line-height: 1.55 !important;
+    margin: 0 0 14px 0 !important;
+    padding: 0 4px !important;
+  }
+
+  .search-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .search-input {
+    padding: 10px 16px 10px 42px !important;
+    font-size: 1rem !important;
+  }
+}
