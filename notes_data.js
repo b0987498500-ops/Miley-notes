@@ -179,8 +179,56 @@ const NOTES_DATA = [
       }
     ]
   },
+  {
+    id: "math-5",
+    stage: "review",
+    volume: "第 3 冊",
+    stageName: "複習筆記本",
+    subject: "math",
+    subjectName: "數學",
+    subjectIcon: "fa-square-root-variable",
+    gradeVersion: "八年級上（翰林版）",
+    unit: "第 4 章 一元二次方程式",
+    title: "一元二次方程式的公式解與判別式（b² - 4ac）",
+    concept: "公式解 x = (-b ± √(b² - 4ac)) / (2a)，判別式 b² - 4ac 判定兩相異根、重根或無解",
+    coreConcepts: [
+      "**一元二次方程式標準式**：設一元二次方程式為 $ax^2 + bx + c = 0$（其中 $a \\neq 0$）。$a$ 為 $x^2$ 項係數、$b$ 為 $x$ 項係數、$c$ 為常數項。",
+      "**公式解核心公式（必背）**：$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$",
+      "**判別式判斷根的情況**：根號內的代數式 $b^2 - 4ac$ 稱為**判別式**：<br>① **$b^2 - 4ac = 0$**：有**二重根**，兩根為 $x = -\\frac{b}{2a}$。<br>② **$b^2 - 4ac > 0$**：有**兩相異根**，兩根為 $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$。<br>③ **$b^2 - 4ac < 0$**：因根號內為負數，在國中實數範圍內**無解**。"
+    ],
+    table: {
+      headers: ["判別式條件 (b² - 4ac)", "根的個數與性質 (點擊翻牌)", "解（根）的表示式 (點擊翻牌)", "拋物線與 x 軸交點"],
+      rows: [
+        ["b² - 4ac > 0", "兩相異根（兩相異實數解）", "x = (-b ± √(b² - 4ac)) / 2a", "交於相異兩點"],
+        ["b² - 4ac = 0", "二重根（兩相等實數解）", "x = -b / 2a", "相切（恰交於一點）"],
+        ["b² - 4ac < 0", "無解（無實數解）", "無解（根號內為負數）", "沒有交點（浮起或沉下）"]
+      ]
+    },
+    mnemonic: "【公式解與判別式秒殺口訣】：<br>① 公式訣：**「二 a 分之負 b，加減根號 b 平方減四 ac！」**<br>② 判別式判斷：**「大於 0 兩相異，等於 0 二重根，小於 0 負數無解！」**<br>⚠️ 避坑提醒：公式分母是 $2a$，千萬別漏乘 $2$；抓係數時記得帶正負號！",
+    quiz: [
+      {
+        question: "若一元二次方程式 ax² + bx + c = 0 的判別式 b² - 4ac = 0，則此方程式的解為何？",
+        options: [
+          { prefix: "A", text: "有二重根，兩根為 x = -b / 2a", correct: true, explanation: "答對了！判別式等於 0 時，加減根號 0 等於加減 0，因此兩根重疊為 x = -b / 2a！" },
+          { prefix: "B", text: "有兩相異根", correct: false, explanation: "判別式 b² - 4ac > 0 時才是有兩相異根喔！" },
+          { prefix: "C", text: "無解", correct: false, explanation: "判別式 b² - 4ac < 0 時才是無解喔！" },
+          { prefix: "D", text: "x = 0", correct: false, explanation: "根的值取決於 -b / 2a，不一定為 0 喔！" }
+        ]
+      },
+      {
+        question: "若方程式 x² - 6x + 9 = 0，判別式 b² - 4ac 的值與其根的情況為何？",
+        options: [
+          { prefix: "A", text: "b² - 4ac = 0，有二重根 x = 3", correct: true, explanation: "太棒了！a=1, b=-6, c=9。b² - 4ac = (-6)² - 4(1)(9) = 36 - 36 = 0，有二重根 x = -(-6)/(2×1) = 3！" },
+          { prefix: "B", text: "b² - 4ac > 0，有兩相異根", correct: false, explanation: "計算一下：(-6)² - 4(1)(9) = 36 - 36 = 0，不是大於 0 喔！" },
+          { prefix: "C", text: "b² - 4ac < 0，無解", correct: false, explanation: "判別式結果剛好為 0，不是負數喔！" },
+          { prefix: "D", text: "b² - 4ac = 72，有兩相異根", correct: false, explanation: "注意：4ac 是 4×1×9 = 36，不是加法喔！" }
+        ]
+      }
+    ]
+  },
 
   // ==========================================
+
   // 🔬 自然科 (Science) - 複習手帳 (第 1～4 冊)
   // ==========================================
   {
