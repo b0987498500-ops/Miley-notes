@@ -1677,7 +1677,8 @@ const NOTES_DATA = [
     title: "需接動名詞（V-ing）當受詞的動詞及片語速查大表",
     concept: "只接動名詞當受詞的特定動詞（enjoy, practice, finish, quit, keep, mind, spend, miss, avoid）與高頻片語（look forward to, be used to, be busy, feel like 等）",
     coreConcepts: [
-      "**① 動名詞當受詞特性**：英文特定動詞與慣用片語後方只能接動名詞（V-ing）作受詞，不可接不定詞（to V）。",
+      "**① 動名詞當受詞特性**：**動名詞（Gerund）代表動詞字尾加 -ing（即 V-ing）**！英文特定動詞與慣用片語後方只能接動名詞（V-ing）作受詞，不可接不定詞（to V）。",
+      "📌 **Miley 專屬備註**：**「動名詞」＝「一定要加 V-ing（Ving）」！**",
       "**② 九大常考核心動詞**：enjoy（享受/喜愛）、practice（練習）、finish（完成）、quit（戒除/放棄）、keep（持續）、mind（介意）、spend（花費）、miss（想念/錯過）、avoid（避免）。",
       "**③ 介系詞 to 必考陷阱片語**：look forward to（期待）、be used to（習慣於），此處 to 為「介系詞」，後方必定接動名詞 V-ing！",
       "**④ 高頻慣用片語與句型**：be busy (in) ＋ V-ing（忙著做）、feel like ＋ V-ing（想要做）、be good at ＋ V-ing（擅長做）、There / It is no use ＋ V-ing（做……徒勞無功）、have fun / a good time ＋ V-ing（玩得開心）、have a hard time / difficulty ＋ (in) V-ing（做……有困難）。"
@@ -1706,7 +1707,7 @@ const NOTES_DATA = [
     },
     image: "",
     imageCaption: "",
-    mnemonic: "【接動名詞 V-ing 秒殺記憶法】：<br>① 九大動詞口訣：「享受（enjoy）練習（practice）完（finish），放棄（quit）持續（keep）不介意（mind），花錢（spend）錯過（miss）能避免（avoid）！」<br>② 介系詞 to 大陷阱：look forward to（期待）、be used to（習慣於），此處 to 都是「介系詞」，後面通通抓 V-ing！",
+    mnemonic: "【接動名詞 V-ing 秒殺記憶法】：<br>① Miley 專屬備註：動名詞就是「加 V-ing」！<br>② 九大動詞口訣：「享受（enjoy）練習（practice）完（finish），放棄（quit）持續（keep）不介意（mind），花錢（spend）錯過（miss）能避免（avoid）！」<br>③ 介系詞 to 大陷阱：look forward to（期待）、be used to（習慣於），此處 to 都是「介系詞」，後面通通抓 V-ing！",
     quiz: [
       {
         question: "選出文法完全正確的填空：We are really looking forward to ________ you at the party tonight.",
@@ -1724,6 +1725,68 @@ const NOTES_DATA = [
           { prefix: "B", text: "My sister enjoys to listen to pop music in her free time.", correct: false, explanation: "錯誤！enjoy 後面只能接動名詞 V-ing，應改為 listening。" },
           { prefix: "C", text: "They spent two hours to finish the math project.", correct: false, explanation: "錯誤！spend ＋ 時間 後面接 (in) V-ing，應改為 finishing。" },
           { prefix: "D", text: "Would you mind to close the window?", correct: false, explanation: "錯誤！mind（介意）後面固定接動名詞 V-ing，應改為 closing。" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "english-5",
+    stage: "review",
+    volume: "第 3 冊",
+    stageName: "複習筆記本",
+    subject: "english",
+    subjectName: "英文",
+    subjectIcon: "fa-language",
+    gradeVersion: "八年級上（南一／翰林／康軒版）",
+    unit: "不定詞核心文法（Infinitives）",
+    title: "需接不定詞（to VR）當受詞的動詞速查大表",
+    concept: "只接不定詞（to VR）當受詞的特定動詞（decide, hope, mean, need, fail, want, choose, learn, plan, wait, prepare, agree, ask, wish, would like）",
+    coreConcepts: [
+      "**① 不定詞當受詞特性**：**「不定詞（Infinitive）」代表「to ＋ 原形動詞（to VR / to V）」**！",
+      "📌 **Miley 專屬備註**：**「不定詞」＝「一定要加 to VR（to ＋ 原形動詞）」！**",
+      "**② 核心文法概念**：此類動詞後面若要接第二個動作，**固定只能接不定詞（to VR）當受詞**，表示「尚未發生、未來計畫、企圖或希望去做的事」，絕不可接 V-ing。",
+      "**③ 必接 to VR 的 15 大核心動詞與片語**：decide（決定）、hope（希望）、mean（打算/意圖）、need（需要）、fail（未能/失敗）、want（想要）、choose（選擇）、learn（學習）、plan（計畫）、wait（等待）、prepare（準備）、agree（同意）、ask（要求）、wish（盼望/願望）、would like（想要/願意）。"
+    ],
+    table: {
+      headers: ["動詞 / 片語", "搭配結構 (固定接 to VR)", "中文意涵 (點擊翻牌揭曉)"],
+      rows: [
+        ["decide", "decide ＋ to VR", "決定去做某事"],
+        ["hope", "hope ＋ to VR", "希望去達成某事"],
+        ["mean", "mean ＋ to VR", "打算 / 用意去做某事"],
+        ["need", "need ＋ to VR", "需要去做某事"],
+        ["fail", "fail ＋ to VR", "未能 / 無法做到某事"],
+        ["want", "want ＋ to VR", "想要去做某事"],
+        ["choose", "choose ＋ to VR", "選擇去做某事"],
+        ["learn", "learn ＋ to VR", "學習去做某事"],
+        ["plan", "plan ＋ to VR", "計畫去做某事"],
+        ["wait", "wait ＋ to VR", "等待去做某事"],
+        ["prepare", "prepare ＋ to VR", "準備好去做某事"],
+        ["agree", "agree ＋ to VR", "同意去做某事"],
+        ["ask", "ask ＋ to VR", "要求去做某事"],
+        ["wish", "wish ＋ to VR", "盼望 / 期望去做某事"],
+        ["would like", "would like ＋ to VR", "想要 / 願意去做某事（＝ want to VR）"]
+      ]
+    },
+    image: "",
+    imageCaption: "",
+    mnemonic: "【接不定詞 to VR 秒殺記憶法】：<br>① Miley 專屬備註：不定詞就是「加 to VR（to ＋ 原形動詞）」！<br>② 觀念區分：動名詞（V-ing）多表「已在做、習慣、經驗」；不定詞（to VR）多表「未來打算、希望去做」！<br>③ 四大願望與決定組：「想要（want/would like）希望（hope/wish）決定好（decide/choose），計畫（plan）準備（prepare）同意學（agree/learn），需要（need）等待（wait）不失敗（fail）！」",
+    quiz: [
+      {
+        question: "選出文法完全正確的填空：Emily decided ________ a new laptop for her online classes.",
+        options: [
+          { prefix: "A", text: "buying", correct: false, explanation: "錯誤！decide 後面固定接不定詞 to VR，不能接動名詞 buying。" },
+          { prefix: "B", text: "buy", correct: false, explanation: "錯誤！缺少不定詞標記 to。" },
+          { prefix: "C", text: "to buy", correct: true, explanation: "太棒了！完全正確！decide（決定）後面固定接「不定詞（to VR）」，所以用 to buy！" },
+          { prefix: "D", text: "to buying", correct: false, explanation: "錯誤！不定詞 to 後面必須接原形動詞 buy，不可接 buying。" }
+        ]
+      },
+      {
+        question: "選出下列句子中文法完全正確的選項：",
+        options: [
+          { prefix: "A", text: "We plan traveling to Japan during the winter vacation.", correct: false, explanation: "錯誤！plan 後面固定接不定詞 to travel。" },
+          { prefix: "B", text: "I would like to have a cup of black coffee, please.", correct: true, explanation: "完全正確！would like 後面接不定詞 to VR（to have），語氣客氣且文法完全正確！" },
+          { prefix: "C", text: "He failed passing the driving test again.", correct: false, explanation: "錯誤！fail 後面固定接不定詞 to pass。" },
+          { prefix: "D", text: "Did she agree helping you with the project?", correct: false, explanation: "錯誤！agree 後面固定接不定詞 to help。" }
         ]
       }
     ]

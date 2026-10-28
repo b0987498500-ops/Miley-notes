@@ -148,7 +148,8 @@
 * **核心知識點**：需接動名詞（V-ing）當受詞的特定動詞、常見介系詞片語與慣用句型
 
 ### 💡 核心觀念精華
-1. **動名詞當受詞特性**：英文中某些特定動詞與片語後方若要接動作，**只能接動名詞（V-ing）**，絕不可接不定詞（to V）。
+1. **動名詞當受詞特性**：**動名詞（Gerund）代表動詞字尾必須加 `-ing`（即 `V-ing`）**！英文中某些特定動詞與片語後方若要接動作，**只能接動名詞（V-ing）**，絕不可接不定詞（to V）。
+   - 📌 **Miley 專屬備註**：**「動名詞」＝「一定要加 V-ing（Ving）」**！
 2. **必接 V-ing 的核心動詞**：
    - `enjoy`（享受 / 喜愛）
    - `practice`（練習）
@@ -200,5 +201,67 @@
 * **題目**：選出文法完全正確的填空：We are really looking forward to ________ you at the party tonight.
   * (A) see
   * (B) seeing ★（正解：look forward to 中的 to 為介系詞，後方固定接動名詞 V-ing）
-  * (C) to see
-  * (D) saw
+---
+
+## 📌 重點 5：需接不定詞（to VR）當受詞的動詞
+
+### 🏷️ 分類資訊
+* **筆記本分類**：複習手帳（第 1～4 冊）
+* **冊數進度**：第 3 冊（八年級上學期）
+* **科目**：英文（南一／翰林／康軒版通用）
+* **單元章節**：不定詞核心文法（Infinitives）
+* **核心知識點**：需接不定詞（to VR）當受詞的特定核心動詞與記憶口訣
+
+### 💡 核心觀念精華
+1. **不定詞當受詞特性**：**「不定詞（Infinitive）」代表「to ＋ 原形動詞（to VR / to V）」**！
+   - 📌 **Miley 專屬備註**：**「不定詞」＝「一定要加 to VR（to ＋ 原形動詞）」**！
+2. **核心觀念**：此類動詞後面若要接第二個動作，**固定只能接不定詞（to VR）當受詞**，表示「尚未發生、未來計畫、企圖或希望去做的事」，絕不可接 V-ing。
+3. **必接 to VR 的 15 大核心動詞與片語**：
+   - `decide`（決定）
+   - `hope`（希望）
+   - `mean`（打算 / 意圖）
+   - `need`（需要）
+   - `fail`（未能 / 失敗）
+   - `want`（想要）
+   - `choose`（選擇）
+   - `learn`（學習）
+   - `plan`（計畫）
+   - `wait`（等待）
+   - `prepare`（準備）
+   - `agree`（同意）
+   - `ask`（要求）
+   - `wish`（盼望 / 願望）
+   - `would like`（想要 / 願意，相當於 want to VR）
+
+### 📊 需接不定詞（to VR）當受詞的動詞速查大表
+
+| 動詞 / 片語 | 搭配結構（固定接 to VR） | 中文意涵 (翻牌背誦) |
+|---|---|---|
+| **decide** | **decide ＋ to VR** | 決定去做某事 |
+| **hope** | **hope ＋ to VR** | 希望去達成某事 |
+| **mean** | **mean ＋ to VR** | 打算 / 用意去做某事 |
+| **need** | **need ＋ to VR** | 需要去做某事 |
+| **fail** | **fail ＋ to VR** | 未能 / 無法做到某事 |
+| **want** | **want ＋ to VR** | 想要去做某事 |
+| **choose** | **choose ＋ to VR** | 選擇去做某事 |
+| **learn** | **learn ＋ to VR** | 學習去做某事 |
+| **plan** | **plan ＋ to VR** | 計畫去做某事 |
+| **wait** | **wait ＋ to VR** | 等待去做某事 |
+| **prepare** | **prepare ＋ to VR** | 準備好去做某事 |
+| **agree** | **agree ＋ to VR** | 同意去做某事 |
+| **ask** | **ask ＋ to VR** | 要求去做某事 |
+| **wish** | **wish ＋ to VR** | 盼望 / 期望去做某事 |
+| **would like** | **would like ＋ to VR** | 想要 / 願意去做某事（＝ want to VR） |
+
+### 🧠 記憶口訣與秒殺密碼
+> 💡 **【接不定詞 to VR 秒殺記憶法】**
+> - **概念辨析**：**動名詞（V-ing）多表「已在進行、經驗、習慣」；不定詞（to VR）多表「未來打算、希望、企圖去做」**！
+> - **四大願望與決定組**：「想要（want/would like）希望（hope/wish）決定好（decide/choose），計畫（plan）準備（prepare）同意學（agree/learn），需要（need）等待（wait）不失敗（fail）！」
+> - **考點鎖定**：看到上述動詞，後面的動詞不要猶豫，一律秒選 `to ＋ 原形動詞（to VR）`！
+
+### 🎯 隨堂觀念自我檢測
+* **題目**：選出文法完全正確的填空：Emily decided ________ a new laptop for her online classes.
+  * (A) buying
+  * (B) buy
+  * (C) to buy ★（正解：decide 後方固定接不定詞 to VR 當受詞）
+  * (D) to buying
