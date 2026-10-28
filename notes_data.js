@@ -1663,6 +1663,70 @@ const NOTES_DATA = [
         ]
       }
     ]
+  },
+  {
+    id: "english-4",
+    stage: "review",
+    volume: "第 3 冊",
+    stageName: "複習筆記本",
+    subject: "english",
+    subjectName: "英文",
+    subjectIcon: "fa-language",
+    gradeVersion: "八年級上（南一／翰林／康軒版）",
+    unit: "動名詞核心文法（Gerunds）",
+    title: "需接動名詞（V-ing）當受詞的動詞及片語速查大表",
+    concept: "只接動名詞當受詞的特定動詞（enjoy, practice, finish, quit, keep, mind, spend, miss, avoid）與高頻片語（look forward to, be used to, be busy, feel like 等）",
+    coreConcepts: [
+      "**① 動名詞當受詞特性**：英文特定動詞與慣用片語後方只能接動名詞（V-ing）作受詞，不可接不定詞（to V）。",
+      "**② 九大常考核心動詞**：enjoy（享受/喜愛）、practice（練習）、finish（完成）、quit（戒除/放棄）、keep（持續）、mind（介意）、spend（花費）、miss（想念/錯過）、avoid（避免）。",
+      "**③ 介系詞 to 必考陷阱片語**：look forward to（期待）、be used to（習慣於），此處 to 為「介系詞」，後方必定接動名詞 V-ing！",
+      "**④ 高頻慣用片語與句型**：be busy (in) ＋ V-ing（忙著做）、feel like ＋ V-ing（想要做）、be good at ＋ V-ing（擅長做）、There / It is no use ＋ V-ing（做……徒勞無功）、have fun / a good time ＋ V-ing（玩得開心）、have a hard time / difficulty ＋ (in) V-ing（做……有困難）。"
+    ],
+    table: {
+      headers: ["分類類別", "動詞 / 片語", "搭配結構與中文意涵 (點擊翻牌揭曉)"],
+      rows: [
+        ["核心動詞", "enjoy", "enjoy ＋ V-ing<br><small style=\"color: #64748b;\">（喜愛 / 享受做某事）</small>"],
+        ["核心動詞", "practice", "practice ＋ V-ing<br><small style=\"color: #64748b;\">（練習做某事）</small>"],
+        ["核心動詞", "finish", "finish ＋ V-ing<br><small style=\"color: #64748b;\">（完成做某事）</small>"],
+        ["核心動詞", "quit", "quit ＋ V-ing<br><small style=\"color: #64748b;\">（戒除 / 放棄做某事）</small>"],
+        ["核心動詞", "keep", "keep ＋ V-ing<br><small style=\"color: #64748b;\">（持續 / 一直做某事）</small>"],
+        ["核心動詞", "mind", "mind ＋ V-ing<br><small style=\"color: #64748b;\">（介意做某事，常用於 Would/Do you mind...?）</small>"],
+        ["核心動詞", "spend", "spend ＋ 時間/金錢 ＋ (in) V-ing<br><small style=\"color: #64748b;\">（花時間/金錢做某事）</small>"],
+        ["核心動詞", "miss", "miss ＋ V-ing<br><small style=\"color: #64748b;\">（錯過 / 想念做某事）</small>"],
+        ["核心動詞", "avoid", "avoid ＋ V-ing<br><small style=\"color: #64748b;\">（避免做某事）</small>"],
+        ["常見片語", "be busy", "be busy (in) ＋ V-ing<br><small style=\"color: #64748b;\">（忙著做某事）</small>"],
+        ["常見片語", "feel like", "feel like ＋ V-ing<br><small style=\"color: #64748b;\">（想要做某事）</small>"],
+        ["常見片語", "look forward to", "look forward to ＋ V-ing<br><small style=\"color: #64748b;\">⚠️ to 是介系詞，後面必接 V-ing（期待……）</small>"],
+        ["常見片語", "be used to", "be used to ＋ V-ing<br><small style=\"color: #64748b;\">⚠️ to 是介系詞，後面必接 V-ing（習慣於……）</small>"],
+        ["常見片語", "be good at", "be good at ＋ V-ing<br><small style=\"color: #64748b;\">⚠️ at 是介系詞，後面必接 V-ing（擅長於……）</small>"],
+        ["慣用句型", "there / it is no use", "There / It is no use ＋ V-ing<br><small style=\"color: #64748b;\">（做……是沒用的 / 徒勞無功）</small>"],
+        ["慣用片語", "have a good time / have fun", "have a good time / have fun ＋ (in) V-ing<br><small style=\"color: #64748b;\">（做某事玩得很開心）</small>"],
+        ["慣用片語", "have a hard time / have difficulty", "have a hard time / have difficulty ＋ (in) V-ing<br><small style=\"color: #64748b;\">（做某事有困難 / 費力）</small>"]
+      ]
+    },
+    image: "",
+    imageCaption: "",
+    mnemonic: "【接動名詞 V-ing 秒殺記憶法】：<br>① 九大動詞口訣：「享受（enjoy）練習（practice）完（finish），放棄（quit）持續（keep）不介意（mind），花錢（spend）錯過（miss）能避免（avoid）！」<br>② 介系詞 to 大陷阱：look forward to（期待）、be used to（習慣於），此處 to 都是「介系詞」，後面通通抓 V-ing！",
+    quiz: [
+      {
+        question: "選出文法完全正確的填空：We are really looking forward to ________ you at the party tonight.",
+        options: [
+          { prefix: "A", text: "see", correct: false, explanation: "錯誤！look forward to 中的 to 是介系詞，不能接動詞原形。" },
+          { prefix: "B", text: "seeing", correct: true, explanation: "太厲害了！完全正確！look forward to（期待）中的 to 是「介系詞」，後面受詞必須接動名詞（V-ing），因此要用 seeing！" },
+          { prefix: "C", text: "to see", correct: false, explanation: "錯誤！look forward to 已經有介系詞 to 了，不可重複接不定詞 to see。" },
+          { prefix: "D", text: "saw", correct: false, explanation: "錯誤！介系詞後面不能接過去式動詞。" }
+        ]
+      },
+      {
+        question: "選出下列句子中文法完全正確的選項：",
+        options: [
+          { prefix: "A", text: "My father has decided to quit smoking for his health.", correct: true, explanation: "完全正確！quit（戒除、放棄）後面固定接動名詞 V-ing（smoking），而 decide 後面接不定詞 to quit，文法完美無瑕！" },
+          { prefix: "B", text: "My sister enjoys to listen to pop music in her free time.", correct: false, explanation: "錯誤！enjoy 後面只能接動名詞 V-ing，應改為 listening。" },
+          { prefix: "C", text: "They spent two hours to finish the math project.", correct: false, explanation: "錯誤！spend ＋ 時間 後面接 (in) V-ing，應改為 finishing。" },
+          { prefix: "D", text: "Would you mind to close the window?", correct: false, explanation: "錯誤！mind（介意）後面固定接動名詞 V-ing，應改為 closing。" }
+        ]
+      }
+    ]
   }
 ];
 

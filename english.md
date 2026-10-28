@@ -136,4 +136,69 @@
   * (B) Leo is taller than any other boy in his class. ★（正解：同班範圍排除自己，any other ＋ 單數名詞 boy）
   * (C) Leo is taller than all the other boy in his class.
   * (D) Leo is taller than any boy in his class.
+---
 
+## 📌 重點 4：需接動名詞（V-ing）當受詞的動詞及片語
+
+### 🏷️ 分類資訊
+* **筆記本分類**：複習手帳（第 1～4 冊）
+* **冊數進度**：第 3 冊（八年級上學期）
+* **科目**：英文（南一／翰林／康軒版通用）
+* **單元章節**：動名詞核心文法（Gerunds）
+* **核心知識點**：需接動名詞（V-ing）當受詞的特定動詞、常見介系詞片語與慣用句型
+
+### 💡 核心觀念精華
+1. **動名詞當受詞特性**：英文中某些特定動詞與片語後方若要接動作，**只能接動名詞（V-ing）**，絕不可接不定詞（to V）。
+2. **必接 V-ing 的核心動詞**：
+   - `enjoy`（享受 / 喜愛）
+   - `practice`（練習）
+   - `finish`（完成）
+   - `quit`（戒除 / 放棄）
+   - `keep`（保持 / 持續）
+   - `mind`（介意）
+   - `spend`（花費時間/金錢）
+   - `miss`（想念 / 錯過）
+   - `avoid`（避免）
+3. **必接 V-ing 的常見核心片語與慣用語**：
+   - `be busy (in) ＋ V-ing`（忙於……）
+   - `feel like ＋ V-ing`（想要……）
+   - `look forward to ＋ V-ing`（期待……，to 為介系詞）
+   - `be used to ＋ V-ing`（習慣於……，to 為介系詞）
+   - `be good at ＋ V-ing`（擅長於……，at 為介系詞）
+   - `there / it is no use ＋ V-ing`（做……是無用的 / 徒勞無功）
+   - `have a good time / have fun ＋ V-ing`（玩得開心）
+   - `have a hard time / have difficulty ＋ (in) V-ing`（做……有困難）
+
+### 📊 需接動名詞（V-ing）當受詞的動詞及片語速查大表
+
+| 分類類別 | 動詞 / 片語 | 搭配結構與中文意涵 (翻牌背誦) |
+|---|---|---|
+| **核心動詞** | enjoy | **enjoy ＋ V-ing**（喜愛 / 享受做某事） |
+| **核心動詞** | practice | **practice ＋ V-ing**（練習做某事） |
+| **核心動詞** | finish | **finish ＋ V-ing**（完成做某事） |
+| **核心動詞** | quit | **quit ＋ V-ing**（戒除 / 放棄做某事） |
+| **核心動詞** | keep | **keep ＋ V-ing**（持續 / 一直做某事） |
+| **核心動詞** | mind | **mind ＋ V-ing**（介意做某事，常用於 Would/Do you mind...?） |
+| **核心動詞** | spend | **spend ＋ 時間/金錢 ＋ (in) V-ing**（花時間/金錢做某事） |
+| **核心動詞** | miss | **miss ＋ V-ing**（錯過做某事 / 想念做某事） |
+| **核心動詞** | avoid | **avoid ＋ V-ing**（避免做某事） |
+| **常見片語** | be busy | **be busy (in) ＋ V-ing**（忙著做某事） |
+| **常見片語** | feel like | **feel like ＋ V-ing**（想要做某事） |
+| **常見片語** | look forward to | **look forward to ＋ V-ing**（期待做某事，⚠️ to 是介系詞） |
+| **常見片語** | be used to | **be used to ＋ V-ing**（習慣於做某事，⚠️ to 是介系詞） |
+| **常見片語** | be good at | **be good at ＋ V-ing**（擅長於做某事，⚠️ at 是介系詞） |
+| **慣用句型** | there / it is no use | **There / It is no use ＋ V-ing**（做……是沒用的 / 徒勞無功） |
+| **慣用片語** | have a good time / have fun | **have a good time / have fun ＋ (in) V-ing**（做某事玩得很開心） |
+| **慣用片語** | have a hard time / have difficulty | **have a hard time / have difficulty ＋ (in) V-ing**（做某事有困難 / 費力） |
+
+### 🧠 記憶口訣與秒殺密碼
+> 💡 **【接動名詞 V-ing 秒殺記憶法】**
+> - **九大動詞口訣**：「享受（enjoy）練習（practice）完（finish），放棄（quit）持續（keep）不介意（mind），花錢（spend）錯過（miss）能避免（avoid）！」
+> - **四大介系詞 to 大陷阱**：`look forward to`（期待）、`be used to`（習慣於），這裡的 `to` 都是**介系詞**，後面通通要抓 `V-ing`！
+
+### 🎯 隨堂觀念自我檢測
+* **題目**：選出文法完全正確的填空：We are really looking forward to ________ you at the party tonight.
+  * (A) see
+  * (B) seeing ★（正解：look forward to 中的 to 為介系詞，後方固定接動名詞 V-ing）
+  * (C) to see
+  * (D) saw
