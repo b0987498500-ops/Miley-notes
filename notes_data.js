@@ -777,6 +777,56 @@ const NOTES_DATA = [
       }
     ]
   },
+  {
+    id: "science-14",
+    stage: "review",
+    volume: "第 4 冊",
+    stageName: "複習筆記本",
+    subject: "science",
+    subjectName: "自然",
+    subjectIcon: "fa-flask",
+    gradeVersion: "八年級下（翰林版）",
+    unit: "第 2 章 氧化與還原反應",
+    title: "常見金屬與碳、氫元素對氧活性的比較",
+    concept: "掌握常見金屬與碳(C)、氫(H)對氧活性序列（Li > K > Ba > ... > Au）與關鍵非金屬基準",
+    coreConcepts: [
+      "**活性定義**：元素對氧的「活性」代表該元素與氧結合的傾向與劇烈程度。活性越大，越容易氧化燃燒，其氧化物越安定。",
+      "**完整活性序列**：$Li > K > Ba > Sr > Na > Ca > Mg > Al > Mn > \\mathbf{C} > Zn > Cr > Fe > Co > Ni > Sn > Pb > \\mathbf{H} > Cu > Hg > Ag > Pt > Au$。",
+      "**關鍵基準一【碳 (C)】**：位於 **錳 (Mn)** 與 **鋅 (Zn)** 之間。因碳活性大於鋅與鐵，工業上（如高爐煉鐵）常用碳或一氧化碳作為還原劑，奪取氧化鐵中的氧。",
+      "**關鍵基準二【氫 (H)】**：位於 **鉛 (Pb)** 與 **銅 (Cu)** 之間。排在氫前面的金屬可與稀酸反應產生氫氣；排在氫後面的金屬（如銅、汞、銀、鉑、金）無法與稀酸反應產生氫氣。"
+    ],
+    table: {
+      headers: ["活性層級", "元素符號順序（由大至小）", "中文名稱速查", "關鍵特徵與非金屬基準標記"],
+      rows: [
+        ["超高活性區", "Li > K > Ba > Sr > Na > Ca > Mg > Al > Mn", "鋰 > 鉀 > 鋇 > 鍶 > 鈉 > 鈣 > 鎂 > 鋁 > 錳", "與氧結合力極強，容易燃燒；鋰鉀鈉質軟需儲存於礦物油/煤油中防氧化"],
+        ["中活性區<br><small style=\"color: #f59e0b;\">(碳基準)</small>", "C > Zn > Cr > Fe > Co > Ni > Sn > Pb > H", "<b>碳</b> > 鋅 > 鉻 > 鐵 > 鈷 > 鎳 > 錫 > 鉛 > <b>氫</b>", "★ <b>碳 (C)</b> 位於 Mn 與 Zn 之間；★ <b>氫 (H)</b> 位於 Pb 與 Cu 之間；排在氫前者可與稀酸反應生氫氣"],
+        ["低活性區<br><small style=\"color: #64748b;\">(貴金屬)</small>", "Cu > Hg > Ag > Pt > Au", "銅 > 汞 > 銀 > 鉑 > 金", "對氧活性極小，不易燃燒或不反應；金 (Au)、鉑 (Pt) 活性最小，常以單質元素態存在"]
+      ]
+    },
+    image: "",
+    imageCaption: "",
+    mnemonic: "【元素對氧活性秒殺口訣】：<br>「鋰鉀鋇鍶鈉、鈣鎂鋁錳碳、鋅鉻鐵鈷鎳、錫鉛氫銅汞、銀鉑金！」<br>（諧音：李家被司拉，蓋美旅盟探；新格鐵姑捏，西遷青銅汞，銀白金！）<br>★ <b>碳 (C)</b> 夾在 <b>Mn</b> 與 <b>Zn</b> 之間；<b>氫 (H)</b> 夾在 <b>Pb</b> 與 <b>Cu</b> 之間！",
+    quiz: [
+      {
+        question: "在常見元素對氧活性大小序列中，非金屬元素「碳 (C)」的位置介於下列哪兩個金屬元素之間？",
+        options: [
+          { prefix: "A", text: "錳 (Mn) 與 鋅 (Zn) 之間", correct: true, explanation: "太棒了！元素活性序列為 ... > Al > Mn > C > Zn > Cr ...，因此碳 (C) 介於錳與鋅之間！" },
+          { prefix: "B", text: "鋁 (Al) 與 錳 (Mn) 之間", correct: false, explanation: "注意：碳 (C) 是排在錳 (Mn) 之後、鋅 (Zn) 之前喔！" },
+          { prefix: "C", text: "鉛 (Pb) 與 銅 (Cu) 之間", correct: false, explanation: "介於鉛 (Pb) 與銅 (Cu) 之間的是「氫 (H)」！" },
+          { prefix: "D", text: "鐵 (Fe) 與 鈷 (Co) 之間", correct: false, explanation: "鐵與鈷之間沒有插入非金屬元素基準！" }
+        ]
+      },
+      {
+        question: "下列關於元素對氧活性的比較與特徵敘述，何者完全正確？",
+        options: [
+          { prefix: "A", text: "銅 (Cu) 的活性大於氫 (H)，因此銅片丟入稀鹽酸中會產生大量氣泡", correct: false, explanation: "銅的活性小於氫（Pb > H > Cu），因此銅不會與稀鹽酸反應產生氫氣！" },
+          { prefix: "B", text: "碳 (C) 的活性大於鐵 (Fe)，故高爐煉鐵可用碳作為還原劑奪取氧化鐵中的氧", correct: true, explanation: "完全正確！因為活性 C > Zn > Cr > Fe，碳的活性大於鐵，能奪取鐵礦中的氧將鐵還原出來！" },
+          { prefix: "C", text: "金 (Au) 的活性極大，在自然界中極易氧化以化合物形式存在", correct: false, explanation: "金 (Au) 的活性最小，極安定不易氧化，常以單質元素態存在！" },
+          { prefix: "D", text: "鎂 (Mg) 的活性小於碳 (C)，因此燃燒的鎂帶無法在二氧化碳中繼續燃燒", correct: false, explanation: "鎂的活性大於碳（Mg > Al > Mn > C），因此鎂能奪取二氧化碳中的氧繼續劇烈燃燒！" }
+        ]
+      }
+    ]
+  },
 
   // ==========================================
   // 🏛️ 社會科 (Social Studies) - 複習與進度手帳
