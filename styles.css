@@ -2419,14 +2419,41 @@ body {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  flex-wrap: wrap;
-  padding: 6px 16px 0 16px;
+  flex-wrap: nowrap; /* 永久保持一整橫排，絕不向下換行折行 */
+  overflow-x: auto;  /* 支援平滑橫向左右滑動與滾動 */
+  overflow-y: hidden;
+  padding: 6px 16px 4px 16px;
   margin-bottom: -3px;
   position: relative;
   z-index: 6;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(107, 67, 30, 0.35) transparent;
+}
+
+.book-tabs-bar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.book-tabs-bar::-webkit-scrollbar-track {
+  background: rgba(107, 67, 30, 0.06);
+  border-radius: 999px;
+  margin: 0 16px;
+}
+
+.book-tabs-bar::-webkit-scrollbar-thumb {
+  background: rgba(107, 67, 30, 0.35);
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+
+.book-tabs-bar::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 67, 30, 0.6);
 }
 
 .book-tab-item {
+  flex-shrink: 0; /* 保持單一按鈕完整寬度，避免多頁時被壓縮 */
   background:
     repeating-linear-gradient(180deg, transparent 0px, transparent 6px, rgba(110, 68, 28, 0.05) 7px, transparent 8px),
     linear-gradient(180deg, #fdf6eb 0%, #faebd7 60%, #eedbc1 100%);

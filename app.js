@@ -1183,6 +1183,24 @@ function renderNotes() {
   // 綁定測驗監聽器
   attachQuizListeners(container, dataList);
 
+  // 讓橫向書頂標籤條自動置中滾動至目前活頁，並支援滑鼠滾輪橫向滑動
+  setTimeout(() => {
+    const activeTab = container.querySelector(".book-tab-item.active");
+    if (activeTab && typeof activeTab.scrollIntoView === "function") {
+      activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+    const tabsBar = container.querySelector(".book-tabs-bar");
+    if (tabsBar && !tabsBar.__wheelBound) {
+      tabsBar.__wheelBound = true;
+      tabsBar.addEventListener("wheel", (e) => {
+        if (e.deltaY !== 0 && tabsBar.scrollWidth > tabsBar.clientWidth) {
+          e.preventDefault();
+          tabsBar.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+    }
+  }, 60);
+
   // KaTeX 數學公式優雅渲染
   if (window.renderMathInElement) {
     renderMathInElement(container, {
