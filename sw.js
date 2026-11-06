@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miley-notes-pwa-v1.14';
+const CACHE_NAME = 'miley-notes-pwa-v1.15';
 
 const ASSETS_TO_CACHE = [
   './',
