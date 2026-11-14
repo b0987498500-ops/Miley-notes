@@ -932,6 +932,90 @@ const NOTES_DATA = [
       }
     ]
   },
+  {
+    id: "science-17",
+    stage: "review",
+    volume: "第 4 冊",
+    stageName: "複習筆記本",
+    subject: "science",
+    subjectName: "自然",
+    subjectIcon: "fa-atom",
+    gradeVersion: "八年級下（康軒／翰林／南一版）",
+    unit: "第 3 章 酸、鹼、鹽（水溶液的酸鹼性與 pH 值的判定）",
+    title: "水溶液酸鹼性核心判定 —「pH 值」定義與氫離子濃度 [H⁺] 換算",
+    concept: "當水溶液中 [H⁺] = 10⁻ⁿ M 時，pH = n；常溫下 pH < 7 為酸性，pH = 7 為中性，pH > 7 為鹼性，pH 每差 1 濃度差 10 倍",
+    coreConcepts: [
+      "**pH 值的定義與判定公式**：當水溶液中的氫離子莫耳濃度 $[H^+] = 10^{-n}\\text{ M}$ 時，其 **$\\text{pH} = n$**。",
+      "**常溫（$25^\\circ\\text{C}$）酸鹼性基準**：",
+      "• **酸性水溶液**：$[H^+] > 10^{-7}\\text{ M} \\implies \\text{pH} < 7$（$[H^+]$ 愈大，酸性愈強，pH 值愈小）。",
+      "• **中性水溶液**：$[H^+] = [OH^-] = 10^{-7}\\text{ M} \\implies \\text{pH} = 7$。",
+      "• **鹼性水溶液**：$[H^+] < 10^{-7}\\text{ M} \\implies \\text{pH} > 7$（$[OH^-]$ 愈大，鹼性愈強，pH 值愈大）。",
+      "**關鍵數值規律（必考陷阱）**：pH 值每相差 1，氫離子濃度相差 **10 倍**；pH 值每相差 2，相差 **100 倍**！常溫下純水及稀薄水溶液中，$[H^+] \\times [OH^-] = 10^{-14}$。"
+    ],
+    table: {
+      headers: ["溶液性質", "氫離子濃度 [H⁺]", "氫氧根濃度 [OH⁻]", "pH 值判定 (點擊翻牌)", "會考與模考秒殺密碼"],
+      rows: [
+        [
+          "強酸性",
+          "10⁻¹ M",
+          "10⁻¹³ M",
+          "★ <b>pH = 1</b>",
+          "指數 -1 ➔ pH=1，酸性極強"
+        ],
+        [
+          "弱酸性",
+          "10⁻⁵ M",
+          "10⁻⁹ M",
+          "★ <b>pH = 5</b>",
+          "指數 -5 ➔ pH=5，< 7 為酸性"
+        ],
+        [
+          "中性純水",
+          "10⁻⁷ M",
+          "10⁻⁷ M",
+          "★ <b>pH = 7</b>",
+          "[H⁺] = [OH⁻]，中性基準"
+        ],
+        [
+          "弱鹼性",
+          "10⁻⁹ M",
+          "10⁻⁵ M",
+          "★ <b>pH = 9</b>",
+          "指數 -9 ➔ pH=9，> 7 為鹼性"
+        ],
+        [
+          "強鹼性",
+          "10⁻¹³ M",
+          "10⁻¹ M",
+          "★ <b>pH = 13</b>",
+          "指數 -13 ➔ pH=13，鹼性極強"
+        ]
+      ]
+    },
+    image: "",
+    imageCaption: "",
+    mnemonic: "【pH 值判定秒殺口訣】：<br>• 口訣：「[H⁺] = 10⁻ⁿ，負號拿掉 n 就是 pH 值！」<br>• 酸鹼判斷：「pH 小於 7 是酸性，數字愈小愈大酸；pH 大於 7 是鹼性，數字愈大愈大鹼！」<br>• 倍數陷阱提醒：pH 差 1 差 10 倍，pH 差 2 差 100 倍（次方差）！",
+    quiz: [
+      {
+        question: "常溫 25°C 下，有一杯鹽酸水溶液，測得其氫離子濃度 [H⁺] = 10⁻³ M；另一杯醋酸水溶液的 pH 值為 5。下列關於這兩杯溶液的敘述，何者完全正確？",
+        options: [
+          { prefix: "A", text: "鹽酸水溶液的 pH 值為 3，且其氫離子濃度為醋酸水溶液的 100 倍", correct: true, explanation: "太棒了！[H⁺] = 10⁻³ M ➔ pH = 3；pH 差 2 代表氫離子濃度相差 10² = 100 倍！" },
+          { prefix: "B", text: "鹽酸水溶液的 pH 值為 -3，酸性比醋酸弱", correct: false, explanation: "錯誤！pH 值為正數 3，酸性遠強於醋酸！" },
+          { prefix: "C", text: "醋酸水溶液的氫離子濃度 [H⁺] = 10⁵ M", correct: false, explanation: "錯誤！pH = 5 代表 [H⁺] = 10⁻⁵ M，並非正次方！" },
+          { prefix: "D", text: "兩杯溶液皆呈酸性，若將醋酸加水稀釋，其 pH 值會持續下降低於 3", correct: false, explanation: "錯誤！酸性溶液加水稀釋只會逐漸接近中性 pH = 7（pH 變大），絕不會變得更酸！" }
+        ]
+      },
+      {
+        question: "在常溫下，若某鹼性水溶液的氫氧根離子濃度 [OH⁻] = 10⁻⁴ M，已知 [H⁺] × [OH⁻] = 10⁻¹⁴，則該水溶液的 pH 值為何？",
+        options: [
+          { prefix: "A", text: "pH = 10", correct: true, explanation: "正解！由 [H⁺] × 10⁻⁴ = 10⁻¹⁴ 可得 [H⁺] = 10⁻¹⁰ M，故 pH = 10！" },
+          { prefix: "B", text: "pH = 4", correct: false, explanation: "陷阱！4 是 pOH（氫氧根指數），pH 必須看氫離子濃度，故為 14 - 4 = 10！" },
+          { prefix: "C", text: "pH = -4", correct: false, explanation: "pH 值不會是負指數直接帶負號！" },
+          { prefix: "D", text: "pH = 7", correct: false, explanation: "pH = 7 為中性，非鹼性水溶液！" }
+        ]
+      }
+    ]
+  },
 
 
   // ==========================================
