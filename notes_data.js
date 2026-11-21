@@ -3339,6 +3339,7 @@ const NOTES_DATA = [
   },
   {
     id: "social-34",
+    image: "images/social/local_government_levels_law.jpg",
     stage: "review",
     volume: "第 4 冊",
     stageName: "複習筆記本",
