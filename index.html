@@ -41,7 +41,7 @@
       // Service Worker 註冊與主動更新
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('sw.js?v=103').then(function(reg) {
+          navigator.serviceWorker.register('sw.js?v=104').then(function(reg) {
             if (typeof reg.update === 'function') reg.update();
           }).catch(function(err) {
             console.warn('SW register error:', err);
