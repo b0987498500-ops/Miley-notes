@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miley-notes-pwa-v1.45';
+const CACHE_NAME = 'miley-notes-pwa-v1.46';
 
 const ASSETS_TO_CACHE = [
   './',
@@ -22,7 +22,8 @@ const ASSETS_TO_CACHE = [
   'images/illustrations/tab_english.png',
   'images/social/asia_monsoon_climate_map.png',
   'images/social/japan_monsoon_currents_map.png',
-  'images/social/japan_cherry_blossom_front_map.png'
+  'images/social/japan_cherry_blossom_front_map.png',
+  'images/social/court_robes_color.png'
 ];
 
 // 安裝 Service Worker 並預載核心資產
